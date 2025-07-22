@@ -40,7 +40,7 @@ const Home = () => {
    image:iphone 
   }]
   return (
-    <div className="main-section bg-pink-50">
+    <div className="main-section bg-orange-200">
       <div className="w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
         <BannerSlider images={images} />
       </div>

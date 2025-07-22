@@ -19,7 +19,7 @@ const Navigation = () => {
       subcategories: [
         {
           name: "Menwear",
-          items: ["Shirts", "T-Shirts", "Jeans", "Shoes"],
+          items: ["Shirts", "T-Shirts", "Jeans", "Shoes","Formals"],
         },
         {
           name: "Womenwear",
