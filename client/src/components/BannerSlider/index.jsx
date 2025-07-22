@@ -25,7 +25,7 @@ const BannerSlider = ({ images = [] }) => {
         {images.map((image, i) => (
           <SwiperSlide key={i}>
             <img
-              className="rounded-3xl object-cover w-full"
+              className="rounded-3xl object-contain w-full"
               src={image}
               alt="Banner image"
             />
