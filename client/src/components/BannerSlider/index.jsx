@@ -20,12 +20,12 @@ const BannerSlider = ({ images = [] }) => {
         }}
         navigation={true}
         modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper"
+        className="mySwiper rounded-3xl"
       >
         {images.map((image, i) => (
           <SwiperSlide key={i}>
             <img
-              className="rounded-3xl object-contain w-full"
+              className="object-contain w-full"
               src={image}
               alt="Banner image"
             />
