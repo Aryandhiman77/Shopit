@@ -5,13 +5,15 @@ import iphone from "/Users/aryan/Desktop/Projects/e-comm images/iphonvar.jpg";
 import fashion from "/Users/aryan/Desktop/Projects/e-comm images/pngegg.png";
 
 const Home = () => {
-  const images = [
-    "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-    "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-    "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-    "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
+  const imageData = [
+    {img:"https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
+      link:"https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60"},
+    {img:"https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
+      link:"https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60"},{img:"https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
+      link:"https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60"},{img:"https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
+      link:"https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60"},
   ];
-  const items=[{
+  const popularCategories=[{
    name:"smartphone",
    image:iphone 
   },{
@@ -42,10 +44,10 @@ const Home = () => {
   return (
     <div className="main-section bg-orange-200">
       <div className="w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
-        <BannerSlider images={images} />
+        <BannerSlider imageData={imageData} />
       </div>
       <div className="w-[90%] mx-auto py-4 min-h-[20vh]">
-        <ItemSlider items={items} />
+        <ItemSlider items={popularCategories} /> 
       </div>
 
     </div>

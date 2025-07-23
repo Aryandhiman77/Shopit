@@ -7,6 +7,7 @@ import "swiper/css/navigation";
 import "./style.css";
 
 import { MdOutlineArrowLeft, MdOutlineArrowRight } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 const ItemSlider = ({ items = [] }) => {
   const swiperRef = useRef(null);
@@ -32,21 +33,21 @@ const ItemSlider = ({ items = [] }) => {
       <Swiper
         slidesPerView={7}
         slidesPerGroup={4}
-        spaceBetween={10}
+        spaceBetween={0}
         modules={[Navigation]}
         className="mySwiper"
         onSwiper={(swiper) => (swiperRef.current = swiper)}
       >
         {items.map((item, i) => (
-          <SwiperSlide key={i}>
-            <div className="flex flex-col justify-center items-center p-3 gap-y-2 rounded-md bg-white">
+          <SwiperSlide key={i} className="px-3 py-4">
+            <Link to={"/"} className="flex flex-col justify-center items-center p-3 gap-y-2 rounded-md bg-white cursor-pointer border-[1px] border-gray-300" style={{boxShadow:"#08080866 0px 3px 12px 0.1px"}}>
               <img
-                className="h-[150px] w-[150px] object-contain hover:scale-105 transition-all ease-in-out duration-250"
+                className="h-[150px] w-[150px] object-contain hover:scale-105 hover:rotate-2 transition-all ease-in-out duration-250"
                 src={item?.image}
                 alt="Category image"
               />
               <p className="text-[1rem]">{item.name}</p>
-            </div>
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>

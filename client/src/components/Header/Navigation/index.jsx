@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { RiMenu3Line } from "react-icons/ri";
 import {
   MdOutlineKeyboardArrowLeft,
@@ -10,75 +10,12 @@ import { IoRocketOutline } from "react-icons/io5";
 import DrawerNavigation from "./Drawer";
 import Level_2_CatMenu from "./Level_2_CatMenu";
 import "./style.css";
+import { DataContext } from "../../../context/DataProvider";
 
 const Navigation = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const MegaMenuData = [
-    {
-      name: "Fashion",
-      subcategories: [
-        {
-          name: "Menwear",
-          items: ["Shirts", "T-Shirts", "Jeans", "Shoes","Formals"],
-        },
-        {
-          name: "Womenwear",
-          items: ["Dresses", "Tops", "Skirts", "Heels"],
-        },
-        {
-          name: "Accessories",
-          items: ["Bags", "Belts", "Watches"],
-        },
-      ],
-    },
-    {
-      name: "Electronics",
-      subcategories: [
-        {
-          name: "Mobiles",
-          items: ["iPhone", "Samsung Galaxy", "OnePlus"],
-        },
-        {
-          name: "Laptops",
-          items: ["MacBook", "Dell XPS", "HP Spectre"],
-        },
-        {
-          name: "Headphones",
-          items: ["AirPods", "Sony WH-1000XM5", "Bose QC45"],
-        },
-      ],
-    },
-    {
-      name: "Home & Kitchen",
-      subcategories: [
-        {
-          name: "Furniture",
-          items: ["Sofas", "Beds", "Dining Tables"],
-        },
-        {
-          name: "Appliances",
-          items: ["Refrigerators", "Microwaves", "Mixers"],
-        },
-        {
-          name: "Decor",
-          items: ["Lamps", "Wall Art", "Clocks"],
-        },
-      ],
-    },
-    {
-      name: "Sports",
-      subcategories: [
-        {
-          name: "Outdoor",
-          items: ["Tents", "Sleeping Bags", "Hiking Boots"],
-        },
-        {
-          name: "Fitness",
-          items: ["Yoga Mats", "Dumbbells", "Resistance Bands"],
-        },
-      ],
-    },
-  ];
+  const {categories} = useContext(DataContext);
+  
 
   return (
     <div className="max-w-[95%] mx-auto flex items-center">
@@ -98,7 +35,7 @@ const Navigation = () => {
       </div>
       <div className="col_2 w-[60%] mx-auto text-gray-500 z-10 relative">
         <ul className="flex gap-x-4 font-[500] level_1_cat">
-          {MegaMenuData?.map((menuData, i) => (
+          {categories?.map((menuData, i) => (
             <li className="relative !p-2 " key={`${i}_level_1_cat`}>
               <Link className="font-[600]">{menuData.name}</Link>
               <Level_2_CatMenu level_2_cat={menuData.subcategories} />

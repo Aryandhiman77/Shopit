@@ -4,8 +4,9 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Link } from "react-router-dom";
 
-const BannerSlider = ({ images = [] }) => {
+const BannerSlider = ({ imageData }) => {
   return (
     <>
       <Swiper
@@ -22,13 +23,15 @@ const BannerSlider = ({ images = [] }) => {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper rounded-3xl"
       >
-        {images.map((image, i) => (
+        {imageData?.map((data, i) => (
           <SwiperSlide key={i}>
-            <img
-              className="object-contain w-full"
-              src={image}
-              alt="Banner image"
-            />
+            <Link to={data.link}>
+              <img
+                className="object-contain w-full"
+                src={data.img}
+                alt="Banner image"
+              />
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>
