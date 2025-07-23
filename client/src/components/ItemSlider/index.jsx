@@ -15,9 +15,9 @@ const ItemSlider = ({ items = [] }) => {
   return (
     <div className="w-full">
       <Swiper
-        slidesPerView={6}
+        slidesPerView={7}
         spaceBetween={10}
-        slidesPerGroup={3}
+        slidesPerGroup={4}
         modules={[Navigation]}
         className="mySwiper"
         onSwiper={(swiper)=>(swiperRef.current = swiper)}
