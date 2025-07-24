@@ -35,6 +35,9 @@ const Navigation = () => {
       </div>
       <div className="col_2 w-[60%] mx-auto text-gray-500 z-10 relative">
         <ul className="flex gap-x-4 font-[500] level_1_cat">
+          <li className="relative !p-2 ">
+              <Link to={"/"} className="font-[600]">Home</Link>
+            </li>
           {categories?.map((menuData, i) => (
             <li className="relative !p-2 " key={`${i}_level_1_cat`}>
               <Link className="font-[600]">{menuData.name}</Link>
