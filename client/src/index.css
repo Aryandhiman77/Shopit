@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme{
-     --color-primary: rgb(255,155,40)
+     --color-primary:  #f25252;
 }
 body {
   font-family: "Montserrat", sans-serif;
@@ -12,8 +12,8 @@ body {
   @apply  absolute rounded-full text-white text-sm font-semibold w-[20px] h-[20px] flex justify-center items-center -top-1 -right-3 border-2 border-white;
 }
 .link{
-  @apply hover:bg-[rgba(255,155,40,0.7)]
+  @apply hover:bg-[#f2525299]
 }
 .level_1_cat li:hover {
-    @apply hover:bg-[rgba(255,155,40,0.4)]
+    @apply hover:bg-[#f2525299] 
 }

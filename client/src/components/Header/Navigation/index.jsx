@@ -34,13 +34,13 @@ const Navigation = () => {
         </Button>
       </div>
       <div className="col_2 w-[60%] mx-auto text-gray-500 z-10 relative">
-        <ul className="flex gap-x-4 font-[500] level_1_cat">
+        <ul className="flex gap-x-4 font-[500] level_1_cat text-black">
           <li className="relative !p-2 ">
-              <Link to={"/"} className="font-[600]">Home</Link>
+              <Link to={"/"}>Home</Link>
             </li>
           {categories?.map((menuData, i) => (
-            <li className="relative !p-2 " key={`${i}_level_1_cat`}>
-              <Link className="font-[600]">{menuData.name}</Link>
+            <li className="relative !p-2 hover:font-[600]" key={`${i}_level_1_cat`}>
+              <Link>{menuData.name}</Link>
               <Level_2_CatMenu level_2_cat={menuData.subcategories} />
             </li>
           ))}

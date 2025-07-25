@@ -1,14 +1,16 @@
 import React, { useContext } from "react";
-import BannerSlider from "../../components/BannerSlider";
-import ItemSlider from "../../components/ItemSlider";
+import BannerSlider from "../../components/Reusables/Sliders/BannerSlider";
+import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
 import iphone from "/Users/aryan/Desktop/Projects/e-comm images/iphonvar.jpg";
 import fashion from "/Users/aryan/Desktop/Projects/e-comm images/pngegg.png";
-import ScrollTab from "../../components/ScrollTab";
+import ScrollTab from "../../components/Reusables/ScrollTab";
 import { DataContext } from "../../context/DataProvider";
-import ProductItem from "../../components/ProductItem";
+import ProductItem from "../../components/Reusables/Items/ProductItem";
+import CategoryItem from "../../components/Reusables/Items/CategoryItems";
+import BannerItem from "../../components/Reusables/Items/BannerItem";
 
 const Home = () => {
-  const {categories} = useContext(DataContext);
+  const { categories } = useContext(DataContext);
   const imageData = [
     {
       img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
@@ -30,7 +32,8 @@ const Home = () => {
   const popularCategories = [
     {
       name: "Fashion",
-      image: "https://static.vecteezy.com/system/resources/previews/003/621/306/non_2x/beautiful-fashion-woman-in-sunglasses-stylish-girl-from-multicolored-paints-splash-of-watercolor-colored-drawing-realistic-illustration-of-paints-vector.jpg",
+      image:
+        "https://static.vecteezy.com/system/resources/previews/003/621/306/non_2x/beautiful-fashion-woman-in-sunglasses-stylish-girl-from-multicolored-paints-splash-of-watercolor-colored-drawing-realistic-illustration-of-paints-vector.jpg",
     },
     {
       name: "Electronics",
@@ -38,19 +41,23 @@ const Home = () => {
     },
     {
       name: "Home & Furniture",
-      image: "https://png.pngtree.com/png-clipart/20240811/original/pngtree-a-lamp-on-table-with-chair-png-image_15751370.png",
+      image:
+        "https://png.pngtree.com/png-clipart/20240811/original/pngtree-a-lamp-on-table-with-chair-png-image_15751370.png",
     },
     {
       name: "Sports",
-      image: "https://img.freepik.com/free-vector/soccer-volleyball-baseball-rugby-equipment_1441-4026.jpg",
+      image:
+        "https://img.freepik.com/free-vector/soccer-volleyball-baseball-rugby-equipment_1441-4026.jpg",
     },
     {
       name: "Grocery",
-      image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwUNj-DZTMUW0XoNJZBFp3fQNr8hcO3sB-Qg&s",
+      image:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwUNj-DZTMUW0XoNJZBFp3fQNr8hcO3sB-Qg&s",
     },
     {
       name: "Jwellery",
-      image: "https://gravity-apps.com/cmspro/wp-content/uploads4953//2023/09/handcrafted-jewellery.jpg",
+      image:
+        "https://gravity-apps.com/cmspro/wp-content/uploads4953//2023/09/handcrafted-jewellery.jpg",
     },
     {
       name: "menwear",
@@ -69,31 +76,49 @@ const Home = () => {
     <div className="wrapper">
       <section className="main-section bg-[#e7eaff]">
         <div className="w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
-          <BannerSlider imageData={imageData} />
+            <BannerSlider
+              spaceBetween={0}
+              imageData={imageData}
+              renderItem={(item)=>(<BannerItem item={item}/>)}
+            />
         </div>
         <div className="w-[90%] mx-auto py-4 min-h-[20vh]">
-          <ItemSlider items={popularCategories} />
+          <ItemSlider
+            items={popularCategories}
+            renderItem={(item) => (<CategoryItem item={item} />)}
+          />
         </div>
       </section>
-      <section className="product&banner-section h-[100vh] bg-white p-10 mx-auto">
+      <section className="product&banner-section bg-white p-10 mx-auto">
         <div className="product-section">
-          <div className="header-section flex justify-between">
+          <div className="header-section flex justify-between ">
             <div>
-            <p className="text-xl font-[600]">Featured Products</p>
-            <p className="text-sm font-[400]">Don't miss the current offers until the end of Season.</p>
+              <p className="text-xl font-[600]">Featured Products</p>
+              <p className="text-sm font-[400]">
+                Don't miss the current offers until the end of Season.
+              </p>
             </div>
-            <ScrollTab items={categories}/>
+            <ScrollTab items={categories} />
           </div>
-          <div className="product-list mt-8 flex gap-x-5">
-            <ProductItem/>
-            <ProductItem/>
-            <ProductItem/>
-            <ProductItem/>
-            <ProductItem/>
-            <ProductItem/>
-           
+          <div className="product-list mt-8">
+            <ItemSlider
+              slidesPerView={6}
+              slidesPerGroup={4}
+              spaceBetween={10}
+              items={popularCategories}
+              renderItem={(item) => <ProductItem item={item} />}
+            />
           </div>
         </div>
+      </section>
+      <section>
+        <div className="banner-list mt-8 w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
+            <ItemSlider
+              spaceBetween={30}
+              items={imageData}
+              renderItem={(item)=><BannerItem item={item}/>}
+            />
+          </div>
       </section>
     </div>
   );

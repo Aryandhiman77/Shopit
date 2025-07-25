@@ -21,7 +21,7 @@ const ScrollTab = ({ items }) => {
         aria-label="scrollable auto tabs example"
       >
         {items?.map((category,i) => (
-          <Tab className="hover:!bg-[#f6eadf] hover:!text-primary " key={i} label={category.name} />
+          <Tab className="link hover:!text-primary " key={i} label={category.name} />
         ))}
       </Tabs>
     </Box>

@@ -6,11 +6,13 @@ import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
 
-const BannerSlider = ({ imageData }) => {
+const BannerSlider = ({ imageData=[],renderItem,spaceBetween=30,slidesPerView,slidesPerGroup}) => {
   return (
     <>
       <Swiper
-        spaceBetween={30}
+        spaceBetween={spaceBetween}
+        slidesPerView={slidesPerView}
+        slidesPerGroup={slidesPerGroup}
         centeredSlides={true}
         autoplay={{
           delay: 2500,
@@ -23,15 +25,9 @@ const BannerSlider = ({ imageData }) => {
         modules={[Autoplay, Pagination, Navigation]}
         className="mySwiper rounded-3xl"
       >
-        {imageData?.map((data, i) => (
+        {imageData.map((item, i) => (
           <SwiperSlide key={i}>
-            <Link to={data.link}>
-              <img
-                className="object-contain w-full"
-                src={data.img}
-                alt="Banner image"
-              />
-            </Link>
+             {renderItem(item)}
           </SwiperSlide>
         ))}
       </Swiper>

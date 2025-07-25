@@ -3,7 +3,7 @@ import Search from "../Search";
 import { MdShoppingCart } from "react-icons/md";
 import { IoMdHeartEmpty, IoIosGitCompare } from "react-icons/io";
 import { IoCartOutline } from "react-icons/io5";
-import Badge from "../Badge";
+import Badge from "../Reusables/Elements/Badge";
 import { ReactSVG } from "react-svg";
 import logo from "../../assets/logo.svg";
 import Tooltip from "@mui/material/Tooltip";
@@ -98,7 +98,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <div className="border-b-[1px] border-gray-200">
+      <div className="border-b-[1px] border-gray-200 ">
         <Navigation />
       </div>
         
