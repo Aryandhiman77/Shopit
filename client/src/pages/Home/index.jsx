@@ -38,7 +38,7 @@ const Home = () => {
     },
     {
       name: "Home & Furniture",
-      image: "https://media.istockphoto.com/id/520536109/photo/contemporary-elegant-luxury-living-room.jpg?s=612x612&w=0&k=20&c=B2qVuu2PPjkw_CebnOicutAJdSa9K_z5IB4TnZWOTY4=",
+      image: "https://png.pngtree.com/png-clipart/20240811/original/pngtree-a-lamp-on-table-with-chair-png-image_15751370.png",
     },
     {
       name: "Sports",
@@ -84,8 +84,14 @@ const Home = () => {
             </div>
             <ScrollTab items={categories}/>
           </div>
-          <div className="product-list mt-8">
+          <div className="product-list mt-8 flex gap-x-5">
             <ProductItem/>
+            <ProductItem/>
+            <ProductItem/>
+            <ProductItem/>
+            <ProductItem/>
+            <ProductItem/>
+           
           </div>
         </div>
       </section>
