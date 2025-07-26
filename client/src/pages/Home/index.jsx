@@ -10,25 +10,8 @@ import CategoryItem from "../../components/Reusables/Items/CategoryItems";
 import BannerItem from "../../components/Reusables/Items/BannerItem";
 
 const Home = () => {
-  const { categories } = useContext(DataContext);
-  const imageData = [
-    {
-      img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-      link: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-    },
-    {
-      img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-      link: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-    },
-    {
-      img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-      link: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-    },
-    {
-      img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-      link: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
-    },
-  ];
+  const { categories,adsBannerData,adsMiniBannersData } = useContext(DataContext);
+ 
   const popularCategories = [
     {
       name: "Fashion",
@@ -77,13 +60,14 @@ const Home = () => {
       <section className="main-section bg-[#e7eaff]">
         <div className="w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
             <BannerSlider
-              spaceBetween={0}
-              imageData={imageData}
+              spaceBetween={10}
+              imageData={adsBannerData}
               renderItem={(item)=>(<BannerItem item={item}/>)}
             />
         </div>
         <div className="w-[90%] mx-auto py-4 min-h-[20vh]">
           <ItemSlider
+             spaceBetween={10}
             items={popularCategories}
             renderItem={(item) => (<CategoryItem item={item} />)}
           />
@@ -100,25 +84,51 @@ const Home = () => {
             </div>
             <ScrollTab items={categories} />
           </div>
-          <div className="product-list mt-8">
+          <div className="product-list mt-2">
             <ItemSlider
               slidesPerView={6}
               slidesPerGroup={4}
               spaceBetween={10}
               items={popularCategories}
-              renderItem={(item) => <ProductItem item={item} />}
+              breakpoints={true}
+              renderItem={(item) => <ProductItem item={item} info={"https://ayuvya.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fayuvya_images%2Fproduct_image%2Fnew_carousel_image_of_combos_with_free_shaker_15novmber_8.webp&w=640&q=75"} />}
             />
           </div>
         </div>
       </section>
-      <section>
-        <div className="banner-list mt-8 w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
+      <section className="bg-white">
+        <div className="banner-list w-[90%] mx-auto py-4 min-h-[20vh] -z-10">
             <ItemSlider
-              spaceBetween={30}
-              items={imageData}
-              renderItem={(item)=><BannerItem item={item}/>}
+              slidesPerView={3}
+              slidesPerGroup={1}
+              spaceBetween={15}
+              items={adsMiniBannersData}
+              renderItem={(item,i)=><BannerItem key={i} item={item}/>}
             />
           </div>
+      </section>
+      <section className="product&banner-section bg-white p-10 mx-auto">
+        <div className="product-section">
+          <div className="header-section flex justify-between ">
+            <div>
+              <p className="text-xl font-[600]">Trending Products</p>
+              <p className="text-sm font-[400]">
+                Don't miss the current offers until the end of Season.
+              </p>
+            </div>
+            <ScrollTab items={categories} />
+          </div>
+          <div className="product-list mt-2">
+            <ItemSlider
+              slidesPerView={6}
+              slidesPerGroup={4}
+              spaceBetween={10}
+              items={popularCategories}
+              breakpoints={true}
+              renderItem={(item) => <ProductItem item={item} info={"https://media-assets.hyperinvento.com/companies/c31a99fe-fc32-4275-a453-18c2131fef39/products/assetss/files/24094f7a2c2947f5b09b8cf913f088f1-product-assets.webp"} />}
+            />
+          </div>
+        </div>
       </section>
     </div>
   );

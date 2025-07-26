@@ -9,8 +9,32 @@ import "./style.css";
 import { MdOutlineArrowLeft, MdOutlineArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-const ItemSlider = ({items=[], renderItem,slidesPerView=7,slidesPerGroup=1 ,spaceBetween=0}) => {
+const ItemSlider = ({
+  items = [],
+  renderItem,
+  slidesPerView = 7,
+  slidesPerGroup = 1,
+  spaceBetween = 0,
+  breakpoints
+}) => {
   const swiperRef = useRef(null);
+  const breaks = breakpoints?{
+          // when window width is >= 640px
+          640: {
+            slidesPerView: 2,
+            slidesPerGroup: 2,
+          },
+          // when window width is >= 768px
+          768: {
+            slidesPerView: 4,
+            slidesPerGroup: 2,
+          },
+          // when window width is >= 1024px
+          1024: {
+            slidesPerView: 6,
+            slidesPerGroup: 3,
+          },
+        }:null
 
   return (
     <div className="w-full relative">
@@ -38,13 +62,12 @@ const ItemSlider = ({items=[], renderItem,slidesPerView=7,slidesPerGroup=1 ,spac
         slidesPerGroup={slidesPerGroup}
         spaceBetween={spaceBetween}
         modules={[Navigation]}
-        className="mySwiper"
+        className="mySwiper !px-3 !py-4"
         onSwiper={(swiper) => (swiperRef.current = swiper)}
+        breakpoints={breaks}
       >
         {items.map((item, i) => (
-          <SwiperSlide key={i} className="px-3 py-4">
-            {renderItem(item)}
-          </SwiperSlide>
+          <SwiperSlide key={i}>{renderItem(item)}</SwiperSlide>
         ))}
       </Swiper>
     </div>

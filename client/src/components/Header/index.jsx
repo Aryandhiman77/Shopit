@@ -13,8 +13,8 @@ import Navigation from "./Navigation";
 
 const Header = () => {
   return (
-    <header className="bg-white">
-      <div className=" border-b-[1px] border-gray-200 ">
+    <>
+    <div className=" border-b-[1px] border-gray-200 ">
         <div className="top-strip py-2 border-t-[1px] border-b-[1px] border-gray-200 text-gray-500">
           <div className="container max-w-screen-xl flex justify-between items-center mx-auto">
             <div className="col1 text-[14px] font-500">
@@ -98,11 +98,14 @@ const Header = () => {
           </div>
         </div>
       </div>
+    <header className="bg-white sticky top-0 z-20">
+      
       <div className="border-b-[1px] border-gray-200 ">
         <Navigation />
       </div>
         
     </header>
+    </>
   );
 };
 
