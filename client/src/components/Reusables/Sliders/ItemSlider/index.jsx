@@ -9,7 +9,7 @@ import "./style.css";
 import { MdOutlineArrowLeft, MdOutlineArrowRight } from "react-icons/md";
 import { Link } from "react-router-dom";
 
-const ItemSlider = ({items=[], buttonSize=2, renderItem,slidesPerView=7,slidesPerGroup=1 ,spaceBetween=0}) => {
+const ItemSlider = ({items=[], renderItem,slidesPerView=7,slidesPerGroup=1 ,spaceBetween=0}) => {
   const swiperRef = useRef(null);
 
   return (
@@ -20,7 +20,7 @@ const ItemSlider = ({items=[], buttonSize=2, renderItem,slidesPerView=7,slidesPe
           onClick={() => swiperRef.current?.slidePrev()}
         >
           <MdOutlineArrowLeft
-            className={`text-[${buttonSize}rem] text-gray-700 hover:scale-[1.3] transition-all duration-100 ease-in-out`}
+            className={`text-[2rem] text-gray-700 hover:scale-[1.3] transition-all duration-100 ease-in-out`}
           />
         </button>
         <button
@@ -28,7 +28,7 @@ const ItemSlider = ({items=[], buttonSize=2, renderItem,slidesPerView=7,slidesPe
           onClick={() => swiperRef.current?.slideNext()}
         >
           <MdOutlineArrowRight
-            className={`text-[${buttonSize}rem] text-gray-700 hover:scale-[1.3] transition-all duration-100 ease-in-out`}
+            className={`text-[2rem] text-gray-700 hover:scale-[1.3] transition-all duration-100 ease-in-out`}
           />
         </button>
       </div>
