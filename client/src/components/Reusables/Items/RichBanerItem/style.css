@@ -10,17 +10,13 @@
 }
 
 .swiper-slide-active .info p{
-    transition-duration: 1s;
+    transition-duration: 1.5s;
     opacity: 1;
     right: 0;
 }
-.swiper-slide-active .info p > span{
-    opacity: 1;
-    bottom: 0;
-}
 
 .swiper-slide-active .info div{
-    transition-duration: 1.3s;
+    transition-duration: 2s;
     opacity: 1;
     bottom: 0;
 }

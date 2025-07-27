@@ -6,20 +6,17 @@ const RichBannerItem = ({
   topHeading = { fontSize: "16px", info: "Enter banner info" },
   description = { fontSize: "16px" },
   bg = "fff",
-  top = "0",
-  bottom = "40%",
-  left = undefined,
-  right = "5%",
+  item
 }) => {
   return (
     <div
-      className={`w-[60%] rounded-xl shadow-2xl mx-auto mt-9`}
+      className={`w-[60%] rounded-xl shadow-2xl`}
       style={{ background: bg }}
     >
       <div className={`relative`}>
         <img
           className="rounded-xl"
-          src="https://serviceapi.spicezgold.com/download/1742441193376_1737037654953_New_Project_45.jpg"
+          src={item}
           alt=""
         />
         <div

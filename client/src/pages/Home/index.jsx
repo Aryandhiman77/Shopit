@@ -62,7 +62,7 @@ const Home = () => {
       <section className="main-section bg-[#e7eaff]">
         <div className="w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
           <BannerSlider
-            fadeEffect={true}
+            fadeEffect={false}
             spaceBetween={10}
             imageData={adsBannerData}
             renderItem={(item) => <BannerItem item={item} />}
@@ -148,12 +148,18 @@ const Home = () => {
         </div>
       </section>
       <section className="rich-banner-section h-[100vh]">
-        <BannerSlider
-          imageData={[1, 2]}
-          loop={true}
-          fadeEffect={true}
-          renderItem={(item) => <RichBannerItem bg={"white"} />}
-        />
+        <div>
+          <BannerSlider
+            imageData={[
+              "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
+              "https://serviceapi.spicezgold.com/download/1742441193376_1737037654953_New_Project_45.jpg",
+            ]}
+            disableButtons={true}
+            loop={true}
+            fadeEffect={true}
+            renderItem={(item) => <RichBannerItem bg={"white"} item={item} />}
+          />
+        </div>
       </section>
     </div>
   );
