@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 const BannerItem = ({ item }) => {
+  
   return (
     <>
       <Link to={item.link} className="overflow-hidden block rounded-2xl">

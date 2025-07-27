@@ -9,10 +9,15 @@ import ProductItem from "../../components/Reusables/Items/ProductItem";
 import CategoryItem from "../../components/Reusables/Items/CategoryItems";
 import BannerItem from "../../components/Reusables/Items/BannerItem";
 import RichBannerItem from "../../components/Reusables/Items/RichBanerItem";
+import StaticBannerItem from "../../components/Reusables/Items/StaticBannerItem";
 
 const Home = () => {
-  const { categories, adsBannerData, adsMiniBannersData } =
-    useContext(DataContext);
+  const {
+    categories,
+    adsBannerData,
+    adsMiniBannersData,
+    miniSliderBannerData,
+  } = useContext(DataContext);
 
   const popularCategories = [
     {
@@ -57,6 +62,18 @@ const Home = () => {
       image: iphone,
     },
   ];
+  const itemdata = {
+    img: "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+    info: {
+      subtitle: "Slimest, Fastest, Powerful",
+      title: "Apple iPhone 15 Pro 128GB, titanium",
+      priceLine: "Starting from",
+      price: "₹59,999",
+      btnlink:
+        "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+      textColor: "black",
+    },
+  };
   return (
     <div className="wrapper">
       <section className="main-section bg-[#e7eaff]">
@@ -147,20 +164,28 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="rich-banner-section h-[100vh]">
-        <div>
-          <BannerSlider
-            imageData={[
-              "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
-              "https://serviceapi.spicezgold.com/download/1742441193376_1737037654953_New_Project_45.jpg",
-            ]}
-            disableButtons={true}
-            loop={true}
-            fadeEffect={true}
-            renderItem={(item) => <RichBannerItem bg={"white"} item={item} />}
-          />
+      <section className="rich-banner-section">
+        <div className="flex items-center p-10 gap-5">
+          <div className="w-[65%]">
+            <BannerSlider
+              imageData={miniSliderBannerData}
+              disableButtons={true}
+              loop={true}
+              fadeEffect={true}
+              renderItem={(item) => <RichBannerItem bg={"white"} item={item} />}
+            />
+          </div>
+          <div className="w-[28%] h-full flex flex-col gap-5">
+            <div className="h-[55%]">
+              <StaticBannerItem bg={"white"} item={itemdata} visible={true}/>
+            </div>
+            <div className="h-[50%]">
+              <StaticBannerItem bg={"white"} item={itemdata} visible={true}/>
+            </div>
+          </div>
         </div>
       </section>
+      <section></section>
     </div>
   );
 };

@@ -1,14 +1,13 @@
-
-import { createContext, useState } from 'react';
+import { createContext, useState } from "react";
 export const DataContext = createContext();
 const DataProvider = ({ children }) => {
-  const [categories,setCategories] =useState([
+  const [categories, setCategories] = useState([
     {
       name: "Fashion",
       subcategories: [
         {
           name: "Menwear",
-          items: ["Shirts", "T-Shirts", "Jeans", "Shoes","Formals"],
+          items: ["Shirts", "T-Shirts", "Jeans", "Shoes", "Formals"],
         },
         {
           name: "Womenwear",
@@ -68,7 +67,7 @@ const DataProvider = ({ children }) => {
       ],
     },
   ]);
-  const [adsBannerData,setAdsBannerData] = useState([
+  const [adsBannerData, setAdsBannerData] = useState([
     {
       img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
       link: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
@@ -85,8 +84,8 @@ const DataProvider = ({ children }) => {
       img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
       link: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
     },
-  ])
-  const [adsMiniBannersData,setAdsMiniBannerData]= useState([
+  ]);
+  const [adsMiniBannersData, setAdsMiniBannerData] = useState([
     {
       img: "https://www.jiomart.com/images/cms/aw_rbslider/slides/1753477176_2.jpg?im=Resize=(768,448)",
       link: "https://www.jiomart.com/images/cms/aw_rbslider/slides/1753477176_2.jpg?im=Resize=(768,448)",
@@ -111,9 +110,37 @@ const DataProvider = ({ children }) => {
       img: "https://www.jiomart.com/images/cms/aw_rbslider/slides/1753376828_2.jpg?im=Resize=(768,448)",
       link: "https://www.jiomart.com/images/cms/aw_rbslider/slides/1753376828_2.jpg?im=Resize=(768,448)",
     },
-  ])
+  ]);
+  const [miniSliderBannerData, setMiniSliderBannerData] = useState([
+    {
+      img: "https://serviceapi.spicezgold.com/download/1742441193376_1737037654953_New_Project_45.jpg",
+      info: {
+        subtitle: "Slimest, Fastest, Powerful",
+        title: "Apple iPhone 15 Pro 128GB, titanium",
+        priceLine: "Starting from",
+        price: "₹59,999",
+        btnlink:
+          "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
+        textColor: "black",
+      },
+    },
+    {
+      img: "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
+      info: {
+        subtitle: "Best in Quality",
+        title: "Stylish tops",
+        priceLine: "Starting from",
+        price: "₹499",
+        btnlink:
+          "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
+        textColor: "black",
+      },
+    },
+  ]);
   return (
-    <DataContext.Provider value={{categories,adsBannerData,adsMiniBannersData}}>
+    <DataContext.Provider
+      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData }}
+    >
       {children}
     </DataContext.Provider>
   );

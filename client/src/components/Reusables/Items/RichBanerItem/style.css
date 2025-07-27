@@ -15,7 +15,7 @@
     right: 0;
 }
 
-.swiper-slide-active .info div{
+.swiper-slide-active .info .banner-link{
     transition-duration: 2s;
     opacity: 1;
     bottom: 0;

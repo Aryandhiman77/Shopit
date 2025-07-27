@@ -1,36 +1,38 @@
 import Button from "@mui/material/Button";
-import "./style.css"
+import "./style.css";
+import { Link } from "react-router-dom";
 
-const RichBannerItem = ({
-  img,
-  topHeading = { fontSize: "16px", info: "Enter banner info" },
-  description = { fontSize: "16px" },
-  bg = "fff",
-  item
-}) => {
+const RichBannerItem = ({ bg = "fff", item}) => {
+  console.log(item);
   return (
-    <div
-      className={`w-[60%] rounded-xl shadow-2xl`}
-      style={{ background: bg }}
-    >
-      <div className={`relative`}>
-        <img
-          className="rounded-xl"
-          src={item}
-          alt=""
-        />
+    <div className={`w-full rounded-xl shadow-2xl`} style={{ background: bg }}>
+      <div className={`richbannercontainer relative`}>
+        <img className="rounded-xl w-full" src={item?.img} alt="" />
         <div
-          className={`info absolute w-[50%] top-[0%] h-[100%] flex flex-col right-0 justify-center gap-y-3 overflow-hidden`}
+          className={`info absolute w-[50%] top-[0%] h-[100%] flex flex-col right-0 justify-center lg:gap-y-3 overflow-hidden`}
+          style={{ color: item?.info.textColor }}
         >
-          <h3 className="relative text-xl font-[500] transition-all opacity-0 duration-700 -right-[80%]">Fastest, Slimest, Powerful</h3>
-          <h1 className="relative text-3xl font-[500] transition-all opacity-0 duration-1000 -right-[80%]">
-            Apple iPhone 15 Pro 128GB, titanium
+          <h3 className="relative text-[10px] sm:text-[12px] md:text-sm lg:text-lg xl:text-xl font-[500] transition-all opacity-0 duration-700 -right-[80%]">
+            {item?.info.subtitle}
+          </h3>
+          <h1 className="relative text-[12px] sm:text-sm md:text-lg lg:text-2xl xl:text-3xl font-[500] transition-all opacity-0 duration-1000 -right-[80%]">
+            {item?.info.title}
           </h1>
-          <p className="relative text-xl flex items-center transition-all opacity-0 -right-[80%]">Starting at only <span className="text-primary text-4xl font-bold px-3">₹45,999</span></p>
-          <div className="relative transition-all opacity-0 -bottom-[20%]">
-            <Button className="!bg-primary !text-white hover:bg-black">
-              Shop Now
-            </Button>
+          <p
+            className="relative text-[10px] flex items-center transition-all opacity-0 -right-[80%]
+          sm:text-[12px] md:text-sm lg:text-md xl:text-xl"
+          >
+            {item?.info?.priceLine}
+            <span className="text-primary sm:text-sm md:text-xl lg:text-2xl xl:text-4xl font-bold px-1 xl:px-2">
+              {item?.info.price}
+            </span>
+          </p>
+          <div className="banner-link relative transition-all opacity-0 -bottom-[20%] w-full">
+            <Link to={item?.info.btnlink}>
+              <Button className="!bg-primary !text-white hover:bg-black">
+                Shop Now
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

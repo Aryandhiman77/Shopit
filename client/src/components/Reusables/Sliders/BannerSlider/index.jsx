@@ -6,7 +6,7 @@ import "swiper/css/navigation";
 import "swiper/css/effect-fade";
 import { EffectFade, Autoplay, Pagination, Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
-
+import "./style.css"
 const BannerSlider = ({
   imageData = [],
   renderItem,
