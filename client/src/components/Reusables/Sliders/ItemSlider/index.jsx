@@ -19,8 +19,9 @@ const ItemSlider = ({
 }) => {
   const swiperRef = useRef(null);
   const breaks = breakpoints?{
+    
           // when window width is >= 640px
-          640: {
+          300: {
             slidesPerView: 2,
             slidesPerGroup: 2,
           },

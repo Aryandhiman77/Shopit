@@ -8,10 +8,12 @@ import { DataContext } from "../../context/DataProvider";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
 import CategoryItem from "../../components/Reusables/Items/CategoryItems";
 import BannerItem from "../../components/Reusables/Items/BannerItem";
+import RichBannerItem from "../../components/Reusables/Items/RichBanerItem";
 
 const Home = () => {
-  const { categories,adsBannerData,adsMiniBannersData } = useContext(DataContext);
- 
+  const { categories, adsBannerData, adsMiniBannersData } =
+    useContext(DataContext);
+
   const popularCategories = [
     {
       name: "Fashion",
@@ -59,17 +61,18 @@ const Home = () => {
     <div className="wrapper">
       <section className="main-section bg-[#e7eaff]">
         <div className="w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
-            <BannerSlider
-              spaceBetween={10}
-              imageData={adsBannerData}
-              renderItem={(item)=>(<BannerItem item={item}/>)}
-            />
+          <BannerSlider
+            fadeEffect={true}
+            spaceBetween={10}
+            imageData={adsBannerData}
+            renderItem={(item) => <BannerItem item={item} />}
+          />
         </div>
         <div className="w-[90%] mx-auto py-4 min-h-[20vh]">
           <ItemSlider
-             spaceBetween={10}
+            spaceBetween={10}
             items={popularCategories}
-            renderItem={(item) => (<CategoryItem item={item} />)}
+            renderItem={(item) => <CategoryItem item={item} />}
           />
         </div>
       </section>
@@ -91,21 +94,28 @@ const Home = () => {
               spaceBetween={10}
               items={popularCategories}
               breakpoints={true}
-              renderItem={(item) => <ProductItem item={item} info={"https://ayuvya.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fayuvya_images%2Fproduct_image%2Fnew_carousel_image_of_combos_with_free_shaker_15novmber_8.webp&w=640&q=75"} />}
+              renderItem={(item) => (
+                <ProductItem
+                  item={item}
+                  info={
+                    "https://ayuvya.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fayuvya_images%2Fproduct_image%2Fnew_carousel_image_of_combos_with_free_shaker_15novmber_8.webp&w=640&q=75"
+                  }
+                />
+              )}
             />
           </div>
         </div>
       </section>
       <section className="bg-white">
         <div className="banner-list w-[90%] mx-auto py-4 min-h-[20vh] -z-10">
-            <ItemSlider
-              slidesPerView={3}
-              slidesPerGroup={1}
-              spaceBetween={15}
-              items={adsMiniBannersData}
-              renderItem={(item,i)=><BannerItem key={i} item={item}/>}
-            />
-          </div>
+          <ItemSlider
+            slidesPerView={3}
+            slidesPerGroup={1}
+            spaceBetween={15}
+            items={adsMiniBannersData}
+            renderItem={(item, i) => <BannerItem key={i} item={item} />}
+          />
+        </div>
       </section>
       <section className="product&banner-section bg-white p-10 mx-auto">
         <div className="product-section">
@@ -125,10 +135,25 @@ const Home = () => {
               spaceBetween={10}
               items={popularCategories}
               breakpoints={true}
-              renderItem={(item) => <ProductItem item={item} info={"https://media-assets.hyperinvento.com/companies/c31a99fe-fc32-4275-a453-18c2131fef39/products/assetss/files/24094f7a2c2947f5b09b8cf913f088f1-product-assets.webp"} />}
+              renderItem={(item) => (
+                <ProductItem
+                  item={item}
+                  info={
+                    "https://media-assets.hyperinvento.com/companies/c31a99fe-fc32-4275-a453-18c2131fef39/products/assetss/files/24094f7a2c2947f5b09b8cf913f088f1-product-assets.webp"
+                  }
+                />
+              )}
             />
           </div>
         </div>
+      </section>
+      <section className="rich-banner-section h-[100vh]">
+        <BannerSlider
+          imageData={[1, 2]}
+          loop={true}
+          fadeEffect={true}
+          renderItem={(item) => <RichBannerItem bg={"white"} />}
+        />
       </section>
     </div>
   );

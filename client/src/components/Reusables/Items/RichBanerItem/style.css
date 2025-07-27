@@ -1,0 +1,26 @@
+
+.swiper-slide-active .info h3{
+    opacity: 1;
+    right: 0;
+}
+
+.swiper-slide-active .info h1{
+    opacity: 1;
+    right: 0;
+}
+
+.swiper-slide-active .info p{
+    transition-duration: 1s;
+    opacity: 1;
+    right: 0;
+}
+.swiper-slide-active .info p > span{
+    opacity: 1;
+    bottom: 0;
+}
+
+.swiper-slide-active .info div{
+    transition-duration: 1.3s;
+    opacity: 1;
+    bottom: 0;
+}
