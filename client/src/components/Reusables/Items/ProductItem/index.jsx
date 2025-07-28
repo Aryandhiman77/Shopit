@@ -24,13 +24,6 @@ const ProductItem = ({ info}) => {
           Apple iPhone 16 black, mat back, A18 chipset, dolby visionasfassldafjksdajfljsaklfjlfjaslfjslajflasjlkfjssfkjasklfjklsajfklsj
         </p>
         <div className="flex items-center gap-x-1 w-full pr-2 rounded-lg">
-          {/* <Rating
-            value={4.7}
-            precision={0.1}
-            size="small"
-            readOnly
-            className="py-2 !text-red-600"
-          /> */}
           {
             GetRating(4.6)
           }

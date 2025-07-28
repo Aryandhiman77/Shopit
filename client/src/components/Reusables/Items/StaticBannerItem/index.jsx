@@ -2,15 +2,15 @@ import Button from '@mui/material/Button'
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const StaticBannerItem = ({bg,item}) => {
+const StaticBannerItem = ({bg,item,horizontalTextAlign="right",verticalTextAlign="center"}) => {
   return (
     <div className={`w-full rounded-xl shadow-2xl group`} style={{ background: bg }}>
       <div className={`richbannercontainer relative block overflow-hidden rounded-xl
         `}>
-        <img className="rounded-xl w-full group-hover:scale-105 object-contain transition-all duration-200" src={item?.img} alt="" />
+        <img className="rounded-xl w-full group-hover:scale-105 object-contain transition-all duration-500" src={item?.img} alt="" />
         <div
-          className={`info absolute w-[55%] top-[0%] h-[100%] flex flex-col right-0 justify-center min-[200px]:gap-y-3 md:gap-y-4 overflow-hidden`}
-          style={{ color: item?.info.textColor }}
+          className={`info absolute w-[55%] top-[0%] h-[100%] flex flex-col ${horizontalTextAlign==="left"?"left-3":"right-0"} min-[200px]:gap-y-3 md:gap-y-2 overflow-hidden`}
+          style={{ color: item?.info.textColor,justifyContent:verticalTextAlign==="center"?"center":verticalTextAlign==="end"?"end":"start" }}
         >
           <h1 className="relative text-[12px] sm:text-sm md:text-md xl:text-lg font-[500]">
             {item?.info.title}

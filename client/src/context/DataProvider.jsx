@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-export const DataContext = createContext();
+import DataContext from "./DataContext";
 const DataProvider = ({ children }) => {
   const [categories, setCategories] = useState([
     {
@@ -122,6 +122,18 @@ const DataProvider = ({ children }) => {
         btnlink:
           "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
         textColor: "black",
+      },
+    },
+    {
+      img: "https://png.pngtree.com/thumb_back/fh260/background/20210413/pngtree-eid-blue-color-background-1920900-px-image_615127.jpg",
+      info: {
+        subtitle: "Slimest, Fastest, Powerful",
+        title: "Apple iPhone 15 Pro 128GB, titanium",
+        priceLine: "Starting from",
+        price: "₹59,999",
+        btnlink:
+          "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
+        textColor: "white",
       },
     },
     {

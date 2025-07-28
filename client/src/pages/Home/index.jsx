@@ -4,12 +4,13 @@ import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
 import iphone from "/Users/aryan/Desktop/Projects/e-comm images/iphonvar.jpg";
 import fashion from "/Users/aryan/Desktop/Projects/e-comm images/pngegg.png";
 import ScrollTab from "../../components/Reusables/ScrollTab";
-import { DataContext } from "../../context/DataProvider";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
 import CategoryItem from "../../components/Reusables/Items/CategoryItems";
 import BannerItem from "../../components/Reusables/Items/BannerItem";
 import RichBannerItem from "../../components/Reusables/Items/RichBanerItem";
 import StaticBannerItem from "../../components/Reusables/Items/StaticBannerItem";
+import StaticBannerSection from "./StaticBannerSection";
+import DataContext from "../../context/DataContext";
 
 const Home = () => {
   const {
@@ -62,8 +63,11 @@ const Home = () => {
       image: iphone,
     },
   ];
-  const itemdata = {
-    img: "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+ ;
+
+
+  const staticBannerSectionData = [{
+    img: "https://serviceapi.spicezgold.com/download/1741663408792_1737020756772_New_Project_1.png",
     info: {
       subtitle: "Slimest, Fastest, Powerful",
       title: "Apple iPhone 15 Pro 128GB, titanium",
@@ -72,8 +76,52 @@ const Home = () => {
       btnlink:
         "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
       textColor: "black",
+      horizontalTextAlignment:"left",
+      verticalTextAlignment:"center",
     },
-  };
+  },{
+    img: "https://serviceapi.spicezgold.com/download/1741664496923_1737020250515_New_Project_47.jpg",
+    info: {
+      subtitle: "Slimest, Fastest, Powerful",
+      title: "Apple iPhone 15 Pro 128GB, titanium",
+      priceLine: "Starting at",
+      price: "₹59,999",
+      btnlink:
+        "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+      textColor: "black",
+      horizontalTextAlignment:"left",
+      verticalTextAlignment:"center",
+
+    },
+  },{
+    img: "https://serviceapi.spicezgold.com/download/1751598649861_1737020916820_New_Project_52.jpg",
+    info: {
+      subtitle: "Slimest, Fastest, Powerful",
+      title: "Apple iPhone 15 Pro 128GB, titanium",
+      priceLine: "Starting at",
+      price: "₹59,999",
+      btnlink:
+        "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+      textColor: "black",
+      horizontalTextAlignment:"right",
+       verticalTextAlignment:"center",
+    },
+  },
+{
+    img: "https://serviceapi.spicezgold.com/download/1741664496923_1737020250515_New_Project_47.jpg",
+    info: {
+      subtitle: "Slimest, Fastest, Powerful",
+      title: "Apple iPhone 15 Pro 128GB, titanium",
+      priceLine: "Starting at",
+      price: "₹59,999",
+      btnlink:
+        "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+      textColor: "black",
+      horizontalTextAlignment:"left",
+      verticalTextAlignment:"center",
+
+    },
+  }]
   return (
     <div className="wrapper">
       <section className="main-section bg-[#e7eaff]">
@@ -93,7 +141,7 @@ const Home = () => {
           />
         </div>
       </section>
-      <section className="product&banner-section bg-white p-10 mx-auto">
+      <section className="popular-product-section bg-white p-10 mx-auto">
         <div className="product-section">
           <div className="header-section flex justify-between ">
             <div>
@@ -123,10 +171,28 @@ const Home = () => {
           </div>
         </div>
       </section>
+          <section className="rich-banner-section">
+  <div className="flex flex-col md:flex-col lg:flex-row p-4 md:p-10 gap-4 md:gap-5">
+    <div className="w-full lg:w-[72%] space-y-2">
+      <BannerSlider
+        imageData={miniSliderBannerData}
+        disableButtons={true}
+        loop={true}
+        fadeEffect={true}
+        renderItem={(item) => <RichBannerItem bg="white" item={item} />}
+      />
+    </div>
+
+    <div className="w-full lg:w-[25%] flex flex-col gap-4 sm:flex-row lg:flex-col">
+      <StaticBannerItem bg="white" item={staticBannerSectionData[0]} horizontalTextAlign="left" visible={true} />
+      <StaticBannerItem bg="white" item={staticBannerSectionData[0]} horizontalTextAlign="left" visible={true} />
+    </div>
+  </div>
+</section>
       <section className="bg-white">
         <div className="banner-list w-[90%] mx-auto py-4 min-h-[20vh] -z-10">
           <ItemSlider
-            slidesPerView={3}
+            slidesPerView={4}
             slidesPerGroup={1}
             spaceBetween={15}
             items={adsMiniBannersData}
@@ -134,7 +200,37 @@ const Home = () => {
           />
         </div>
       </section>
-      <section className="product&banner-section bg-white p-10 mx-auto">
+ <section className="latest-product-section bg-white pt-10 px-10 mx-auto">
+        <div className="product-section">
+          <div className="header-section flex justify-between ">
+            <div>
+              <p className="text-xl font-[600]">Latest Products</p>
+              <p className="text-sm font-[400]">
+                Don't miss the current offers until the end of Season.
+              </p>
+            </div>
+            <ScrollTab items={categories} />
+          </div>
+          <div className="product-list mt-2">
+            <ItemSlider
+              slidesPerView={6}
+              slidesPerGroup={4}
+              spaceBetween={10}
+              items={popularCategories}
+              breakpoints={true}
+              renderItem={(item) => (
+                <ProductItem
+                  item={item}
+                  info={
+                    "https://media-assets.hyperinvento.com/companies/c31a99fe-fc32-4275-a453-18c2131fef39/products/assetss/files/24094f7a2c2947f5b09b8cf913f088f1-product-assets.webp"
+                  }
+                />
+              )}
+            />
+          </div>
+        </div>
+      </section>
+      <section className="trending-product-section bg-white pt-10 px-10 mx-auto">
         <div className="product-section">
           <div className="header-section flex justify-between ">
             <div>
@@ -164,26 +260,11 @@ const Home = () => {
           </div>
         </div>
       </section>
-      <section className="rich-banner-section">
-  <div className="flex flex-col md:flex-col lg:flex-row p-4 md:p-10 gap-4 md:gap-5">
-    <div className="w-full lg:w-[72%]">
-      <BannerSlider
-        imageData={miniSliderBannerData}
-        disableButtons={true}
-        loop={true}
-        fadeEffect={true}
-        renderItem={(item) => <RichBannerItem bg="white" item={item} />}
-      />
-    </div>
+   
+        <StaticBannerSection items={staticBannerSectionData}/>
 
-    <div className="w-full lg:w-[25%] flex flex-col gap-4 sm:flex-row lg:flex-col">
-      <StaticBannerItem bg="white" item={itemdata} visible={true} />
-      <StaticBannerItem bg="white" item={itemdata} visible={true} />
-    </div>
-  </div>
-</section>
 
-      <section></section>
+       
     </div>
   );
 };

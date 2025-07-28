@@ -10,7 +10,8 @@ import { IoRocketOutline } from "react-icons/io5";
 import DrawerNavigation from "./Drawer";
 import Level_2_CatMenu from "./Level_2_CatMenu";
 import "./style.css";
-import { DataContext } from "../../../context/DataProvider";
+import DataContext from "../../../context/DataContext";
+
 
 const Navigation = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
