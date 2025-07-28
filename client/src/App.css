@@ -1,0 +1,19 @@
+html{
+    scrollbar-track-color: brown;
+}
+::-webkit-scrollbar{
+    width: 10px !important;
+    height: 2px !important;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #f25252 !important;
+    cursor: pointer;
+}
+
+::-webkit-scrollbar-thumb{
+    background: rgb(249, 183, 183);
+    border-radius: 40px;
+}
+::-webkit-scrollbar-track{
+    background: white;
+}

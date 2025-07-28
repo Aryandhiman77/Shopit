@@ -30,11 +30,19 @@ const ItemSlider = ({
             slidesPerView: 4,
             slidesPerGroup: 2,
           },
+          850:{
+            slidesPerView: 4,
+            slidesPerGroup: 2,
+          },
           // when window width is >= 1024px
           1024: {
+            slidesPerView: 5,
+            slidesPerGroup: 2,
+          },
+          1130:{
             slidesPerView: 6,
             slidesPerGroup: 3,
-          },
+          }
         }:null
 
   return (

@@ -135,6 +135,7 @@ const Home = () => {
         </div>
         <div className="w-[90%] mx-auto py-4 min-h-[20vh]">
           <ItemSlider
+          breakpoints={true}
             spaceBetween={10}
             items={popularCategories}
             renderItem={(item) => <CategoryItem item={item} />}
