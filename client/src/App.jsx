@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import DataProvider from "./context/DataProvider";
 import AuthProvider from "./context/AuthProvider";
+import FooterSection from "./components/Footer";
 
 const App = () => {
   return (
@@ -14,6 +15,9 @@ const App = () => {
           <Routes>
             <Route exact={true} path="/" element={<Home />} />
           </Routes>
+          <div className="bg-white">
+          <FooterSection/>
+          </div>
         </DataProvider>
       </AuthProvider>
     </BrowserRouter>

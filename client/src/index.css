@@ -17,3 +17,6 @@ body {
 .level_1_cat li:hover {
     @apply hover:bg-[#f2525299] 
 }
+.link-footer{
+  @apply hover:text-primary cursor-pointer
+}
