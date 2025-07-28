@@ -67,7 +67,7 @@ const Home = () => {
     info: {
       subtitle: "Slimest, Fastest, Powerful",
       title: "Apple iPhone 15 Pro 128GB, titanium",
-      priceLine: "Starting from",
+      priceLine: "Starting at",
       price: "₹59,999",
       btnlink:
         "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
@@ -165,26 +165,24 @@ const Home = () => {
         </div>
       </section>
       <section className="rich-banner-section">
-        <div className="flex items-center p-10 gap-5">
-          <div className="w-[65%]">
-            <BannerSlider
-              imageData={miniSliderBannerData}
-              disableButtons={true}
-              loop={true}
-              fadeEffect={true}
-              renderItem={(item) => <RichBannerItem bg={"white"} item={item} />}
-            />
-          </div>
-          <div className="w-[28%] h-full flex flex-col gap-5">
-            <div className="h-[55%]">
-              <StaticBannerItem bg={"white"} item={itemdata} visible={true}/>
-            </div>
-            <div className="h-[50%]">
-              <StaticBannerItem bg={"white"} item={itemdata} visible={true}/>
-            </div>
-          </div>
-        </div>
-      </section>
+  <div className="flex flex-col md:flex-col lg:flex-row p-4 md:p-10 gap-4 md:gap-5">
+    <div className="w-full lg:w-[72%]">
+      <BannerSlider
+        imageData={miniSliderBannerData}
+        disableButtons={true}
+        loop={true}
+        fadeEffect={true}
+        renderItem={(item) => <RichBannerItem bg="white" item={item} />}
+      />
+    </div>
+
+    <div className="w-full lg:w-[25%] flex flex-col gap-4 sm:flex-row lg:flex-col">
+      <StaticBannerItem bg="white" item={itemdata} visible={true} />
+      <StaticBannerItem bg="white" item={itemdata} visible={true} />
+    </div>
+  </div>
+</section>
+
       <section></section>
     </div>
   );

@@ -3,11 +3,10 @@ import "./style.css";
 import { Link } from "react-router-dom";
 
 const RichBannerItem = ({ bg = "fff", item}) => {
-  console.log(item);
   return (
-    <div className={`w-full rounded-xl shadow-2xl`} style={{ background: bg }}>
+    <div className={`w-fullrounded-xl shadow-2xl`} style={{ background: bg }}>
       <div className={`richbannercontainer relative`}>
-        <img className="rounded-xl w-full" src={item?.img} alt="" />
+        <img className="rounded-xl w-full h-full object-cover" src={item?.img} alt="" />
         <div
           className={`info absolute w-[50%] top-[0%] h-[100%] flex flex-col right-0 justify-center lg:gap-y-3 overflow-hidden`}
           style={{ color: item?.info.textColor }}

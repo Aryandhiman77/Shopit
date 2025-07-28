@@ -4,22 +4,23 @@ import { Link } from 'react-router-dom'
 
 const StaticBannerItem = ({bg,item}) => {
   return (
-    <div className={`w-full rounded-xl shadow-2xl`} style={{ background: bg }}>
-      <div className={`richbannercontainer relative`}>
-        <img className="rounded-xl w-full" src={item?.img} alt="" />
+    <div className={`w-full rounded-xl shadow-2xl group`} style={{ background: bg }}>
+      <div className={`richbannercontainer relative block overflow-hidden rounded-xl
+        `}>
+        <img className="rounded-xl w-full group-hover:scale-105 object-contain transition-all duration-200" src={item?.img} alt="" />
         <div
-          className={`info absolute w-[50%] top-[0%] h-[100%] flex flex-col right-0 justify-center lg:gap-y-1 overflow-hidden`}
+          className={`info absolute w-[55%] top-[0%] h-[100%] flex flex-col right-0 justify-center min-[200px]:gap-y-3 md:gap-y-4 overflow-hidden`}
           style={{ color: item?.info.textColor }}
         >
-          <h1 className="relative text-[12px] sm:text-sm md:text-lg xl:text-xl font-[500]">
+          <h1 className="relative text-[12px] sm:text-sm md:text-md xl:text-lg font-[500]">
             {item?.info.title}
           </h1>
           <p
             className="relative text-[10px] flex items-center 
-          sm:text-[12px] md:text-sm lg:text-md xl:text-xl"
+          sm:text-[12px] lg:text-[11px] xl:text-[14px] font-bold" 
           >
             {item?.info?.priceLine}
-            <span className="text-primary sm:text-sm md:text-xl lg:text-2xl xl:text-4xl font-bold px-1 xl:px-2">
+            <span className="text-primary sm:text-sm md:text-md lg:text-md xl:text-xl font-bold px-1 xl:px-1">
               {item?.info.price}
             </span>
           </p>
