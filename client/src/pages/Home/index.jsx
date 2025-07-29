@@ -25,103 +25,111 @@ const Home = () => {
       name: "Fashion",
       image:
         "https://static.vecteezy.com/system/resources/previews/003/621/306/non_2x/beautiful-fashion-woman-in-sunglasses-stylish-girl-from-multicolored-paints-splash-of-watercolor-colored-drawing-realistic-illustration-of-paints-vector.jpg",
+        slug:"fashion"
     },
     {
       name: "Electronics",
       image: "https://www.matric.com/hubfs/classes%20of%20electronics.jpg",
+      slug:"electronics",
     },
     {
-      name: "Home & Furniture",
+      name: "home-furniture", // lowercase, & is replaced with -
       image:
         "https://png.pngtree.com/png-clipart/20240811/original/pngtree-a-lamp-on-table-with-chair-png-image_15751370.png",
+        slug:"Home-&-Furniture",
     },
     {
       name: "Sports",
       image:
         "https://img.freepik.com/free-vector/soccer-volleyball-baseball-rugby-equipment_1441-4026.jpg",
+        slug:"sports" 
     },
     {
       name: "Grocery",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwUNj-DZTMUW0XoNJZBFp3fQNr8hcO3sB-Qg&s",
+        slug:"grocery",
     },
     {
       name: "Jwellery",
       image:
         "https://gravity-apps.com/cmspro/wp-content/uploads4953//2023/09/handcrafted-jewellery.jpg",
+        slug:"jwellery"
     },
     {
       name: "menwear",
       image: fashion,
+      slug:"menwear"
     },
     {
       name: "smartphone",
       image: iphone,
+      slug:"smartphone"
     },
     {
       name: "smartphone",
       image: iphone,
+      slug:"smartphone"
     },
   ];
- ;
-
-
-  const staticBannerSectionData = [{
-    img: "https://serviceapi.spicezgold.com/download/1741663408792_1737020756772_New_Project_1.png",
-    info: {
-      subtitle: "Slimest, Fastest, Powerful",
-      title: "Apple iPhone 15 Pro 128GB, titanium",
-      priceLine: "Starting at",
-      price: "₹59,999",
-      btnlink:
-        "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
-      textColor: "black",
-      horizontalTextAlignment:"left",
-      verticalTextAlignment:"center",
+  const staticBannerSectionData = [
+    {
+      img: "https://serviceapi.spicezgold.com/download/1741663408792_1737020756772_New_Project_1.png",
+      info: {
+        subtitle: "Slimest, Fastest, Powerful",
+        title: "Apple iPhone 15 Pro 128GB, titanium",
+        priceLine: "Starting at",
+        price: "₹59,999",
+        btnlink:
+          "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+        textColor: "black",
+        horizontalTextAlignment: "left",
+        verticalTextAlignment: "center",
+      },
     },
-  },{
-    img: "https://serviceapi.spicezgold.com/download/1741664496923_1737020250515_New_Project_47.jpg",
-    info: {
-      subtitle: "Slimest, Fastest, Powerful",
-      title: "Apple iPhone 15 Pro 128GB, titanium",
-      priceLine: "Starting at",
-      price: "₹59,999",
-      btnlink:
-        "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
-      textColor: "black",
-      horizontalTextAlignment:"left",
-      verticalTextAlignment:"center",
-
+    {
+      img: "https://serviceapi.spicezgold.com/download/1741664496923_1737020250515_New_Project_47.jpg",
+      info: {
+        subtitle: "Slimest, Fastest, Powerful",
+        title: "Apple iPhone 15 Pro 128GB, titanium",
+        priceLine: "Starting at",
+        price: "₹59,999",
+        btnlink:
+          "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+        textColor: "black",
+        horizontalTextAlignment: "left",
+        verticalTextAlignment: "center",
+      },
     },
-  },{
-    img: "https://serviceapi.spicezgold.com/download/1751598649861_1737020916820_New_Project_52.jpg",
-    info: {
-      subtitle: "Slimest, Fastest, Powerful",
-      title: "Apple iPhone 15 Pro 128GB, titanium",
-      priceLine: "Starting at",
-      price: "₹59,999",
-      btnlink:
-        "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
-      textColor: "black",
-      horizontalTextAlignment:"right",
-       verticalTextAlignment:"center",
+    {
+      img: "https://serviceapi.spicezgold.com/download/1751598649861_1737020916820_New_Project_52.jpg",
+      info: {
+        subtitle: "Slimest, Fastest, Powerful",
+        title: "Apple iPhone 15 Pro 128GB, titanium",
+        priceLine: "Starting at",
+        price: "₹59,999",
+        btnlink:
+          "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+        textColor: "black",
+        horizontalTextAlignment: "right",
+        verticalTextAlignment: "center",
+      },
     },
-  },
-{
-    img: "https://serviceapi.spicezgold.com/download/1741664496923_1737020250515_New_Project_47.jpg",
-    info: {
-      subtitle: "Slimest, Fastest, Powerful",
-      title: "Apple iPhone 15 Pro 128GB, titanium",
-      priceLine: "Starting at",
-      price: "₹59,999",
-      btnlink:
-        "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
-      textColor: "black",
-      horizontalTextAlignment:"left",
-      verticalTextAlignment:"center",
-
+    {
+      img: "https://serviceapi.spicezgold.com/download/1741664496923_1737020250515_New_Project_47.jpg",
+      info: {
+        subtitle: "Slimest, Fastest, Powerful",
+        title: "Apple iPhone 15 Pro 128GB, titanium",
+        priceLine: "Starting at",
+        price: "₹59,999",
+        btnlink:
+          "https://serviceapi.spicezgold.com/download/1741664665391_1741497254110_New_Project_50.jpg",
+        textColor: "black",
+        horizontalTextAlignment: "left",
+        verticalTextAlignment: "center",
+      },
     },
-  }]
+  ];
   return (
     <div className="wrapper">
       <section className="main-section bg-[#e7eaff]">
@@ -135,7 +143,7 @@ const Home = () => {
         </div>
         <div className="w-[90%] mx-auto py-4 min-h-[20vh]">
           <ItemSlider
-          breakpoints={true}
+            breakpoints={true}
             spaceBetween={10}
             items={popularCategories}
             renderItem={(item) => <CategoryItem item={item} />}
@@ -172,24 +180,34 @@ const Home = () => {
           </div>
         </div>
       </section>
-          <section className="rich-banner-section">
-  <div className="flex flex-col md:flex-col lg:flex-row p-4 md:p-10 gap-4 md:gap-5">
-    <div className="w-full lg:w-[72%] space-y-2">
-      <BannerSlider
-        imageData={miniSliderBannerData}
-        disableButtons={true}
-        loop={true}
-        fadeEffect={true}
-        renderItem={(item) => <RichBannerItem bg="white" item={item} />}
-      />
-    </div>
+      <section className="rich-banner-section">
+        <div className="flex flex-col md:flex-col lg:flex-row p-4 md:p-10 gap-4 md:gap-5">
+          <div className="w-full lg:w-[72%] space-y-2">
+            <BannerSlider
+              imageData={miniSliderBannerData}
+              disableButtons={true}
+              loop={true}
+              fadeEffect={true}
+              renderItem={(item) => <RichBannerItem bg="white" item={item} />}
+            />
+          </div>
 
-    <div className="w-full lg:w-[25%] flex flex-col gap-4 sm:flex-row lg:flex-col">
-      <StaticBannerItem bg="white" item={staticBannerSectionData[0]} horizontalTextAlign="left" visible={true} />
-      <StaticBannerItem bg="white" item={staticBannerSectionData[0]} horizontalTextAlign="left" visible={true} />
-    </div>
-  </div>
-</section>
+          <div className="w-full lg:w-[25%] flex flex-col gap-4 sm:flex-row lg:flex-col">
+            <StaticBannerItem
+              bg="white"
+              item={staticBannerSectionData[0]}
+              horizontalTextAlign="left"
+              visible={true}
+            />
+            <StaticBannerItem
+              bg="white"
+              item={staticBannerSectionData[0]}
+              horizontalTextAlign="left"
+              visible={true}
+            />
+          </div>
+        </div>
+      </section>
       <section className="bg-white">
         <div className="banner-list w-[90%] mx-auto py-4 min-h-[20vh] -z-10">
           <ItemSlider
@@ -201,7 +219,7 @@ const Home = () => {
           />
         </div>
       </section>
- <section className="latest-product-section bg-white pt-10 px-10 mx-auto">
+      <section className="latest-product-section bg-white pt-10 px-10 mx-auto">
         <div className="product-section">
           <div className="header-section flex justify-between ">
             <div>
@@ -261,11 +279,9 @@ const Home = () => {
           </div>
         </div>
       </section>
-   
-        <StaticBannerSection items={staticBannerSectionData}/>
-
-
-       
+      <div className="bg-white">
+        <StaticBannerSection items={staticBannerSectionData} />
+      </div>
     </div>
   );
 };

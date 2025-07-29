@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { data } from "react-router-dom";
 import StaticBannerItem from "../../../components/Reusables/Items/StaticBannerItem";
 

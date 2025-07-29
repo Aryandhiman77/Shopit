@@ -5,6 +5,8 @@ import DataProvider from "./context/DataProvider";
 import AuthProvider from "./context/AuthProvider";
 import FooterSection from "./components/Footer";
 import "./App.css"
+import ProductsListing from "./pages/ProductsListing";
+import BreadCrumb from "./components/Reusables/BreadCrumb";
 
 const App = () => {
   return (
@@ -14,13 +16,13 @@ const App = () => {
           <Header />
           <Routes>
             <Route exact={true} path="/" element={<Home />} />
+            <Route exact={true} path="/:category" element={<ProductsListing />} />
           </Routes>
-          <div className="bg-white">
           <FooterSection/>
-          </div>
         </DataProvider>
       </AuthProvider>
     </BrowserRouter>
+    
   );
 };
 

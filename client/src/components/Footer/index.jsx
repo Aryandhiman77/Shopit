@@ -52,111 +52,111 @@ const FooterSection = () => {
       </section>
       <Divider />
       <section>
-        <div class="footer flex px-3 lg:px-0 flex-col lg:flex-row py-8">
-          <div class="part1 w-full lg:w-[25%] border-r border-[rgba(0,0,0,0.1)]">
-            <h2 class="text-[18px] font-[600] mb-4">Contact us</h2>
-            <p class="text-[13px] font-[400] pb-4">
+        <div className="footer flex px-3 lg:px-0 flex-col lg:flex-row py-8">
+          <div className="part1 w-full lg:w-[25%] border-r border-[rgba(0,0,0,0.1)]">
+            <h2 className="text-[18px] font-[600] mb-4">Contact us</h2>
+            <p className="text-[13px] font-[400] pb-4">
               Shopit - Mega Super Store <br /> India, haryana - 133001
             </p>
             <Link
-              class="link-footer text-[13px]"
+              className="link-footer text-[13px]"
               href="mailto:someone@example.com"
             >
               aryandhiman015@.com
             </Link>
-            <span class="text-[22px] font-[600] block w-full mt-3 mb-5 text-primary">
+            <span className="text-[22px] font-[600] block w-full mt-3 mb-5 text-primary">
               (+91) 80535 66803
             </span>
-            <div class="flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <svg
                 stroke="currentColor"
                 fill="currentColor"
-                stroke-width="0"
+                strokeWidth="0"
                 viewBox="0 0 512 512"
-                class="text-[40px] text-primary"
+                className="text-[40px] text-primary"
                 height="1em"
                 width="1em"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
                   fill="none"
-                  stroke-linejoin="round"
-                  stroke-width="32"
+                  strokeLinejoin="round"
+                  strokeWidth="32"
                   d="M408 64H104a56.16 56.16 0 0 0-56 56v192a56.16 56.16 0 0 0 56 56h40v80l93.72-78.14a8 8 0 0 1 5.13-1.86H408a56.16 56.16 0 0 0 56-56V120a56.16 56.16 0 0 0-56-56z"
                 ></path>
               </svg>
-              <span class="text-[16px] font-[600]">
+              <span className="text-[16px] font-[600]">
                 Online Chat
                 <br />
                 Get Expert Help
               </span>
             </div>
           </div>
-          <div class="part2  w-full lg:w-[40%] flex pl-0 lg:pl-8 mt-5 lg:mt-0">
-            <div class="part2_col1 w-[50%]">
-              <h2 class="text-[18px] font-[600] mb-4">Products</h2>
-              <ul class="list">
-                <li class="list-none text-[14px] w-full mb-2">
+          <div className="part2  w-full lg:w-[40%] flex pl-0 lg:pl-8 mt-5 lg:mt-0">
+            <div className="part2_col1 w-[50%]">
+              <h2 className="text-[18px] font-[600] mb-4">Products</h2>
+              <ul className="list">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Prices drop
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     New products
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Best sales
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Contact us
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Sitemap
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Stores
                   </Link>
                 </li>
               </ul>
             </div>
-            <div class="part2_col2 w-[50%]">
-              <h2 class="text-[18px] font-[600] mb-4">Our company</h2>
-              <ul class="list">
-                <li class="list-none text-[14px] w-full mb-2">
-                  <Link class="link-footer" to={"/"} data-discover="true">
+            <div className="part2_col2 w-[50%]">
+              <h2 className="text-[18px] font-[600] mb-4">Our company</h2>
+              <ul className="list">
+                <li className="list-none text-[14px] w-full mb-2">
+                  <Link className="link-footer" to={"/"} data-discover="true">
                     Delivery
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Legal Notice
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Terms and conditions of use
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     About us
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Secure payment
                   </Link>
                 </li>
-                <li class="list-none text-[14px] w-full mb-2">
+                <li className="list-none text-[14px] w-full mb-2">
                   <Link className="link-footer" to={"/"} data-discover="true">
                     Login
                   </Link>
@@ -164,18 +164,18 @@ const FooterSection = () => {
               </ul>
             </div>
           </div>
-          <div class="part2  w-full lg:w-[35%] flex pl-0 lg:pl-8 flex-col pr-8 mt-5 lg:mt-0">
-            <h2 class="text-[18px] font-[600] mb-2 lg:mb-4">
+          <div className="part2  w-full lg:w-[35%] flex pl-0 lg:pl-8 flex-col pr-8 mt-5 lg:mt-0">
+            <h2 className="text-[18px] font-[600] mb-2 lg:mb-4">
               Subscribe to newsletter
             </h2>
-            <p class="text-[13px]">
+            <p className="text-[13px]">
               Subscribe to our latest newsletter to get news about special
               discounts.
             </p>
-            <form class="mt-5 flex flex-col gap-y-2">
+            <form className="mt-5 flex flex-col gap-y-2">
               <input
                 type="text"
-                class="w-full h-[45px] border outline-none pl-4 pr-4 rounded-sm mb-4 focus:border-[rgba(0,0,0,0.3)]"
+                className="w-full h-[45px] border outline-none pl-4 pr-4 rounded-sm mb-4 focus:border-[rgba(0,0,0,0.3)]"
                 placeholder="Your Email Address"
               />
               <div className="flex gap-3 items-center">
@@ -196,22 +196,22 @@ const FooterSection = () => {
           </div>
         </div>
       </section>
-      <div class="bottomStrip border-t border-[rgba(0,0,0,0.1)] pt-3 pb-[100px] lg:pb-3 bg-white">
-        <div class="container flex items-center justify-between flex-col lg:flex-row gap-4 lg:gap-0">
-          <ul class="flex items-center gap-2">
-            <li class="list-none">
+      <div className="bottomStrip border-t border-[rgba(0,0,0,0.1)] pt-3 pb-[100px] lg:pb-3 w-full">
+        <div className="container flex items-center justify-between flex-col lg:flex-row gap-4 lg:gap-0">
+          <ul className="flex items-center gap-2">
+            <li className="list-none">
               <Link
-                class="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] flex items-center justify-center group hover:bg-primary transition-all"
-                href="/"
+                className="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] flex items-center justify-center group hover:bg-primary transition-all"
+                to={"/"}
                 target="_blank"
                 data-discover="true"
               >
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 320 512"
-                  class="text-[17px] group-hover:text-white"
+                  className="text-[17px] group-hover:text-white"
                   height="1em"
                   width="1em"
                   xmlns="http://www.w3.org/2000/svg"
@@ -220,19 +220,19 @@ const FooterSection = () => {
                 </svg>
               </Link>
             </li>
-            <li class="list-none">
+            <li className="list-none">
               <Link
-                class="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] flex items-center justify-center group hover:bg-primary transition-all"
-                href="/"
+                className="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] flex items-center justify-center group hover:bg-primary transition-all"
+                to={"/"}
                 target="_blank"
                 data-discover="true"
               >
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 1024 1024"
-                  class="text-[21px] group-hover:text-white"
+                  className="text-[21px] group-hover:text-white"
                   height="1em"
                   width="1em"
                   xmlns="http://www.w3.org/2000/svg"
@@ -241,19 +241,19 @@ const FooterSection = () => {
                 </svg>
               </Link>
             </li>
-            <li class="list-none">
+            <li className="list-none">
               <Link
-                class="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] flex items-center justify-center group hover:bg-primary transition-all"
-                href="/"
+                className="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] flex items-center justify-center group hover:bg-primary transition-all"
+                to={"/"}
                 target="_blank"
                 data-discover="true"
               >
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 384 512"
-                  class="text-[17px] group-hover:text-white"
+                  className="text-[17px] group-hover:text-white"
                   height="1em"
                   width="1em"
                   xmlns="http://www.w3.org/2000/svg"
@@ -262,19 +262,19 @@ const FooterSection = () => {
                 </svg>
               </Link>
             </li>
-            <li class="list-none">
+            <li className="list-none">
               <Link
-                class="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] flex items-center justify-center group hover:bg-primary transition-all"
-                href="/"
+                className="w-[35px] h-[35px] rounded-full border border-[rgba(0,0,0,0.1)] flex items-center justify-center group hover:bg-primary transition-all"
+                to={"/"}
                 target="_blank"
                 data-discover="true"
               >
                 <svg
                   stroke="currentColor"
                   fill="currentColor"
-                  stroke-width="0"
+                  strokeWidth="0"
                   viewBox="0 0 448 512"
-                  class="text-[17px] group-hover:text-white"
+                  className="text-[17px] group-hover:text-white"
                   height="1em"
                   width="1em"
                   xmlns="http://www.w3.org/2000/svg"
@@ -284,10 +284,10 @@ const FooterSection = () => {
               </Link>
             </li>
           </ul>
-          <p class="text-[13px] text-center mb-0">
+          <p className="text-[13px] text-center mb-0">
             © 2024 - Ecommerce Template
           </p>
-          <div class="flex items-center gap-1">
+          <div className="flex items-center gap-1">
             <img src={carte_bleue} alt="image" />
             <img src={visa} alt="image" />
             <img src={masterCard} alt="image" />
