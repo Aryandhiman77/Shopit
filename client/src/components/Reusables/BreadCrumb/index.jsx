@@ -31,7 +31,6 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => ({
 
 const BreadCrumb = () => {
   const { pathname } = useLocation();
-// const pathname = "/fashion/electronics/home-furniture"
   const navigate = useNavigate();
   const pathnames = pathname.split("/").filter((x) => x);
   const pathIndex = pathnames.length - 1; //
@@ -45,7 +44,6 @@ const BreadCrumb = () => {
 
   return (
     <nav aria-label="breadcrumb">
-      {/* <Breadcrumbs> */}
         <StyledBreadcrumb  label={"Home"}>Home</StyledBreadcrumb>
         {pathnames?.map((value, index) => {
           const to = `/${pathnames.slice(0, index + 1).join("/")}`;
@@ -60,7 +58,6 @@ const BreadCrumb = () => {
               </StyledBreadcrumb>
           );
         })}
-      {/* </Breadcrumbs> */}
     </nav>
   );
 };
