@@ -35,7 +35,6 @@ const BreadCrumb = () => {
   const pathnames = pathname.split("/").filter((x) => x);
   const pathIndex = pathnames.length - 1; //
   const navigateToPreviousLink = (index)=>{
-    
     if(index!==0){
         return navigate(`/${pathname[index -1]}`);
     }
