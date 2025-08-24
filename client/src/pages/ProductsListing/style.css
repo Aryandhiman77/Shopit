@@ -1,0 +1,8 @@
+.css-ptck8z-MuiButtonBase-root-MuiPaginationItem-root{
+    font-size: 16px!important;
+    padding: 14px!important;
+}
+.css-ptck8z-MuiButtonBase-root-MuiPaginationItem-root.Mui-selected{
+   background-color: #f25252!important;
+    color: white!important;
+}

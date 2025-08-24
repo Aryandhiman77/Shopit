@@ -11,6 +11,9 @@ import { styled } from "@mui/material/styles";
 import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
 import DataContext from "../../context/DataContext";
+import { GiHamburgerMenu } from "react-icons/gi";
+import Pagination from "@mui/material/Pagination";
+import "./style.css"
 
 const StyledListHeader = styled(ListSubheader)({
   backgroundImage: "var(--Paper-overlay)",
@@ -45,7 +48,7 @@ const ProductsListing = () => {
                     viewStyle === "list" && "!text-primary"
                   } `}
                 >
-                  <IoListSharp className="text-xl" />
+                  <GiHamburgerMenu className="text-xl" />
                 </Button>
                 <Button
                   onClick={() => setViewStyle("grid")}
@@ -101,19 +104,22 @@ const ProductsListing = () => {
             </div>
           </div>
           <div className="products w-full ">
-              <div className= {`product-list mt-2 ${viewStyle==="grid"?"grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4":""}`}>
-              {
-                productsData?.map((item,i )=>(
-                  <div key={i} className="z-20 relative p-2">
-                  <ProductItem item={item} horizontal={viewStyle==="list"} />
-              </div>
-              ))
-            }
+            <div
+              className={`product-list mt-2 ${
+                viewStyle === "grid"
+                  ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+                  : ""
+              }`}
+            >
+              {productsData?.map((item, i) => (
+                <div key={i} className="z-20 relative p-2">
+                  <ProductItem item={item} horizontal={viewStyle === "list"} />
+                </div>
+              ))}
             </div>
-    
-              
-              
-           
+          </div>
+          <div className="pagination flex justify-center mt-5">
+            <Pagination count={10} variant="outlined" shape="rounded" />
           </div>
         </div>
       </div>
