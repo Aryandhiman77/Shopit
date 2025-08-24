@@ -20,3 +20,9 @@ body {
 .link-footer{
   @apply hover:text-primary cursor-pointer
 }
+.grid-view{
+  @apply min-w-[12.5vw] max-w-[15rem] shadow-lg flex justify-around flex-col items-center border-[1px] border-[#e5e5e5] transition-all duration-200 ease-in-out rounded-lg relative overflow-hidden -z-10 w-full h-[22rem];
+}
+.list-view{
+  @apply min-w-full max-w-[100vw] shadow-lg flex justify-around flex-row items-center border-[1px] border-[#e5e5e5] transition-all duration-200 ease-in-out rounded-lg relative overflow-hidden -z-10 w-full h-[14rem] gap-5;
+}

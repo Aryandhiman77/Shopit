@@ -101,17 +101,19 @@ const ProductsListing = () => {
             </div>
           </div>
           <div className="products w-full ">
-            <div className="product-list mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4">
+              <div className= {`product-list mt-2 ${viewStyle==="grid"?"grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4":""}`}>
               {
                 productsData?.map((item,i )=>(
-                  <div key={i} className="z-1">
-                  <ProductItem item={item} />
+                  <div key={i} className="z-20 relative p-2">
+                  <ProductItem item={item} horizontal={viewStyle==="list"} />
               </div>
-                ))
-              }
-              
-              
+              ))
+            }
             </div>
+    
+              
+              
+           
           </div>
         </div>
       </div>
