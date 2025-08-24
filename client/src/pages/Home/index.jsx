@@ -18,7 +18,9 @@ const Home = () => {
     adsBannerData,
     adsMiniBannersData,
     miniSliderBannerData,
+    productsData
   } = useContext(DataContext);
+  console.log(productsData)
 
   const popularCategories = [
     {
@@ -166,14 +168,11 @@ const Home = () => {
               slidesPerView={6}
               slidesPerGroup={4}
               spaceBetween={10}
-              items={popularCategories}
+              items={productsData}
               breakpoints={true}
               renderItem={(item) => (
                 <ProductItem
                   item={item}
-                  info={
-                    "https://ayuvya.com/_next/image?url=https%3A%2F%2Fstorage.googleapis.com%2Fayuvya_images%2Fproduct_image%2Fnew_carousel_image_of_combos_with_free_shaker_15novmber_8.webp&w=640&q=75"
-                  }
                 />
               )}
             />
@@ -235,14 +234,11 @@ const Home = () => {
               slidesPerView={6}
               slidesPerGroup={4}
               spaceBetween={10}
-              items={popularCategories}
+              items={productsData}
               breakpoints={true}
               renderItem={(item) => (
-                <ProductItem
+               <ProductItem
                   item={item}
-                  info={
-                    "https://media-assets.hyperinvento.com/companies/c31a99fe-fc32-4275-a453-18c2131fef39/products/assetss/files/24094f7a2c2947f5b09b8cf913f088f1-product-assets.webp"
-                  }
                 />
               )}
             />
@@ -265,14 +261,11 @@ const Home = () => {
               slidesPerView={6}
               slidesPerGroup={4}
               spaceBetween={10}
-              items={popularCategories}
+              items={productsData}
               breakpoints={true}
               renderItem={(item) => (
                 <ProductItem
                   item={item}
-                  info={
-                    "https://media-assets.hyperinvento.com/companies/c31a99fe-fc32-4275-a453-18c2131fef39/products/assetss/files/24094f7a2c2947f5b09b8cf913f088f1-product-assets.webp"
-                  }
                 />
               )}
             />

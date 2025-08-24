@@ -1,0 +1,28 @@
+.filters {
+  top: 0 !important;
+}
+.scrolling {
+  overflow-x: hidden;
+  overflow-y: scroll;
+  max-height: 200px;
+}
+.scrolling::-webkit-scrollbar {
+  width: 2px !important;
+  height: 2px !important;
+}
+.scrolling::-webkit-scrollbar-thumb {
+  background: #ccc !important;
+}
+.scrolling::-webkit-scrollbar-track {
+  background: #e5e5e5 !important;
+}
+.range-slider{
+     height: 3px!important;
+}
+.range-slider .range-slider__range {
+  background: #f95959!important;
+  height: 3px!important;
+}
+.range-slider .range-slider__thumb {
+  background: #f52525!important;
+}

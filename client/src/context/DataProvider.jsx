@@ -149,9 +149,37 @@ const DataProvider = ({ children }) => {
       },
     },
   ]);
+  const [productsData,setProductsData]=useState([
+
+    {
+      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
+      productName:"iPhone 15 Pro Max",
+      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
+      mrpPrice:5000,
+      sellingPrice:4000,
+      rating:4.6,
+      reviewsLength:770,
+      discountPercentage:"20%"
+    
+
+    },
+    {
+      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
+      productName:"iPhone 15 Pro Max",
+      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
+      mrpPrice:5000,
+      sellingPrice:4000,
+      rating:4.6,
+      reviewsLength:770,
+      discountPercentage:"20%"
+    
+
+    },
+    
+  ])
   return (
     <DataContext.Provider
-      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData }}
+      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData,productsData }}
     >
       {children}
     </DataContext.Provider>
