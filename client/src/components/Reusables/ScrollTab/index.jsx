@@ -11,7 +11,8 @@ const ScrollTab = ({ items }) => {
   };
 
   return (
-    <Box  sx={{ maxWidth: { xs: 320, sm: 780 }, bgcolor: "background.paper" }}>
+    <div className="w-full bg-white">
+    <Box  sx={{ maxWidth: { xs: 320, sm: 780 } }}>
       <Tabs
         value={value}
         onChange={handleChange}
@@ -20,11 +21,12 @@ const ScrollTab = ({ items }) => {
         
         aria-label="scrollable auto tabs example"
       >
-        {items?.map((category,i) => (
-          <Tab className="link hover:!text-primary " key={i} label={category.name} />
+        {items?.map((item,i) => (
+          <Tab className="link hover:!text-primary " key={i} label={item?.name} />
         ))}
       </Tabs>
     </Box>
+    </div>
   );
 };
 

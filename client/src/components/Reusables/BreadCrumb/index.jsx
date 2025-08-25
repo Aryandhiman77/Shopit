@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => ({
   backgroundColor: theme.palette.grey[100],
-  height: theme.spacing(3),
+  height: theme.spacing(3),padding:2,margin:2,
   color: (theme.vars || theme).palette.text.primary,
   fontWeight: theme.typography.fontWeightRegular,
   "&:hover, &:focus": {
@@ -42,6 +42,7 @@ const BreadCrumb = () => {
   }
 
   return (
+    <div className="p-2 bg-[#e5e5e5] w-full">
     <nav aria-label="breadcrumb">
         <StyledBreadcrumb  label={"Home"}>Home</StyledBreadcrumb>
         {pathnames?.map((value, index) => {
@@ -58,6 +59,7 @@ const BreadCrumb = () => {
           );
         })}
     </nav>
+    </div>
   );
 };
 

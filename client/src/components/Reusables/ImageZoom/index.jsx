@@ -25,10 +25,12 @@ const ImageZoom = ({ image, children }) => {
     magnifiedImage.current.style = `background:url(${image}) 
       -${x * cx}px -${y * cy}px /
       ${product_image_rect.width * cx}px ${product_image_rect.height * cy}px no-repeat`;
+      magnifiedImage.current.classList.remove("hidden") 
   };
 
   const onMouseLeavesImage = () => {
     magnifiedImage.current.style = "opacity:0";
+    magnifiedImage.current.classList.add("hidden") 
     lens.current.style = "opacity:0";
   };
 
@@ -57,10 +59,10 @@ const ImageZoom = ({ image, children }) => {
         <div className="image-2 w-full md:w-[65%] relative">
           <div
             ref={magnifiedImage}
-            className="absolute inset-0 rounded-xl h-[73vh] object-contain"
+            className="magnified-image absolute inset-0 rounded-xl h-[65vh] object-contain hidden z-20"
           />
           {/* Let children flow normally */}
-          <div className="relative -z-10">{children}</div>
+          <div className="relative z-10">{children}</div>
         </div>
       </div>
     </div>

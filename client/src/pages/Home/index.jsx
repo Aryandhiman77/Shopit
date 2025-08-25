@@ -193,12 +193,14 @@ const Home = () => {
 
           <div className="w-full lg:w-[25%] flex flex-col gap-4 sm:flex-row lg:flex-col">
             <StaticBannerItem
+            key={"banneritem-1"}
               bg="white"
               item={staticBannerSectionData[0]}
               horizontalTextAlign="left"
               visible={true}
             />
             <StaticBannerItem
+             key={"banneritem-2"}
               bg="white"
               item={staticBannerSectionData[0]}
               horizontalTextAlign="left"

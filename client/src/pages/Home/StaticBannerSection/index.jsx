@@ -7,9 +7,9 @@ const StaticBannerSection = ({ items }) => {
   return (
     <section className="static-banner-section">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-4 md:p-10 md:px-12">
-        {items?.map((item) => (
+        {items?.map((item,i) => (
             
-          <StaticBannerItem item={item} horizontalTextAlign={item?.info.horizontalTextAlignment} verticalTextAlign={item?.info.verticalTextAlignment} />
+          <StaticBannerItem key={i} item={item} horizontalTextAlign={item?.info.horizontalTextAlignment} verticalTextAlign={item?.info.verticalTextAlignment} />
         ))}
       </div>
     </section>
