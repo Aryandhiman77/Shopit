@@ -1,0 +1,16 @@
+.image-1::before{
+    height: 100%;
+    width: 100%;
+    content: "";
+    position: absolute;
+    top: 0;
+    background: rgb(0,0,0,0.2);
+    opacity: 0;
+}
+.image-1:hover::before {
+  opacity: 1;
+}
+
+.image-1:hover .lens{
+    opacity: 1;
+}

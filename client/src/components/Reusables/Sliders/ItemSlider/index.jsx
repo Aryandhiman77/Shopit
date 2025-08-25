@@ -7,6 +7,8 @@ import "swiper/css/navigation";
 import "./style.css";
 
 import { MdOutlineArrowLeft, MdOutlineArrowRight } from "react-icons/md";
+import { IoIosArrowUp,IoIosArrowDown } from "react-icons/io";
+
 import { Link } from "react-router-dom";
 
 const ItemSlider = ({
@@ -15,7 +17,8 @@ const ItemSlider = ({
   slidesPerView = 7,
   slidesPerGroup = 1,
   spaceBetween = 0,
-  breakpoints
+  breakpoints,
+  direction
 }) => {
   const swiperRef = useRef(null);
   const breaks = breakpoints?{
@@ -47,7 +50,27 @@ const ItemSlider = ({
 
   return (
     <div className="w-full relative">
-      <div className="swiperbtns absolute z-10 top-0 w-full flex justify-between items-center h-full px-4 pointer-events-none">
+      {
+        direction==="vertical"?
+        <div className="swiperbtns absolute z-10 top-0 w-full flex flex-col justify-between items-center h-full px-4 pointer-events-none">
+        <button
+          className="bg-[#d2d2d2] group hover:bg-primary text-[#aaaaaa] w-full shadow-2xl cursor-pointer active:scale-110 pointer-events-auto " 
+          onClick={() => swiperRef.current?.slidePrev()}
+        >
+          <IoIosArrowUp
+            className={` group-hover:text-white text-[2rem] text-primary group-hover:scale-[1.3] transition-all duration-200 ease-in-out mx-auto`}
+          />
+        </button>
+        <button
+          className="bg-[#d2d2d2] group hover:bg-primary text-[#aaaaaa] w-full shadow-2xl cursor-pointer active:scale-110 pointer-events-auto"
+          onClick={() => swiperRef.current?.slideNext()}
+        >
+          <IoIosArrowDown
+            className={` group-hover:text-white text-[2rem] text-primary group-hover:scale-[1.3] transition-all duration-200 ease-in-out mx-auto`}
+          />
+        </button>
+      </div>
+        :  <div className="swiperbtns absolute z-10 top-0 w-full flex justify-between items-center h-full px-4 pointer-events-none">
         <button
           className="bg-[#d3d3cb] rounded-full shadow-2xl cursor-pointer active:scale-110 pointer-events-auto"
           onClick={() => swiperRef.current?.slidePrev()}
@@ -65,13 +88,16 @@ const ItemSlider = ({
           />
         </button>
       </div>
-
+      }
+    
+    
       <Swiper
+       direction={direction}
         slidesPerView={slidesPerView}
         slidesPerGroup={slidesPerGroup}
         spaceBetween={spaceBetween}
         modules={[Navigation]}
-        className="mySwiper !px-3 !py-4"
+        className={`mySwiper !px-3 !py-4 ${direction==="vertical"&&"!h-[50vh]"}`}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         breakpoints={breaks}
       >

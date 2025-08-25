@@ -11,11 +11,12 @@ import {
 import GetRating from "./rating";
 import Button from "@mui/material/Button";
 import React, { useEffect, memo } from "react";
+import Price from "./Price";
 const ProductItem = ({ item, horizontal = false }) => {
   const smText = horizontal ? "text-lg" : "text-sm";
   const lgText = horizontal ? "text-2xl" : "text-lg";
   return (
-    <Link className={`product-item ${horizontal ? "list-view" : "grid-view"}`}>
+    <Link className={`product-item ${horizontal ? "list-view" : "grid-view"}`} to={`/product/${item?.slug}`} >
       <div className="overflow-hidden block rounded-t-lg ">
         <img
           className="h-full w-[20rem] hover:scale-110 transition-all ease-in-out duration-500 object-contain relative bg-white"
@@ -48,14 +49,7 @@ const ProductItem = ({ item, horizontal = false }) => {
           {GetRating(item?.rating)}
           <p className={`${smText} text-gray-400`}>({item?.reviewsLength})</p>
         </div>
-        <div className="flex flex-row gap-x-3 font-[system-ui]">
-          <p className={`${smText} line-through text-gray-400`}>
-            ₹ {Number(item?.mrpPrice).toLocaleString()}
-          </p>
-          <p className={`${smText} font-semibold text-primary`}>
-            ₹ {Number(item?.sellingPrice).toLocaleString()}
-          </p>
-        </div>
+       <Price mrp={5000} sellingPrice={3000} textSize={smText}/>
         <Button
           className={`!mt-2 ${
             horizontal ? "w-1/5" : "w-full"

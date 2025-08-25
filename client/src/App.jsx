@@ -7,6 +7,7 @@ import FooterSection from "./components/Footer";
 import "./App.css"
 import ProductsListing from "./pages/ProductsListing";
 import BreadCrumb from "./components/Reusables/BreadCrumb";
+import ProductDetails from "./pages/ProductDetails";
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
           <Routes>
             <Route exact={true} path="/" element={<Home />} />
             <Route exact={true} path="/:category" element={<ProductsListing />} />
+            <Route exact={true} path="/product/:slug" element={<ProductDetails />} />
           </Routes>
           <FooterSection/>
         </DataProvider>
