@@ -3,11 +3,13 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import "./style.css"
-const ScrollTab = ({ items }) => {
+const ScrollTab = ({ items,setActive}) => {
   const [value, setValue] = useState(0);
+  console.log(value)
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    setActive(newValue);
   };
 
   return (

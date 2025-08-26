@@ -4,27 +4,38 @@ import Home from "./pages/Home";
 import DataProvider from "./context/DataProvider";
 import AuthProvider from "./context/AuthProvider";
 import FooterSection from "./components/Footer";
-import "./App.css"
+import "./App.css";
 import ProductsListing from "./pages/ProductsListing";
 import BreadCrumb from "./components/Reusables/BreadCrumb";
 import ProductDetails from "./pages/ProductDetails";
+import RestoreScrollToTop from "./utility/RestoreScrollToTop";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <DataProvider>
-          <Header />
-          <Routes>
-            <Route exact={true} path="/" element={<Home />} />
-            <Route exact={true} path="/:category" element={<ProductsListing />} />
-            <Route exact={true} path="/product/:slug" element={<ProductDetails />} />
-          </Routes>
-          <FooterSection/>
-        </DataProvider>
-      </AuthProvider>
-    </BrowserRouter>
-    
+    <>
+      <BrowserRouter>
+        <AuthProvider>
+          <DataProvider>
+            <RestoreScrollToTop />
+            <Header />
+            <Routes>
+              <Route exact={true} path="/" element={<Home />} />
+              <Route
+                exact={true}
+                path="/:category"
+                element={<ProductsListing />}
+              />
+              <Route
+                exact={true}
+                path="/product/:slug"
+                element={<ProductDetails />}
+              />
+            </Routes>
+            <FooterSection />
+          </DataProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </>
   );
 };
 

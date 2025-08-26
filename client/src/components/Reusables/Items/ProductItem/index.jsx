@@ -56,7 +56,6 @@ const ProductItem = ({ item, horizontal = false }) => {
           } p-3 addToCart-btn !border-[1px] !border-primary !text-primary hover:!bg-black hover:!text-white  hover:!border-black gap-x-2`}
         >
           <IoCartOutline className={`${lgText}`} />
-          <IoCartOutline className={`${lgText}`} />
           Add to Cart
         </Button>
       </div>

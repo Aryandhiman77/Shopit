@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
 import { Swiper, SwiperSlide } from "swiper/react";
 import BreadCrumb from "../../components/Reusables/BreadCrumb";
+import "./style.css";
 
 // Import Swiper styles
 import "swiper/css";
@@ -17,6 +18,8 @@ import { MdShoppingCart } from "react-icons/md";
 import ScrollTab from "../../components/Reusables/ScrollTab";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
 import DataContext from "../../context/DataContext";
+import QuantityBox from "../../components/Reusables/QuantityBox";
+import AdditionalProductInformation from "../../components/AdditionalProductInfo";
 
 const ProductDetails = () => {
   const { slug } = useParams();
@@ -91,7 +94,7 @@ const ProductDetails = () => {
               </div>
             </div>
             <Divider />
-            <div className="description text-gray-500 font-[400] my-4 line-clamp-3">
+            <div className="mini-description text-gray-500 font-[400] my-4 line-clamp-3">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus
               perspiciatis distinctio exercitationem nisi. Autem natus error
               exercitationem architecto vitae sunt cumque qui at reprehenderit.
@@ -106,29 +109,36 @@ const ProductDetails = () => {
                 </span>
                 <span className="text-green-600 font-[600]">147 Items </span>
               </p>
-              <div className="size flex flex-row items-center gap-3">
-                <span className=" font-[500] text-md">Size: </span>
-                <div className="font-[400] border-[1px] border-gray-300 p-2 text-white bg-primary rounded-md">
-                  SM
+              <div className="size flex flex-col gap-2">
+                <div>
+                  <span className=" font-[500] text-md">Size: </span>
+                  <span className="text-gray-700 font-[600]"> Small </span>
                 </div>
-                <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md">
-                  MD
-                </div>
-                <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md">
-                  LG
-                </div>
-                <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md">
-                  XL
-                </div>
-                <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md">
-                  XXL
+                <div className="flex gap-2">
+                  <div className="font-[600] border-[1px] border-gray-300 p-2 text-white bg-primary rounded-md text-sm">
+                    Small
+                  </div>
+                  <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md text-sm">
+                    Medium
+                  </div>
+                  <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md text-sm">
+                    Lage
+                  </div>
+                  <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md text-sm">
+                    XL
+                  </div>
+                  <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md text-sm">
+                    XXL
+                  </div>
                 </div>
               </div>
-              <div className="color-variants flex gap-2 items-center">
+              <div className="color-variants flex   gap-2 flex-col">
                 <span className=" font-[500] text-md">Color: </span>
-                <div className="box h-10 w-10 bg-amber-500 rounded-full"></div>
-                <div className="box h-10 w-10 bg-red-500 rounded-full"></div>
-                <div className="box h-10 w-10 bg-pink-500 rounded-full"></div>
+                <div className="flex gap-2">
+                  <div className="box h-10 w-10 bg-amber-500 rounded-full"></div>
+                  <div className="box h-10 w-10 bg-red-500 rounded-full"></div>
+                  <div className="box h-10 w-10 bg-pink-500 rounded-full"></div>
+                </div>
               </div>
               <p className="shipping-info">
                 <span className=" font-[500] text-sm text-gray-600">
@@ -136,13 +146,7 @@ const ProductDetails = () => {
                 </span>
               </p>
               <div className="addtoCart flex gap-4">
-                <input
-                  type="number"
-                  defaultValue={0}
-                  min={0}
-                  max={100}
-                  className="border-[1px] border-[#e5e5e5] focus:outline-none w-20 p-2"
-                />
+                <QuantityBox/>
                 <Button className="!bg-primary !text-white w-1/4 flex items-center gap-2">
                   <MdShoppingCart className="text-xl" />
                   <p> Add To Cart</p>
@@ -153,44 +157,7 @@ const ProductDetails = () => {
         </ImageZoom>
       </div>
       <div className="additional-details w-full p-3 bg-white">
-        <ScrollTab
-          items={[
-            { name: "Description" },
-            { name: "Product Details" },
-            { name: "Reviews" },
-          ]}
-        />
-        <Divider />
-        <p className="text-gray-500 font-[300] text-[15px] p-2">
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quod
-          accusantium quos natus quia dignissimos itaque magnam ipsam
-          perferendis odit? Voluptates perspiciatis totam expedita. Optio
-          aliquam aut perferendis quos impedit dolore exercitationem, earum
-          maiores iste blanditiis rerum? Eligendi dicta eveniet placeat quidem
-          voluptate porro sit ex repellendus, sunt aperiam harum odit reiciendis
-          tenetur? Ut eos tempora eveniet neque tempore nulla odio officiis
-          quibusdam, quisquam, reiciendis velit repellendus perferendis harum,
-          mollitia beatae eaque dignissimos facere hic omnis laudantium
-          accusantium voluptatem officia. Itaque minus corrupti nam ullam
-          repudiandae quos reiciendis suscipit libero incidunt totam facere
-          maiores beatae, quam, distinctio maxime odit error! Fuga corporis
-          doloremque voluptatem explicabo fugit cum possimus magnam corrupti
-          assumenda dolores magni velit, quas fugiat quidem? Iste fuga officiis
-          commodi obcaecati ipsum, quasi reiciendis quo sapiente. Sequi impedit
-          architecto libero? Provident accusantium expedita, iure deserunt et
-          asperiores quibusdam exercitationem aut odio, in cum possimus optio
-          necessitatibus beatae recusandae, nesciunt aliquam. Necessitatibus
-          cumque laudantium corporis expedita amet, veniam nesciunt excepturi.
-          Sapiente distinctio doloribus nulla aut veniam, non molestiae fuga,
-          iusto voluptas eius natus pariatur quibusdam laborum? Dolores
-          accusantium quasi excepturi vitae autem fugit, molestiae, sunt
-          mollitia, id exercitationem rerum a numquam unde? Repudiandae dolores
-          itaque architecto quibusdam ab ratione deserunt, sapiente ex sit sunt
-          molestias eligendi quasi mollitia optio perspiciatis. Assumenda
-          voluptates delectus recusandae dolores nemo totam reprehenderit quae
-          fuga? Aspernatur consectetur quam cum cupiditate in molestiae dolorem.
-          Dolor ipsa similique deserunt accusamus accusantium!
-        </p>
+        <AdditionalProductInformation/>
       </div>
       <div className="product-section mt-4 bg-white p-5">
         <div className="header-section flex justify-between ">
