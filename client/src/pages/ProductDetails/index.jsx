@@ -19,7 +19,7 @@ import ScrollTab from "../../components/Reusables/ScrollTab";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
 import DataContext from "../../context/DataContext";
 import QuantityBox from "../../components/Reusables/QuantityBox";
-import AdditionalProductInformation from "../../components/AdditionalProductInfo";
+import AdditionalProductInformation from "./AdditionalProductInfo";
 
 const ProductDetails = () => {
   const { slug } = useParams();

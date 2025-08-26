@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import ScrollTab from "../Reusables/ScrollTab";
+import ScrollTab from "../../../components/Reusables/ScrollTab";
 import Divider from "@mui/material/Divider";
-import ProgressBar from "../Reusables/ProgressBar";
+import ProgressBar from "../../../components/Reusables/ProgressBar";
 
-import ReviewItem from "../Reusables/ReviewItem";
+import ReviewItem from "../../../components/Reusables/ReviewItem";
 
 const AdditionalProductInformation = ({
   richDescription,
