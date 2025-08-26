@@ -18,7 +18,9 @@ const ItemSlider = ({
   slidesPerGroup = 1,
   spaceBetween = 0,
   breakpoints,
-  direction
+  direction,
+  slidesOffsetBefore,
+  slidesOffsetAfter
 }) => {
   const swiperRef = useRef(null);
   const breaks = breakpoints?{
@@ -52,9 +54,9 @@ const ItemSlider = ({
     <div className="w-full relative">
       {
         direction==="vertical"?
-        <div className="swiperbtns absolute z-10 top-0 w-full flex flex-col justify-between items-center h-full px-4 pointer-events-none">
+        <div className="swiperbtns absolute z-10 top-0 w-full flex flex-col justify-between items-center h-full pointer-events-none">
         <button
-          className="bg-[#d2d2d2] group hover:bg-primary text-[#aaaaaa] w-full shadow-2xl cursor-pointer active:scale-110 pointer-events-auto " 
+          className="bg-[#d2d2d2c2] group hover:bg-primary text-[#aaaaaa] w-full shadow-2xl cursor-pointer active:scale-110 pointer-events-auto " 
           onClick={() => swiperRef.current?.slidePrev()}
         >
           <IoIosArrowUp
@@ -62,7 +64,7 @@ const ItemSlider = ({
           />
         </button>
         <button
-          className="bg-[#d2d2d2] group hover:bg-primary text-[#aaaaaa] w-full shadow-2xl cursor-pointer active:scale-110 pointer-events-auto"
+          className="bg-[#d2d2d2c2] group hover:bg-primary text-[#aaaaaa] w-full shadow-2xl cursor-pointer active:scale-110 pointer-events-auto"
           onClick={() => swiperRef.current?.slideNext()}
         >
           <IoIosArrowDown
@@ -96,8 +98,10 @@ const ItemSlider = ({
         slidesPerView={slidesPerView}
         slidesPerGroup={slidesPerGroup}
         spaceBetween={spaceBetween}
+        slidesOffsetBefore={slidesOffsetBefore}
+        slidesOffsetAfter={slidesOffsetAfter}
         modules={[Navigation]}
-        className={`mySwiper !px-3 !py-4 ${direction==="vertical"&&"!h-[50vh]"}`}
+        className={`mySwiper  ${direction==="vertical"?"!h-[60vh] mt-2 p-2":"!px-3 !py-4"}`}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         breakpoints={breaks}
       >

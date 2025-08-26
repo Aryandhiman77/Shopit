@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import "./style.css";
+import grid from "../../../assets/grid.png"
 
 const ImageZoom = ({ image, children }) => {
   const lens = useRef(null);
@@ -25,7 +26,7 @@ const ImageZoom = ({ image, children }) => {
     magnifiedImage.current.style = `background:url(${image}) 
       -${x * cx}px -${y * cy}px /
       ${product_image_rect.width * cx}px ${product_image_rect.height * cy}px no-repeat`;
-      magnifiedImage.current.classList.remove("hidden") 
+      magnifiedImage.current.classList.remove("hidden") ;
   };
 
   const onMouseLeavesImage = () => {
@@ -39,27 +40,27 @@ const ImageZoom = ({ image, children }) => {
       <div className="images-container flex flex-col md:flex-row gap-5 p-2">
         {/* Left image */}
         <div
-          className="image-1 relative w-full md:w-[35%] h-[45vh] md:h-[60vh]"
+          className="image-1 relative md:w-[35%] h-[45vh] md:h-[60vh]"
           onMouseMove={moveLens}
           onMouseLeave={onMouseLeavesImage}
         >
           <img
             ref={mainImage}
             src={image}
-            className="h-full w-full object-cover rounded-xl "
+            className="h-full min-w-full object-cover rounded-xl"
             alt=""
           />
           <div
             ref={lens}
-            className="lens h-30 w-40 border-2 border-[#f58a25] bg-[#d37f0280] absolute top-0 opacity-0 rounded-xl"
-          ></div>
+            className="lens h-[30%] w-[50%] absolute top-0 opacity-0 rounded-xl flex justify-center items-center"
+          ><img src={grid} alt="" className="h-full w-full" /></div>
         </div>
 
         {/* Right content */}
-        <div className="image-2 w-full md:w-[65%] relative">
+        <div className="image-2 w-[65%] md:w-[65%] relative ">
           <div
             ref={magnifiedImage}
-            className="magnified-image absolute inset-0 rounded-xl h-[65vh] object-contain hidden z-20"
+            className="magnified-image absolute inset-0 rounded-xl h-[60vh] object-contain hidden z-20"
           />
           {/* Let children flow normally */}
           <div className="relative z-10">{children}</div>

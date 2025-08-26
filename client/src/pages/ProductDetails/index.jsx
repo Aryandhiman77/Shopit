@@ -48,8 +48,10 @@ const ProductDetails = () => {
       <div className="flex flex-row gap-4 p-2">
         <div className="gallery">
           <ItemSlider
+          slidesOffsetBefore={40}
+          slidesOffsetAfter={40}
             direction={"vertical"}
-            slidesPerView={4}
+            slidesPerView={5}
             slidesPerGroup={1}
             spaceBetween={0}
             items={imagesData}
@@ -57,7 +59,7 @@ const ProductDetails = () => {
             renderItem={(src, i) => (
               <img
                 key={i}
-                className="h-20 w-auto object-cover border-[1px] border-black rounded-xl m-1"
+                className="h-20 w-auto object-cover border-[1px] border-black rounded-xl"
                 src={src}
                 alt=""
               />
@@ -66,7 +68,7 @@ const ProductDetails = () => {
         </div>
         <ImageZoom
           image={
-            "https://images.unsplash.com/photo-1678685888221-cda773a3dcdb?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXBwbGUlMjBpcGhvbmV8ZW58MHx8MHx8fDA%3D"
+            imagesData[3]
           }
         >
           <div className="flex flex-col gap-2 m-2 relative z-20">
