@@ -3,7 +3,7 @@ import ScrollTab from "../../../components/Reusables/ScrollTab";
 import Divider from "@mui/material/Divider";
 import ProgressBar from "../../../components/Reusables/ProgressBar";
 
-import ReviewItem from "../../../components/Reusables/ReviewItem";
+import ReviewItem from "../../../components/Reusables/Items/ReviewItem";
 
 const AdditionalProductInformation = ({
   richDescription,
@@ -11,7 +11,6 @@ const AdditionalProductInformation = ({
   reviews,
 }) => {
   const [activeTab, setActiveTab] = useState(0);
-  let ref = useRef(0);
   return (
     <div>
       <ScrollTab

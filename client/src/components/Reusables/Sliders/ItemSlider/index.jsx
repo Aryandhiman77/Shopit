@@ -105,7 +105,7 @@ const ItemSlider = ({
         breakpoints={breaks}
       >
         {items.map((item, i) => (
-          <SwiperSlide key={i}>{renderItem(item)}</SwiperSlide>
+          <SwiperSlide key={i}>{renderItem(item,i)}</SwiperSlide>
         ))}
       </Swiper>
     </div>

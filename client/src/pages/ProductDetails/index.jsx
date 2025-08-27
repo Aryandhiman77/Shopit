@@ -14,6 +14,7 @@ import DataContext from "../../context/DataContext";
 import QuantityBox from "../../components/Reusables/QuantityBox";
 import AdditionalProductInformation from "./AdditionalProductInfo";
 import SizeVariantList from "../../components/Reusables/SizeVariantList";
+import Gallery from "./Gallery";
 
 const ProductDetails = () => {
   const { slug } = useParams(); // GET SLUG AND WAIT FOR API CALL
@@ -43,26 +44,7 @@ const ProductDetails = () => {
         </label>
       </div>
       <div className="flex flex-row gap-4 p-2">
-        <div className="gallery">
-          <ItemSlider
-          slidesOffsetBefore={40}
-          slidesOffsetAfter={40}
-            direction={"vertical"}
-            slidesPerView={5}
-            slidesPerGroup={1}
-            spaceBetween={0}
-            items={imagesData}
-            breakpoints={false}
-            renderItem={(src, i) => (
-              <img
-                key={i}
-                className="h-20 w-auto object-cover border-[1px] border-black rounded-xl"
-                src={src}
-                alt=""
-              />
-            )}
-          />
-        </div>
+        <Gallery imagesData={imagesData} getActive={(i)=>console.log("currently Active",i)}/>
         <ImageZoom
           image={
             imagesData[3]
