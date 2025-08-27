@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import ImageZoom from "../../components/Reusables/ImageZoom";
 import { useParams } from "react-router-dom";
 import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
@@ -24,7 +24,9 @@ import AdditionalProductInformation from "./AdditionalProductInfo";
 const ProductDetails = () => {
   const { slug } = useParams();
   const { productsData } = useContext(DataContext);
-  console.log(slug);
+  useEffect(()=>{
+    console.log("rerendering..")
+  },[])
   const imagesData = [
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
@@ -166,6 +168,9 @@ const ProductDetails = () => {
           <p className="text-xl font-[600] px-5 text-gray-600">
             Related Products
           </p>
+          <Button className="!text-primary">
+            View all
+          </Button>
         </div>
         <div className="product-list mt-2">
           <ItemSlider

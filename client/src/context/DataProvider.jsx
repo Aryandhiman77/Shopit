@@ -354,9 +354,10 @@ const DataProvider = ({ children }) => {
     },
     
   ])
+  const [level1Categories,setLevel1Categories] = useState(["Fashion","Electronics","Sports","Home & kitchen","Jwellery"])
   return (
     <DataContext.Provider
-      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData,productsData }}
+      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData,productsData,level1Categories }}
     >
       {children}
     </DataContext.Provider>

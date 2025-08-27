@@ -18,9 +18,10 @@ const Home = () => {
     adsBannerData,
     adsMiniBannersData,
     miniSliderBannerData,
-    productsData
+    productsData,
+    level1Categories
   } = useContext(DataContext);
-  console.log(productsData)
+  console.log(level1Categories)
 
   const popularCategories = [
     {
@@ -161,7 +162,7 @@ const Home = () => {
                 Don't miss the current offers until the end of Season.
               </p>
             </div>
-            <ScrollTab items={categories} />
+            <ScrollTab items={level1Categories} />
           </div>
           <div className="product-list mt-2">
             <ItemSlider
@@ -229,7 +230,7 @@ const Home = () => {
                 Don't miss the current offers until the end of Season.
               </p>
             </div>
-            <ScrollTab items={categories} />
+            <ScrollTab items={level1Categories} />
           </div>
           <div className="product-list mt-2">
             <ItemSlider
@@ -256,7 +257,8 @@ const Home = () => {
                 Don't miss the current offers until the end of Season.
               </p>
             </div>
-            <ScrollTab items={categories} />
+            {/* level 1 categories only*/}
+            <ScrollTab items={level1Categories} /> 
           </div>
           <div className="product-list mt-2">
             <ItemSlider

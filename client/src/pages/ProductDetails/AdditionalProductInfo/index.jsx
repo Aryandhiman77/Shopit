@@ -14,11 +14,7 @@ const AdditionalProductInformation = ({
   return (
     <div>
       <ScrollTab
-        items={[
-          { name: "Description" },
-          { name: "Product Details" },
-          { name: `Reviews (${1})` },
-        ]}
+        items={["Description", "Product Details", `Reviews (${1})`]}
         setActive={setActiveTab}
       />
       <Divider />
@@ -63,51 +59,57 @@ const AdditionalProductInformation = ({
               Specifications
             </div>
             <Divider />
-            <table className="m-3 w-[80%]">
-              <th className="text-xl font-[500] p-2 text-gray-700" align="left">
+            <div className="m-3">
+              <div
+                className="text-xl font-[500] p-2 text-gray-700"
+                align="left"
+              >
                 General
-              </th>
-              <tbody>
-                <tr>
-                  <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
-                    Processor
-                  </td>
-                  <td className="px-2 py-1 text-gray-600 font-[600] text-[15px] w-1/2">
-                    {" "}
-                    Apple Silicon A18 pro Chip
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
-                    Battery
-                  </td>
-                  <td className="px-2 py-1 text-gray-600 font-[600] text-[15px] w-1/2">
-                    5000 mah
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
-                    Dolby Atmos
-                  </td>
-                  <td className="px-2 py-1 text-gray-600 font-[600] text-[15px] w-1/2">
-                    Yes
-                  </td>
-                </tr>
-                <tr>
-                  <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
-                    Charger in box
-                  </td>
-                  <td className="px-2 py-1 text-gray-600 font-[600] text-[15px] w-1/2">
-                    Not available
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+              </div>
+              <table className="w-[80%]">
+                <tbody>
+                  <tr>
+                    <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
+                      Processor
+                    </td>
+                    <td className="px-2 py-1 text-gray-600 font-[600] text-[15px] w-1/2">
+                      {" "}
+                      Apple Silicon A18 pro Chip
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
+                      Battery
+                    </td>
+                    <td className="px-2 py-1 text-gray-600 font-[600] text-[15px] w-1/2">
+                      5000 mah
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
+                      Dolby Atmos
+                    </td>
+                    <td className="px-2 py-1 text-gray-600 font-[600] text-[15px] w-1/2">
+                      Yes
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
+                      Charger in box
+                    </td>
+                    <td className="px-2 py-1 text-gray-600 font-[600] text-[15px] w-1/2">
+                      Not available
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <Divider />
-            <table className="w-[80%] m-3">
-              <th className="text-xl font-[500] p-2 text-gray-700" align="left">
-                Display
-              </th>
+              <div className="m-3">
+            <div className="text-xl font-[500] p-2 text-gray-700" align="left">
+              Display
+            </div>
+            <table className="w-[80%]">
               <tbody>
                 <tr>
                   <td className="px-2 py-1 text-gray-600 font-[500] text-[15px] w-1/2">
@@ -128,11 +130,13 @@ const AdditionalProductInformation = ({
                 </tr>
               </tbody>
             </table>
+            </div>
             <Divider />
-            <table className="w-[80%] m-3">
-              <th className="text-xl font-[500] p-2 text-gray-700" align="left">
-                Multimedia
-              </th>
+            <div className="m-3">
+            <div className="text-xl font-[500] p-2 text-gray-700" align="left">
+              Multimedia
+            </div>
+            <table className="w-[80%]">
               <tbody>
                 <tr>
                   <td className="px-2 py-1 text-gray-600 font-[500] text-[15px]">
@@ -152,6 +156,7 @@ const AdditionalProductInformation = ({
                 </tr>
               </tbody>
             </table>
+            </div>
           </div>
         )}
         {activeTab === 2 && (
@@ -197,9 +202,9 @@ const AdditionalProductInformation = ({
             </div>
             <Divider />
             <div className="reviews">
-              <ReviewItem rating={4}/>
-              <ReviewItem rating={2}/>
-              <ReviewItem rating={3}/>
+              <ReviewItem rating={4} />
+              <ReviewItem rating={2} />
+              <ReviewItem rating={3} />
             </div>
           </div>
         )}
