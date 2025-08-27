@@ -10,11 +10,12 @@ import {
 } from "react-icons/io5";
 import GetRating from "./rating";
 import Button from "@mui/material/Button";
-import React, { useEffect, memo } from "react";
+import React, { useEffect, memo, useRef } from "react";
 import Price from "./Price";
 const ProductItem = ({ item, horizontal = false }) => {
   const smText = horizontal ? "text-lg" : "text-sm";
   const lgText = horizontal ? "text-2xl" : "text-lg";
+
   return (
     <Link className={`product-item ${horizontal ? "list-view" : "grid-view"}`} to={`/product/${item?.slug}`} >
       <div className="overflow-hidden block rounded-t-lg ">
@@ -73,4 +74,5 @@ const ProductItem = ({ item, horizontal = false }) => {
   );
 };
 
-export default React.memo(ProductItem);
+export default memo(ProductItem); 
+// memo to save from rerendering when related items navigate to product item page then related items don't rerender

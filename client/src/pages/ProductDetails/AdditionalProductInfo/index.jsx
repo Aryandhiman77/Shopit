@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useRef, useState } from "react";
 import ScrollTab from "../../../components/Reusables/ScrollTab";
 import Divider from "@mui/material/Divider";
 import ProgressBar from "../../../components/Reusables/ProgressBar";
@@ -11,6 +11,7 @@ const AdditionalProductInformation = ({
   reviews,
 }) => {
   const [activeTab, setActiveTab] = useState(0);
+  let ref = useRef(0);
   return (
     <div>
       <ScrollTab
@@ -18,6 +19,7 @@ const AdditionalProductInformation = ({
         setActive={setActiveTab}
       />
       <Divider />
+    
       <div className="text-gray-500 font-[300] text-[15px] border-2 m-3 border-[#e5e5e5] rounded-xl ">
         {activeTab === 0 && (
           <div className="rich-description p-5">

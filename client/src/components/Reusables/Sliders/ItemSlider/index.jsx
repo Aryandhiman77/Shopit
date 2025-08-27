@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 
@@ -49,7 +49,6 @@ const ItemSlider = ({
             slidesPerGroup: 3,
           }
         }:null
-
   return (
     <div className="w-full relative">
       {

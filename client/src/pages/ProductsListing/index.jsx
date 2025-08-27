@@ -1,23 +1,17 @@
-import React, { useContext, useState } from "react";
+import { useContext,useState } from "react";
 import { useParams } from "react-router-dom";
 import BreadCrumb from "../../components/Reusables/BreadCrumb";
-import { IoGridSharp, IoListSharp } from "react-icons/io5";
+import { IoGridSharp } from "react-icons/io5";
 import Sidebar from "../../components/SideBar";
 import Button from "@mui/material/Button";
-import ListSubheader from "@mui/material/ListSubheader";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { styled } from "@mui/material/styles";
-import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
 import DataContext from "../../context/DataContext";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Pagination from "@mui/material/Pagination";
 import "./style.css"
 
-const StyledListHeader = styled(ListSubheader)({
-  backgroundImage: "var(--Paper-overlay)",
-});
 
 const ProductsListing = () => {
   const { category } = useParams();
@@ -32,9 +26,9 @@ const ProductsListing = () => {
     setAnchorEl(null);
   };
   return (
-    <div className="max-w-full p-5">
+    <div className="max-w-full">
       <BreadCrumb />
-      <div className="wrapper flex flex-row gap-5 w-[100%] mt-5 ">
+      <div className="wrapper flex flex-row gap-5 w-[100%] mt-5  p-5">
         <div className="w-1/5">
           <Sidebar />
         </div>

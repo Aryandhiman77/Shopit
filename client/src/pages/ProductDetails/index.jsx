@@ -1,32 +1,24 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useState } from "react";
 import ImageZoom from "../../components/Reusables/ImageZoom";
 import { useParams } from "react-router-dom";
 import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
-import { Swiper, SwiperSlide } from "swiper/react";
 import BreadCrumb from "../../components/Reusables/BreadCrumb";
 import "./style.css";
-
-// Import Swiper styles
-import "swiper/css";
-import "swiper/css/pagination";
-import { Pagination } from "swiper/modules";
 import Rating from "@mui/material/Rating";
 import Price from "../../components/Reusables/Items/ProductItem/Price";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import { MdShoppingCart } from "react-icons/md";
-import ScrollTab from "../../components/Reusables/ScrollTab";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
 import DataContext from "../../context/DataContext";
 import QuantityBox from "../../components/Reusables/QuantityBox";
 import AdditionalProductInformation from "./AdditionalProductInfo";
+import SizeVariantList from "../../components/Reusables/SizeVariantList";
 
 const ProductDetails = () => {
-  const { slug } = useParams();
+  const { slug } = useParams(); // GET SLUG AND WAIT FOR API CALL
   const { productsData } = useContext(DataContext);
-  useEffect(()=>{
-    console.log("rerendering..")
-  },[])
+
   const imagesData = [
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
@@ -35,6 +27,9 @@ const ProductDetails = () => {
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
   ];
+  const getActiveIndex = (i)=>{
+    console.log(i);
+  }
   return (
     <div>
       <div className="flex justify-between w-full bg-[#e5e5e5]">
@@ -118,28 +113,12 @@ const ProductDetails = () => {
                   <span className=" font-[500] text-md">Size: </span>
                   <span className="text-gray-700 font-[600]"> Small </span>
                 </div>
-                <div className="flex gap-2">
-                  <div className="font-[600] border-[1px] border-gray-300 p-2 text-white bg-primary rounded-md text-sm">
-                    Small
-                  </div>
-                  <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md text-sm">
-                    Medium
-                  </div>
-                  <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md text-sm">
-                    Lage
-                  </div>
-                  <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md text-sm">
-                    XL
-                  </div>
-                  <div className="font-[400] border-[1px] border-gray-300 p-2 hover:bg-[#e5e5e5] cursor-pointer rounded-md text-sm">
-                    XXL
-                  </div>
-                </div>
+                <SizeVariantList getActive={getActiveIndex} items={["Small","Medium","Large","XL","XXL"]}/>
               </div>
               <div className="color-variants flex   gap-2 flex-col">
                 <span className=" font-[500] text-md">Color: </span>
                 <div className="flex gap-2">
-                  <div className="box h-10 w-10 bg-amber-500 rounded-full"></div>
+                  <div className="box h-10 w-10 bg-amber-500 rounded-full " ></div>
                   <div className="box h-10 w-10 bg-red-500 rounded-full"></div>
                   <div className="box h-10 w-10 bg-pink-500 rounded-full"></div>
                 </div>
