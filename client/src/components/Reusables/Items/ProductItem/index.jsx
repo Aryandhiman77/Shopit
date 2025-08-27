@@ -1,6 +1,6 @@
 import Badge from "../../Elements/Badge";
 import Rating from "@mui/material/Rating";
-import { data, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { GiExpand } from "react-icons/gi";
 import "./style.css";
 import {
@@ -10,11 +10,10 @@ import {
 } from "react-icons/io5";
 import GetRating from "./rating";
 import Button from "@mui/material/Button";
-import React, { useEffect, memo, useRef, useState } from "react";
+import {memo, useState } from "react";
 import Price from "./Price";
 import ProductModal from "../../Modal";
 import Gallery from "../../../../pages/ProductDetails/Gallery";
-import ImageZoom from "../../ImageZoom";
 import Divider from "@mui/material/Divider";
 import SizeVariantList from "../../SizeVariantList";
 import QuantityBox from "../../QuantityBox";
