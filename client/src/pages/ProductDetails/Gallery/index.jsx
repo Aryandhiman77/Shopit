@@ -22,7 +22,7 @@ const Gallery = ({imagesData,defaultActive=0,getActive=()=>{}}) => {
             renderItem={(src, i) => (
               <img
                 key={i}
-                className={`h-20 w-20 object-cover border-[1px] border-black rounded-xl cursor-pointer ${activeIndex===i?"opacity-100":"opacity-50"}`}
+                className={`h-20 w-20 object-cover rounded-xl cursor-pointer ${activeIndex===i?"opacity-100":"opacity-50"}`}
                 src={src}
                 onClick={()=>handleActive(i)}
                 alt=""

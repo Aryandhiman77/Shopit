@@ -34,6 +34,7 @@ const ProductDetails = () => {
   const handleImageZoomPropChange = (i) => {
     setActiveThumbnail(imagesData[i]);
   };
+   
   return (
     <div>
       <div className="flex justify-between w-full bg-[#e5e5e5]">
