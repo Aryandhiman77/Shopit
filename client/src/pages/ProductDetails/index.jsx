@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import ImageZoom from "../../components/Reusables/ImageZoom";
 import { useParams } from "react-router-dom";
 import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
@@ -19,18 +19,21 @@ import Gallery from "./Gallery";
 const ProductDetails = () => {
   const { slug } = useParams(); // GET SLUG AND WAIT FOR API CALL
   const { productsData } = useContext(DataContext);
-
   const imagesData = [
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
+    "https://www.zdnet.com/a/img/resize/7c135e7748ad80aa72743c58c1d067ba1a0fddcf/2023/10/06/4e7663f4-fe43-424e-8fde-64a5612cdfd7/img-1950.jpg?auto=webp&width=1280",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT31y7OlfN7OpPHPLzl_2MDPNAw9V6fjLUeIg&s",
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
     "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
   ];
-  const getActiveIndex = (i)=>{
+  const [activeThumbnail, setActiveThumbnail] = useState(imagesData[0]);
+  const getActiveIndex = (i) => {
     console.log(i);
-  }
+  };
+  const handleImageZoomPropChange = (i) => {
+    setActiveThumbnail(imagesData[i]);
+  };
   return (
     <div>
       <div className="flex justify-between w-full bg-[#e5e5e5]">
@@ -44,12 +47,11 @@ const ProductDetails = () => {
         </label>
       </div>
       <div className="flex flex-row gap-4 p-2">
-        <Gallery imagesData={imagesData} getActive={(i)=>console.log("currently Active",i)}/>
-        <ImageZoom
-          image={
-            imagesData[3]
-          }
-        >
+        <Gallery
+          imagesData={imagesData}
+          getActive={handleImageZoomPropChange}
+        />
+        <ImageZoom image={activeThumbnail}>
           <div className="flex flex-col gap-2 m-2 relative z-20">
             <div className="heading font-[600] text-3xl text-gray-700">
               iPhone 15 pro max
@@ -95,12 +97,15 @@ const ProductDetails = () => {
                   <span className=" font-[500] text-md">Size: </span>
                   <span className="text-gray-700 font-[600]"> Small </span>
                 </div>
-                <SizeVariantList getActive={getActiveIndex} items={["Small","Medium","Large","XL","XXL"]}/>
+                <SizeVariantList
+                  getActive={getActiveIndex}
+                  items={["Small", "Medium", "Large", "XL", "XXL"]}
+                />
               </div>
               <div className="color-variants flex   gap-2 flex-col">
                 <span className=" font-[500] text-md">Color: </span>
                 <div className="flex gap-2">
-                  <div className="box h-10 w-10 bg-amber-500 rounded-full " ></div>
+                  <div className="box h-10 w-10 bg-amber-500 rounded-full "></div>
                   <div className="box h-10 w-10 bg-red-500 rounded-full"></div>
                   <div className="box h-10 w-10 bg-pink-500 rounded-full"></div>
                 </div>
@@ -111,7 +116,7 @@ const ProductDetails = () => {
                 </span>
               </p>
               <div className="addtoCart flex gap-4">
-                <QuantityBox/>
+                <QuantityBox />
                 <Button className="!bg-primary !text-white w-1/4 flex items-center gap-2">
                   <MdShoppingCart className="text-xl" />
                   <p> Add To Cart</p>
@@ -122,16 +127,14 @@ const ProductDetails = () => {
         </ImageZoom>
       </div>
       <div className="additional-details w-full p-3 bg-white">
-        <AdditionalProductInformation/>
+        <AdditionalProductInformation />
       </div>
       <div className="product-section mt-4 bg-white p-5">
         <div className="header-section flex justify-between ">
           <p className="text-xl font-[600] px-5 text-gray-600">
             Related Products
           </p>
-          <Button className="!text-primary">
-            View all
-          </Button>
+          <Button className="!text-primary">View all</Button>
         </div>
         <div className="product-list mt-2">
           <ItemSlider
