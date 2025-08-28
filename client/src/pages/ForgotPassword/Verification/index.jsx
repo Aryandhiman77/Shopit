@@ -5,6 +5,8 @@ import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import OTPInput from "../../../components/Reusables/OTPInput";
+import { SiAdguard } from "react-icons/si";
+
 const ForgotPassword = () => {
   const [otp, setOTP] = useState(null);
   const [otpSectionHidden, setOtpSectionHidden] = useState(true);
@@ -20,7 +22,8 @@ const ForgotPassword = () => {
       <section className="section py-10 bg-[#e5e5e5]">
         <div className="container">
           <div className="card bg-white shadow-md rounded-md p-4 w-[500px] m-auto">
-            <h2 className="font-[500] text-black text-center text-[20px]">
+            <h2 className="font-[500] text-black text-[20px] flex items-center flex-col text-center">
+              <SiAdguard className="text-[60px] text-blue-400 m-4"/>
               Verify your Identity
             </h2>
             <div className="m-4 flex flex-col gap-4">
