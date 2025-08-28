@@ -9,6 +9,8 @@ import ProductsListing from "./pages/ProductsListing";
 import BreadCrumb from "./components/Reusables/BreadCrumb";
 import ProductDetails from "./pages/ProductDetails";
 import RestoreScrollToTop from "./utility/RestoreScrollToTop";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 const App = () => {
   return (
@@ -29,6 +31,16 @@ const App = () => {
                 exact={true}
                 path="/product/:slug"
                 element={<ProductDetails />}
+              />
+              <Route
+                exact={true}
+                path="/login"
+                element={<Login />}
+              />
+              <Route
+                exact={true}
+                path="/register"
+                element={<Register />}
               />
             </Routes>
             <FooterSection />
