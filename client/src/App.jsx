@@ -11,6 +11,8 @@ import ProductDetails from "./pages/ProductDetails";
 import RestoreScrollToTop from "./utility/RestoreScrollToTop";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/ForgotPassword/Verification";
+import ResetPass from "./pages/ForgotPassword/ResetPass";
 
 const App = () => {
   return (
@@ -41,6 +43,16 @@ const App = () => {
                 exact={true}
                 path="/register"
                 element={<Register />}
+              />
+              <Route
+                exact={true}
+                path="/verify"
+                element={<ForgotPassword />}
+              />
+              <Route
+                exact={true}
+                path="/reset"
+                element={<ResetPass />}
               />
             </Routes>
             <FooterSection />
