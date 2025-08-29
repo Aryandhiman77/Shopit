@@ -50,7 +50,7 @@ const ForgotPassword = () => {
               <div className={otpSectionHidden?"hidden":"flex flex-col gap-4"}>
                 <div className="w-full">
                   <p className="font-[500] py-2">Enter OTP</p>
-                  <OTPInput maxLength={4} onChangeOTP={setOTP} />
+                  <OTPInput maxLength={6} onChangeOTP={setOTP} />
                 </div>
                 <Button
                   onClick={() => navigate("/reset")}

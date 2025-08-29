@@ -135,7 +135,7 @@ const Home = () => {
   ];
   return (
     <div className="wrapper">
-      <section className="main-section bg-[#e7eaff]">
+      <section className="main-section bg-[#fbecf9d0]">
         <div className="w-[98%] mx-auto py-4 min-h-[20vh] -z-10">
           <BannerSlider
             fadeEffect={false}

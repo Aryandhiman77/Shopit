@@ -11,9 +11,10 @@ import DrawerNavigation from "./Drawer";
 import Level_2_CatMenu from "./Level_2_CatMenu";
 import "./style.css";
 import DataContext from "../../../context/DataContext";
+import DrawerList from "./Drawer/DrawerList";
 
 
-const Navigation = () => {
+const NavigationBar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const {categories} = useContext(DataContext);
   
@@ -54,10 +55,10 @@ const Navigation = () => {
       <DrawerNavigation
         isDrawerOpen={isDrawerOpen}
         setDrawerOpen={setDrawerOpen}
-        position={"left"}
-      />
+        anchor={"left"}
+        ><DrawerList setDrawerOpen={setDrawerOpen}/></DrawerNavigation>
     </div>
   );
 };
 
-export default Navigation;
+export default NavigationBar;

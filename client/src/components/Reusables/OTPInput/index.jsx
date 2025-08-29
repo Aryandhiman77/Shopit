@@ -4,7 +4,7 @@ const OTPInput = ({ maxLength = 4, onChangeOTP = () => {} }) => {
   const [otp, setOTP] = useState(new Array(maxLength).fill(""));
 
   const handleInput = (value, i) => {
-    if (!/^[0-9]?$/.test(value)) return; // allow only numbers 
+    if (!/^[0-9]?$/.test(value)) return; // allow only numbers
 
     const newOtp = [...otp];
     newOtp[i] = value;
@@ -31,13 +31,14 @@ const OTPInput = ({ maxLength = 4, onChangeOTP = () => {} }) => {
         <input
           key={i}
           value={digit}
-          className={`w-1/${maxLength} h-15 border-[1px] px-4 focus:outline-none border-[#c6c6c6] rounded-sm text-center focus:border-primary`}
+          className={`w-1/6 h-15 border-[1px] px-4 focus:outline-none border-[#c6c6c6] rounded-sm text-center focus:border-primary`}
           type="tel"
+          inputMode="numeric" // numeric keyboard
+          autoComplete="one-time-code" // enables OTP auto-fill
           id={`otp-digit-${i}`}
           maxLength={1}
           onChange={(e) => handleInput(e.target.value, i)}
           onKeyDown={(e) => handleKeyDown(e, i)}
-          autoComplete={false}
         />
       ))}
     </div>

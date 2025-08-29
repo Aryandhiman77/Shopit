@@ -8,13 +8,13 @@ import { ReactSVG } from "react-svg";
 import logo from "../../assets/logo.svg";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import Navigation from "./Navigation";
+import NavigationBar from "./Navigation";
 
 
 const Header = () => {
   return (
     <>
-    <div className=" border-b-[1px] border-gray-200 ">
+    <div className=" border-b-[1px] border-gray-200 bg-white">
         <div className="top-strip py-2 border-t-[1px] border-b-[1px] border-gray-200 text-gray-500">
           <div className="container max-w-screen-xl flex justify-between items-center mx-auto">
             <div className="col1 text-[14px] font-500">
@@ -36,7 +36,7 @@ const Header = () => {
             </div>
           </div>
         </div>
-        <div className="header flex items-center w-[90%] mx-auto mt-2 pb-3 ">
+        <div className="header flex items-center w-[90%] mx-auto mt-2 pb-3  ">
           <Link to={"/"} className="col1-logo w-[25%] text-5xl">
             <ReactSVG src={logo} />
           </Link>
@@ -101,10 +101,13 @@ const Header = () => {
     <header className="bg-white sticky top-0 z-20">
       
       <div className="border-b-[1px] border-gray-200 ">
-        <Navigation />
+        <NavigationBar  />
       </div>
         
     </header>
+    <div className="cartPanel">
+
+    </div>
     </>
   );
 };

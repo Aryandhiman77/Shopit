@@ -54,18 +54,18 @@ const ProductItem = ({ item, horizontal = false }) => {
       >
         <Link to={`/product/${item?.slug}`}>
           <p
-            className={`text-black ${
+            className={`text-gray-700 ${
               horizontal ? "text-[16px]" : "text-[13px]"
-            } font-[500]`}
+            } font-[400]`}
           >
-            {item?.productName}
+            Apple
           </p>
           <p
-            className={`text-black ${
+            className={`text-black font-[400] ${
               horizontal ? "text-[15px]" : "text-[13px]"
             } line-clamp-2`}
           >
-            {item?.description}
+            {item?.productName}
           </p>
           <div className="flex items-center gap-x-1 w-full pr-2 rounded-lg">
             {GetRating(item?.rating)}
@@ -107,7 +107,7 @@ const ProductItem = ({ item, horizontal = false }) => {
         </div>
         <img src={activeThum} className="w-100 h-100" alt="" />
           <div className="flex flex-col gap-2 m-2 z-20">
-            <div className="heading font-[600] text-3xl text-gray-700">
+            <div className="brand font-[600] text-3xl text-gray-700">
               iPhone 15 pro max
             </div>
             <div className="flex gap-1 items-center">
