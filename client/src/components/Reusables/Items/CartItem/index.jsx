@@ -3,9 +3,10 @@ import QuantityBox from "../../QuantityBox";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { MdDelete, MdDeleteOutline } from "react-icons/md";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 const CartItem = ({ item }) => {
   return (
-    <div className="flex flex-row gap-4 bg-white rounded-xl m-3 items-center relative">
+    <div className="flex flex-row gap-4 bg-white rounded-xl m-3 items-center relative cursor-pointer hover:bg-[#ede4ff]">
       <img
         className="h-25 w-25 m-2 rounded-lg object-cover"
         src="https://i.insider.com/66ed6324cfb7f307e5735cbe?width=1200&format=jpeg"
@@ -13,7 +14,7 @@ const CartItem = ({ item }) => {
       />
       <div className="p-2 w-full">
         <button className="absolute top-2 right-3 cursor-pointer">
-        <MdDeleteOutline className="text-2xl opacity-75 hover:text-primary"/>
+        <MdDeleteOutline className="text-2xl hover:text-primary text-gray-500"/>
         </button>
         <div className="brand text-[12px] font-[400] text-gray-600">
           <p>{item?.brand}</p>
@@ -24,6 +25,7 @@ const CartItem = ({ item }) => {
           <div className="price text-primary font-[600]">₹15000</div>
         </div>
       </div>
+      <Divider/>
     </div>
   );
 };
