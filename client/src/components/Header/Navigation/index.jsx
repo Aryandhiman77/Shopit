@@ -20,7 +20,7 @@ const NavigationBar = () => {
   
 
   return (
-    <div className="max-w-[95%] mx-auto flex items-center">
+    <div className="max-w-[95%] mx-auto flex items-center ">
       <div className="col_1 w-[23%]">
         <Button
           onClick={() => setDrawerOpen(true)}

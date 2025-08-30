@@ -20,7 +20,7 @@ const DrawerList = ({setDrawerOpen}) => {
       </div>
       <Divider />
       <div className="drawer_items">
-        <ul className=" flex flex-col gap-y-3 font-[600]">
+        <ul className=" flex flex-col gap-y-3 font-[600] h-full">
           <DrawerItems items={categories} />
         </ul>
       </div>

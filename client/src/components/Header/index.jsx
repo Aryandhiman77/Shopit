@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import Search from "../Search";
-import { MdShoppingCart } from "react-icons/md";
 import { IoMdHeartEmpty, IoIosGitCompare } from "react-icons/io";
 import { IoCartOutline } from "react-icons/io5";
 import Badge from "../Reusables/Elements/Badge";
@@ -9,9 +8,13 @@ import logo from "../../assets/logo.svg";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import NavigationBar from "./Navigation";
+import DrawerNavigation from "./Navigation/Drawer";
+import CartPanel from "./Navigation/CartPanel";
+import { useState } from "react";
 
 
 const Header = () => {
+  const [cartPanelOpen,setCartPanelOpen]=useState(false);
   return (
     <>
     <div className=" border-b-[1px] border-gray-200 bg-white">
@@ -84,7 +87,7 @@ const Header = () => {
                   </li>
                   <li>
                     <Tooltip title="Cart">
-                      <IconButton>
+                      <IconButton onClick={()=>setCartPanelOpen(!cartPanelOpen)}>
                         <Badge
                           value={2}
                           icon={<IoCartOutline className=" text-2xl" />}
@@ -106,7 +109,9 @@ const Header = () => {
         
     </header>
     <div className="cartPanel">
-
+      <DrawerNavigation position={"right"} isDrawerOpen={cartPanelOpen} setDrawerOpen={setCartPanelOpen}>
+        <CartPanel setDrawerOpen={setCartPanelOpen}/>
+      </DrawerNavigation>
     </div>
     </>
   );
