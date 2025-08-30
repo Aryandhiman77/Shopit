@@ -86,7 +86,7 @@ const Header = () => {
                     </Tooltip>
                   </li>
                   <li>
-                    <Tooltip title="Cart">
+                    <Tooltip title="Cart total: ₹ 3,999">
                       <IconButton onClick={()=>setCartPanelOpen(!cartPanelOpen)}>
                         <Badge
                           value={2}

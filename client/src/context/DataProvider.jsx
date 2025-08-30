@@ -354,10 +354,16 @@ const DataProvider = ({ children }) => {
     },
     
   ])
+    const cartItems = [
+    { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
+    { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
+    { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
+    { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
+  ];
   const [level1Categories,setLevel1Categories] = useState(["Fashion","Electronics","Sports","Home & kitchen","Jwellery"])
   return (
     <DataContext.Provider
-      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData,productsData,level1Categories }}
+      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData,productsData,level1Categories,cartItems }}
     >
       {children}
     </DataContext.Provider>

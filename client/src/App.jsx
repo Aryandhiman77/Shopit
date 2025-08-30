@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword/Verification";
 import ResetPass from "./pages/ForgotPassword/ResetPass";
+import CartPage from "./pages/Cart";
 
 const App = () => {
   return (
@@ -53,6 +54,11 @@ const App = () => {
                 exact={true}
                 path="/reset"
                 element={<ResetPass />}
+              />
+              <Route
+                exact={true}
+                path="/myCart"
+                element={<CartPage />}
               />
             </Routes>
             <FooterSection />
