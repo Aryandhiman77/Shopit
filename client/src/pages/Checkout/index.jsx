@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("card");
@@ -93,7 +94,7 @@ const Checkout = () => {
                   name="payment"
                   checked={paymentMethod === "razorpay"}
                   onChange={() => setPaymentMethod("razorpay")}
-                  className="w-4 h-4"
+                  className="w-4 h-4 accent-primary"
                 />
                 <span>Razorpay (Google Pay, PhonePe, Paytm, UPI)</span>
               </label>
@@ -104,7 +105,7 @@ const Checkout = () => {
                   name="payment"
                   checked={paymentMethod === "cod"}
                   onChange={() => setPaymentMethod("cod")}
-                  className="w-4 h-4"
+                  className="w-4 h-4 accent-primary"
                 />
                 <span>Cash on Delivery</span>
               </label>
@@ -155,9 +156,11 @@ const Checkout = () => {
           </div>
 
           {/* Place Order Button */}
-          <button className="mt-6 w-full bg-primary text-white py-3 rounded-xl text-lg font-semibold hover:bg-primary/90 transition">
+          <Link to={"/orderPlaced"}>
+          <button  className="mt-6 w-full bg-primary text-white py-3 rounded-xl text-lg font-semibold hover:bg-primary/90 transition cursor-pointer">
             Place Order
           </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -17,6 +17,7 @@ import CartPage from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import MyAccount from "./pages/MyAccount";
 import TrackPackage from "./pages/TrackPackage";
+import OrderPlaced from "./pages/OrderPlaced";
 
 const App = () => {
   return (
@@ -77,6 +78,11 @@ const App = () => {
                 exact={true}
                 path="/track"
                 element={<TrackPackage />}
+              />
+              <Route
+                exact={true}
+                path="/orderPlaced"
+                element={<OrderPlaced />}
               />
             </Routes>
             <FooterSection />
