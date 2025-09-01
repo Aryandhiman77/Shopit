@@ -9,7 +9,7 @@ import Wishlist from "./Tabs/Wishlist";
 import MyOrders from "./Tabs/MyOrders";
 import Address from "./Tabs/Address";
 const MyAccount = () => {
-  const items = ["My Profile", "Address", "Wishlist", "My Orders", "Logout"];
+  const sideBartabs = ["My Profile", "Address", "Wishlist", "My Orders", "Logout"];
   const [tabActive, setTabActive] = useState(0);
   const tabs = [
   <Profile key="profile" />,
@@ -40,22 +40,14 @@ const MyAccount = () => {
         <Divider />
         <ScrollTab
           orientation="vertical"
-          items={items}
+          items={sideBartabs}
           bg={"#e5e5e5"}
           setActive={setTabActive}
         />
       </div>
       <div className="information w-[50%] bg-white h-fit rounded-sm shadow-lg">
         <CollapsablePanel isOpened={tabActive>-1}>
-          {/* {tabActive === 0 && <Profile />}
-          {tabActive === 1 && <Address />}
-          {tabActive === 2 && <Wishlist />}
-          {tabActive === 3 && <MyOrders />} */}
-          { 
-            tabs.map((tab,i)=>(
-                tabActive===i && tab
-            ))
-          }
+          {tabs[tabActive]}
         </CollapsablePanel>
       </div>
     </div>
