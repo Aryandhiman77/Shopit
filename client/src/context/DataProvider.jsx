@@ -361,9 +361,16 @@ const DataProvider = ({ children }) => {
     { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
   ];
   const [level1Categories,setLevel1Categories] = useState(["Fashion","Electronics","Sports","Home & kitchen","Jwellery"])
+  const addresses = [
+              {
+                fullName: "Aryan dhiman",
+                type: "home",
+                fullAddress: "Vpo sarsehri, ambala cantt, haryana - 133001",
+              },
+            ]
   return (
     <DataContext.Provider
-      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData,productsData,level1Categories,cartItems }}
+      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData,productsData,level1Categories,cartItems,addresses }}
     >
       {children}
     </DataContext.Provider>

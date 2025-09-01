@@ -16,6 +16,7 @@ import ResetPass from "./pages/ForgotPassword/ResetPass";
 import CartPage from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import MyAccount from "./pages/MyAccount";
+import TrackPackage from "./pages/TrackPackage";
 
 const App = () => {
   return (
@@ -71,6 +72,11 @@ const App = () => {
                 exact={true}
                 path="/myaccount"
                 element={<MyAccount />}
+              />
+              <Route
+                exact={true}
+                path="/track"
+                element={<TrackPackage />}
               />
             </Routes>
             <FooterSection />

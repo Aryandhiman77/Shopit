@@ -8,7 +8,7 @@ import WishlistItem from "../../../../components/Reusables/Items/WishlistItem";
 const Wishlist = () => {
   return (
     <div>
-      <div className="header p-5">
+      <div className="header p-5 ">
         <p className="text-gray-600 font-[600] text-[16px]">My Wishlist</p>
       </div>
       <Divider />
