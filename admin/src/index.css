@@ -1,14 +1,23 @@
 @import "tailwindcss";
 
-    :root {
-      --background-color: #ffffff;
-      --text-color: #333333;
-    }
+:root {
+  --background-color: #ffffff;
+  --text-color: #333333;
+}
+@theme {
+  --color-primary: #f25252;
+}
 
-    body.dark {
-      --background-color: #333333;
-      --text-color: #ffffff;
-    }
-    .darkmode{
-        @apply dark:bg-gray-800 dark:text-white;
-    }
+body {
+  font-family: "Inter", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+body.dark {
+  --background-color: #333333;
+  --text-color: #ffffff;
+}
+.darkmode {
+  @apply dark:bg-gray-800 dark:text-white;
+}
