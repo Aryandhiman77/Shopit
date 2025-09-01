@@ -1,15 +1,21 @@
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Collapse } from "react-collapse";
 import AddressItem from "../../../../components/Reusables/Items/AddressItem";
 import DataContext from "../../../../context/DataContext";
+import { Link } from "react-router-dom";
 
 const Address = () => {
   const [isFormVisible, setFormVisible] = useState(false);
-  const {addresses} = useContext(DataContext);
+  const { addresses } = useContext(DataContext);
+  const [selectedIndex,setSelectedIndex] = useState(0);
+  const handleAddressSelection = (i)=>{
+    setSelectedIndex(i);
+    console.log(i)
+  }
   return (
     <div>
       <div className="header p-5">
@@ -155,7 +161,7 @@ const Address = () => {
               type="submit"
               className="btn !text-white !bg-primary hover:!bg-black !p-3"
             >
-              Register
+              Add Address
             </Button>
           </form>
         </Collapse>
@@ -168,7 +174,9 @@ const Address = () => {
               Add shipping address
             </div>
             {addresses?.map((item, i) => (
-              <AddressItem address={item} key={i} />
+              <div key={i} onClick={()=>handleAddressSelection(i)} className={`!w-full cursor-pointer ${selectedIndex===i?"bg-[#fffaed]":""}`}>
+                <AddressItem address={item} key={i} selected={selectedIndex===i} />
+              </div>
             ))}
           </div>
         )}

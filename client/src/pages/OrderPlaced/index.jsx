@@ -6,7 +6,10 @@ import { Link } from "react-router-dom";
 
 const OrderPlaced = () => {
   const [showConfetti, setShowConfetti] = useState(true);
-  const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
   useEffect(() => {
     // Stop confetti after 5 seconds
@@ -27,7 +30,9 @@ const OrderPlaced = () => {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-br from-green-50 to-white text-center p-6">
-      {showConfetti && <Confetti width={windowSize.width} height={windowSize.height} />}
+      {showConfetti && (
+        <Confetti width={windowSize.width} height={windowSize.height} />
+      )}
 
       {/* Success Icon */}
       <motion.div
@@ -55,8 +60,9 @@ const OrderPlaced = () => {
         transition={{ delay: 0.4, duration: 0.8 }}
         className="text-gray-600 mt-3 max-w-lg"
       >
-        Thank you for shopping with us. Your order has been confirmed and is being processed.  
-        You’ll receive a confirmation email with your order details shortly.
+        Thank you for shopping with us. Your order has been confirmed and is
+        being processed. You’ll receive a confirmation email with your order
+        details shortly.
       </motion.p>
 
       {/* Order Summary Card */}
@@ -66,7 +72,9 @@ const OrderPlaced = () => {
         transition={{ delay: 0.6, duration: 0.8 }}
         className="bg-white shadow-xl rounded-2xl mt-8 w-full max-w-md p-6 text-left"
       >
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Order Summary</h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+          Order Summary
+        </h2>
         <div className="space-y-3">
           <div className="flex justify-between text-gray-600">
             <span>Order ID:</span>
@@ -84,16 +92,26 @@ const OrderPlaced = () => {
       </motion.div>
 
       {/* CTA Button */}
-      <Link to={"/track"}>
-      <motion.button
-
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="mt-8 bg-green-500 text-white px-6 py-3 rounded-xl shadow-md font-medium hover:bg-green-600 transition"
-      >
-        Track Your Order
-      </motion.button>
-      </Link>
+      <div className="flex gap-10">
+        <Link to={"/track"}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="mt-8 bg-green-500 text-white px-6 py-3 rounded-xl shadow-md font-medium hover:bg-green-600 transition"
+          >
+            Track Your Order
+          </motion.button>
+        </Link>
+        <Link to={"/"}>
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="mt-8 bg-primary text-white px-6 py-3 rounded-xl shadow-md font-medium hover:bg-red-500 transition"
+          >
+            Continue Shopping
+          </motion.button>
+        </Link>
+      </div>
     </div>
   );
 };

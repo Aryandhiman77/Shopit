@@ -5,9 +5,9 @@ import Dropdown from "@mui/joy/Dropdown";
 import MenuButton from "@mui/joy/MenuButton";
 import { MdEdit, MdDelete } from "react-icons/md";
 
-const AddressItem = ({address}) => {
+const AddressItem = ({address,selected}) => {
   return (
-    <div className="address-item border-[1px] border-[#a0a0a0] border-dashed p-5 rounded-md bg-[#fafafa] hover:bg-gray-100 cursor-pointer text-sm font-[500] text-gray-600 w-full my-2">
+    <div className={`address-item border-[1px] ${selected?"border-primary border":"border-[#a0a0a0] border-dashed"}  p-5 rounded-md  hover:bg-gray-100 text-sm font-[500] text-gray-600 w-full my-2`}>
       <div className="flex justify-between items-center">
         <div className="bg-[#e5e5e5] p-1 rounded-md text-[12px]">{address.type}</div>
         <Dropdown>

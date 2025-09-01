@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Address from "../MyAccount/Tabs/Address";
+import Divider from "@mui/material/Divider";
 
 const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("card");
@@ -11,7 +13,8 @@ const Checkout = () => {
       size: "42",
       quantity: 1,
       price: 8999,
-      image: "https://rukminim2.flixcart.com/image/704/844/xif0q/shoe/d/f/d/-original-imah49fsejv4xrbm.jpeg?q=90&crop=false",
+      image:
+        "https://rukminim2.flixcart.com/image/704/844/xif0q/shoe/d/f/d/-original-imah49fsejv4xrbm.jpeg?q=90&crop=false",
     },
     {
       id: 2,
@@ -19,7 +22,8 @@ const Checkout = () => {
       size: "41",
       quantity: 2,
       price: 12999,
-      image: "https://images-cdn.ubuy.co.in/65fed6212d90ee163700a4f9-adidas-men-39-s-ultraboost-21-running.jpg",
+      image:
+        "https://images-cdn.ubuy.co.in/65fed6212d90ee163700a4f9-adidas-men-39-s-ultraboost-21-running.jpg",
     },
   ];
 
@@ -37,57 +41,17 @@ const Checkout = () => {
         {/* Left Side - Shipping + Payment */}
         <div className="lg:col-span-2 space-y-8">
           {/* Shipping Address */}
-          <div className="bg-white p-6 rounded-2xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Shipping Address</h2>
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="border border-gray-300 p-3 rounded-lg focus:outline-primary"
-              />
-              <input
-                type="text"
-                placeholder="Phone Number"
-                className="border border-gray-300 p-3 rounded-lg focus:outline-primary"
-              />
-              <input
-                type="text"
-                placeholder="Email Address"
-                className="border border-gray-300 p-3 rounded-lg focus:outline-primary md:col-span-2"
-              />
-              <input
-                type="text"
-                placeholder="Street Address"
-                className="border border-gray-300 p-3 rounded-lg focus:outline-primary md:col-span-2"
-              />
-              <input
-                type="text"
-                placeholder="City"
-                className="border border-gray-300 p-3 rounded-lg focus:outline-primary"
-              />
-              <input
-                type="text"
-                placeholder="State"
-                className="border border-gray-300 p-3 rounded-lg focus:outline-primary"
-              />
-              <input
-                type="text"
-                placeholder="Postal Code"
-                className="border border-gray-300 p-3 rounded-lg focus:outline-primary"
-              />
-              <input
-                type="text"
-                placeholder="Country"
-                className="border border-gray-300 p-3 rounded-lg focus:outline-primary"
-              />
-            </form>
+          <div className="bg-white rounded-2xl shadow-md">
+            <Address />
           </div>
 
           {/* Payment Method */}
-          <div className="bg-white p-6 rounded-2xl shadow-md">
-            <h2 className="text-xl font-semibold mb-4">Payment Method</h2>
-            <div className="space-y-3">
-
+          <div className="bg-white rounded-2xl shadow-md">
+            <div className="header p-5">
+        <p className="text-gray-600 font-[600] text-[16px]">Payment Method</p>
+      </div>
+      <Divider/>
+            <div className="space-y-3 p-4">
               <label className="flex items-center gap-3 cursor-pointer border border-gray-200 p-3 rounded-lg hover:border-primary transition">
                 <input
                   type="radio"
@@ -157,9 +121,9 @@ const Checkout = () => {
 
           {/* Place Order Button */}
           <Link to={"/orderPlaced"}>
-          <button  className="mt-6 w-full bg-primary text-white py-3 rounded-xl text-lg font-semibold hover:bg-primary/90 transition cursor-pointer">
-            Place Order
-          </button>
+            <button className="mt-6 w-full bg-primary text-white py-3 rounded-xl text-lg font-semibold hover:bg-primary/90 transition cursor-pointer">
+              Place Order
+            </button>
           </Link>
         </div>
       </div>

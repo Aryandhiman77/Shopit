@@ -367,6 +367,11 @@ const DataProvider = ({ children }) => {
                 type: "home",
                 fullAddress: "Vpo sarsehri, ambala cantt, haryana - 133001",
               },
+              {
+                fullName: "Aryan dhiman",
+                type: "home",
+                fullAddress: "Vpo sarsehri, ambala cantt, haryana - 133001",
+              },
             ]
   return (
     <DataContext.Provider
