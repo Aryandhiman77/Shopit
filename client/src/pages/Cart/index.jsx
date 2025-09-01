@@ -11,7 +11,7 @@ const CartPage = () => {
   const { cartItems } = useContext(DataContext);
   return (
     <div className="container max-w-screen-xl m-auto mt-4 flex flex-row gap-5">
-      <div className="my-cart w-[65%] bg-white  rounded-lg">
+      <div className="my-cart w-[65%] bg-white  rounded-lg shadow-lg border-[1px] border-gray-200">
         <div className="header p-5">
           <p className="text-gray-600 font-[600] text-[16px]">My Cart</p>
           <p className="text-gray-600 font-[400] text-sm">
@@ -28,7 +28,7 @@ const CartPage = () => {
           ))}
         </div>
       </div>
-      <div className="price-info-card w-[35%] bg-white sticky top-13 h-fit rounded-lg overflow-hidden">
+      <div className="price-info-card w-[35%] bg-white sticky top-13 h-fit rounded-lg overflow-hidden shadow-lg border-[1px] border-gray-200">
         <div className="total bg-white flex-shrink-0">
           <div className="header p-5">
             <p className="text-gray-600 font-[600] text-[16px]">Cart Total</p>
@@ -44,7 +44,7 @@ const CartPage = () => {
           </div>
           <div className="flex justify-between p-2">
             <span className="font-[600]">Estimate price</span>
-            <span className="text-primary font-[600]">₹ 22,999 </span>
+            <span className="text-primary font-[600] line-through">₹ 22,999 </span>
           </div>
           <div className="flex justify-between p-4">
             <span className="font-[600]">Discount </span>
@@ -52,7 +52,7 @@ const CartPage = () => {
           </div>
           <Divider />
           <div className="flex justify-between p-4">
-            <span className="font-[600]">Total (tax excl.)</span>
+            <span className="font-[600]">Total (all taxes incl.)</span>
             <span className="text-primary font-[600]">₹ 15,999 </span>
           </div>
           <Divider />

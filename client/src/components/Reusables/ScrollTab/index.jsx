@@ -3,7 +3,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import "./style.css"
-const ScrollTab = ({ items,setActive}) => {
+const ScrollTab = ({ items,setActive,orientation="horizontal",bg="white"}) => {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -18,11 +18,12 @@ const ScrollTab = ({ items,setActive}) => {
         onChange={handleChange}
         variant="scrollable"
         scrollButtons="auto"
+        orientation={orientation}
         
         aria-label="scrollable auto tabs example"
       >
         {items?.map((item,i) => (
-          <Tab className="link hover:!text-primary " key={i} label={item} />
+          <Tab className=" hover:!text-white hover:!bg-primary !capitalize" key={i} label={item} />
         ))}
       </Tabs>
     </Box>

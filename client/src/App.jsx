@@ -14,6 +14,8 @@ import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword/Verification";
 import ResetPass from "./pages/ForgotPassword/ResetPass";
 import CartPage from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import MyAccount from "./pages/MyAccount";
 
 const App = () => {
   return (
@@ -59,6 +61,16 @@ const App = () => {
                 exact={true}
                 path="/myCart"
                 element={<CartPage />}
+              />
+              <Route
+                exact={true}
+                path="/checkout"
+                element={<Checkout />}
+              />
+              <Route
+                exact={true}
+                path="/myaccount"
+                element={<MyAccount />}
               />
             </Routes>
             <FooterSection />

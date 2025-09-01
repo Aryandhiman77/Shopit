@@ -69,9 +69,11 @@ const CartPanel = ({ setDrawerOpen }) => {
               View Cart
             </Button>
           </Link>
+          <Link to={"/checkout"} onClick={()=>setDrawerOpen(false)} >
           <Button className="!border-[1px] !border-primary !text-primary !px-4 !py-3 hover:!bg-black hover:!text-white hover:!border-black">
             Proceed to Buy
           </Button>
+          </Link>
         </div>
       </div>
     </div>
