@@ -1,18 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../../Header";
 import SideBar from "../../Sidebar";
+import CollapsablePanel from "../CollapsablePanel";
 
-const Layout = ({children}) => {
+const Layout = ({ children }) => {
+  const [sideBarOpened, setSideBarOpened] = useState(true);
   return (
     <div>
-      <div className="flex flex-row">
-        
-        <div className="w-[20%] shadow-md h-[100vh] ">
+      <div className="flex flex-row z-60">
+        <div
+          className={`w-[20%] shadow-md ${
+            sideBarOpened ? "block" : "hidden"
+          }`}
+        >
           <SideBar />
         </div>
-        <div className="w-full h-full">
-          <Header />
-          {children}
+        <div className=" h-fit overflow-x-hidden" style={{width:sideBarOpened?"80%":"100%"}}>
+          <Header
+            sidebarOpened={sideBarOpened}
+            setSidebarOpened={setSideBarOpened}
+          />
+          <div className="z-40 relative w-full">{children}</div>
         </div>
       </div>
     </div>

@@ -10,9 +10,9 @@ const App = () => {
     <BrowserRouter>
       <ThemeProvider>
         <Layout>
-        <Routes>
-          <Route exact={true} path="/" element={<Dashboard />} />
-        </Routes>
+          <Routes>
+            <Route exact={true} path="/" element={<Dashboard />} />
+          </Routes>
         </Layout>
       </ThemeProvider>
     </BrowserRouter>

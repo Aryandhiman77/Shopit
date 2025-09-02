@@ -9,10 +9,13 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
+  font-weight: weight;
   font-style: normal;
 }
+
+
 
 body.dark {
   --background-color: #333333;
@@ -20,4 +23,16 @@ body.dark {
 }
 .darkmode {
   @apply dark:bg-gray-800 dark:text-white;
+}
+.custom-border{
+    @apply border-[1px] border-[#e5e5e5]
+}
+.custom-btn {
+  @apply p-2 shadow-md rounded-lg cursor-pointer transition-all duration-75 
+         active:translate-y-[2px] active:bg-[#f1f1f1] 
+         hover:text-blue-500 hover:bg-[#f7f7f7] 
+         bg-white  ; 
+}
+.heading-1{
+  @apply text-gray-700 font-[600] text-lg
 }

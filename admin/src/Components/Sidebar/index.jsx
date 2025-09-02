@@ -1,15 +1,16 @@
 import React from "react";
 import logo from "../../assets/admin-logo.jpg";
-import { BsDot, BsGearWide, BsPlus } from "react-icons/bs";
+import { BsPlus } from "react-icons/bs";
 import { Button, Divider } from "@mui/material";
 import {
-  MdArrowDropDown,
   MdIosShare,
   MdOutlineDashboard,
   MdSupervisedUserCircle
 } from "react-icons/md";
+import { RiArrowDropDownLine } from "react-icons/ri";
+
 import MButton from "../Reusables/Elements/MButton";
-import { PiDot, PiSlideshowDuotone,PiUser } from "react-icons/pi";
+import { PiSlideshowDuotone } from "react-icons/pi";
 import CollapablePanel from "../Reusables/CollapsablePanel"
 import { IoBagCheckOutline, IoEye, IoList, IoLogOut, IoLogOutOutline } from "react-icons/io5";
 import { TbCategory } from "react-icons/tb";
@@ -21,11 +22,11 @@ import { FaBoxOpen } from "react-icons/fa6";
 
 const SideBar = () => {
   return (
-    <div className="bg-white w-full">
-      <div className="logo sticky top-0 ">
+    <div className="bg-white w-full sticky top-0 ">
+      <div className="logo  ">
         <div className="relative flex justify-center items-center">
           <img src={logo} alt="shopit" className="w-18 h-auto" />
-          <p className="text-gray-600 text-2xl font-[600]">Shopit Admin</p>
+          <p className="text-gray-600 text-2xl font-[600] ">Shopit Admin</p>
         </div>
       </div>
       <Divider />
@@ -42,16 +43,18 @@ const SideBar = () => {
             <MButton
               title="Home Slides"
               startIcon={<PiSlideshowDuotone className="text-xl" />}
-              endIcon={<MdArrowDropDown className="text-xl" />}
+              endIcon={<RiArrowDropDownLine className="text-xl" />}
             />
             <CollapablePanel isOpened={true} className={"px-5"} >
               <MButton
+              className={"!text-[13px] !font-[500]"}
                 title="Add Slide"
-                startIcon={<BsPlus className="text-xl" />}
+                startIcon={<BsPlus className="text-lg" />}
               />
               <MButton
+               className={"!text-[13px] !font-[500]"}
                 title="View Slides"
-                startIcon={<IoEye className="text-xl" />}
+                startIcon={<IoEye className="text-lg" />}
               />
             </CollapablePanel>
           </li>
@@ -67,16 +70,18 @@ const SideBar = () => {
             <MButton
               title="Product"
               startIcon={<FaBoxOpen className="text-xl" />}
-              endIcon={<MdArrowDropDown className="text-xl" />}
+              endIcon={<RiArrowDropDownLine className="text-xl" />}
             />
             <CollapablePanel isOpened={true} className={"px-5"} >
              <MButton
+              className={"!text-[13px] !font-[500]"}
                 title="Product List"
-                startIcon={<IoList className="text-xl" />}
+                startIcon={<IoList className="text-lg" />}
               />
               <MButton
+               className={"!text-[13px] !font-[500]"}
                 title="Add Product"
-                startIcon={<BsPlus className="text-xl" />}
+                startIcon={<BsPlus className="text-lg" />}
               />
             </CollapablePanel>
           </li>
@@ -85,20 +90,23 @@ const SideBar = () => {
             <MButton
               title="Category"
               startIcon={<TbCategory className="text-xl" />}
-              endIcon={<MdArrowDropDown className="text-xl" />}
+              endIcon={<RiArrowDropDownLine className="text-xl" />}
             />
             <CollapablePanel isOpened={true} className={"px-5"} >
               <MButton
+               className={"!text-[13px] !font-[500]"}
                 title="Level 1"
-                startIcon={<MdOutlineDashboard className="text-xl" />}
+                startIcon={<MdOutlineDashboard className="text-lg" />}
               />
               <MButton
+               className={"!text-[13px] !font-[500]"}
                 title="Level 2"
-                startIcon={<MdOutlineDashboard className="text-xl" />}
+                startIcon={<MdOutlineDashboard className="text-lg" />}
               />
               <MButton
+              className={"!text-[13px] !font-[500]"}
                 title="Level 3"
-                startIcon={<MdOutlineDashboard className="text-xl" />}
+                startIcon={<MdOutlineDashboard className="text-lg" />}
               />
             </CollapablePanel>
           </li>
