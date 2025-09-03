@@ -9,8 +9,8 @@ const Layout = ({ children }) => {
     <div>
       <div className="flex flex-row z-60">
         <div
-          className={`w-[20%] shadow-md ${
-            sideBarOpened ? "block" : "hidden"
+          className={` shadow-md transition-all duration-150 ${
+            sideBarOpened ? "w-[20%]" : "w-[0%]  overflow-hidden"
           }`}
         >
           <SideBar />

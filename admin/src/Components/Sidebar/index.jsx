@@ -22,7 +22,7 @@ import { FaBoxOpen } from "react-icons/fa6";
 
 const SideBar = () => {
   return (
-    <div className="bg-white w-full sticky top-0 ">
+    <div className="bg-white w-full sticky top-0">
       <div className="logo  ">
         <div className="relative flex justify-center items-center">
           <img src={logo} alt="shopit" className="w-18 h-auto" />
