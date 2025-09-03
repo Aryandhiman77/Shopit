@@ -20,32 +20,128 @@ const Dashboard = () => {
     paymentId: 32422432,
     username: "Aryan Dhiman",
     phoneNumber: "+91 123456789",
-    items: ["", "", "", "", "", ""],
+    items: [{
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "pending",
+    }
+  ],
     price: 2000,
     createdAt: "September 2,2025",
     modifiedAt: "September 2,2025",
-    status: "pending",
   },
   {
     orderId: "#32422432",
     paymentId: 32422432,
     username: "Aryan Dhiman",
     phoneNumber: "+91 123456789",
-    items: ["", "", "", "", "", ""],
+    items: [{
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "pending",
+    }
+  ],
     price: 2000,
     createdAt: "September 2,2025",
     modifiedAt: "September 2,2025",
-    status: "pending",
   },{
     orderId: "#32422432",
     paymentId: 32422432,
     username: "Aryan Dhiman",
     phoneNumber: "+91 123456789",
-    items: ["", "", "", "", "", ""],
+    items: [{
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "pending",
+    }
+  ],
     price: 2000,
     createdAt: "September 2,2025",
     modifiedAt: "September 2,2025",
-    status: "pending",
+  },{
+    orderId: "#32422432",
+    paymentId: 32422432,
+    username: "Aryan Dhiman",
+    phoneNumber: "+91 123456789",
+    items: [{
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "pending",
+    }
+  ],
+    price: 2000,
+    createdAt: "September 2,2025",
+    modifiedAt: "September 2,2025",
+  },{
+    orderId: "#32422432",
+    paymentId: 32422432,
+    username: "Aryan Dhiman",
+    phoneNumber: "+91 123456789",
+    items: [{
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "pending",
+    }
+  ],
+    price: 2000,
+    createdAt: "September 2,2025",
+    modifiedAt: "September 2,2025",
+  },{
+    orderId: "#32422432",
+    paymentId: 32422432,
+    username: "Aryan Dhiman",
+    phoneNumber: "+91 123456789",
+    items: [{
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "pending",
+    },
+    {
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "shipped",
+    },
+    
+    {
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "delivered",
+    },
+    {
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "cancelled",
+    },
+    {
+      image:"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/airpods-pro-2-hero-select-202409_FMT_WHH?wid=750&hei=556&fmt=jpeg&qlt=90&.v=1724041668836",
+      name:"Apple Airpods 2nd generation",
+      quantity:1,
+      price:"₹ 23,999",
+      status: "refunded",
+    },
+    
+  ],
+    price: 2000,
+    createdAt: "September 2,2025",
+    modifiedAt: "September 2,2025",
   },
 ];
   return (
@@ -150,7 +246,6 @@ const Dashboard = () => {
             "Price",
             "Created at",
             "Modified at",
-            "Status",
             "Operations",
           ]}
         >

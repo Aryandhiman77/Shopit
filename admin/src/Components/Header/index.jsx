@@ -15,7 +15,7 @@ import Search from "../Reusables/Search";
 const Header = ({ sidebarOpened, setSidebarOpened }) => {
   //   const [isSideBarOpen, setSideBarOpen] = useState(false);
   return (
-    <div className="w-full flex flex-row justify-between items-center p-4 z-50">
+    <div className="w-full flex flex-row justify-between items-center p-4 z-50 relative">
       <div className="part-1 flex gap-5 ">
         <button
           className="custom-btn custom-border text-xl text-gray-600"
@@ -98,7 +98,7 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
           <CustomMenu
             title={<img src={avatar} alt="" height={40} width={40} />}
             btnClasses={
-              "shadow-md bg-black"
+              "shadow-md bg-black rounded-full"
             }
           >
             <div className="flex flex-row gap-4 p-4">
