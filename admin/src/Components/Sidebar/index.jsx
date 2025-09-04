@@ -30,7 +30,7 @@ const SideBar = () => {
         </div>
       </div>
       <Divider />
-      <div className="sidebar-content p-2">
+      <div className="sidebar-content ">
         <ul className="flex flex-col gap-1">
           <li>
             <MButton

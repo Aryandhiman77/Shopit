@@ -32,15 +32,15 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
           placeholder={"Search your page ..."}
         />
       </div>
-      <div className="flex items-center gap-4">
-        <button className="custom-btn custom-border">
-<svg
+      <div className="part-2 flex items-center gap-4">
+        <button className="custom-btn custom-border ">
+          <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             strokeWidth="1.8"
             stroke="currentColor"
-            className="h-[22px] w-auto animate-spin-slow"
+            className="h-[22px] w-auto animate-spin"
           >
             <path
               strokeLinecap="round"
@@ -97,9 +97,7 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
         <div>
           <CustomMenu
             title={<img src={avatar} alt="" height={40} width={40} />}
-            btnClasses={
-              "shadow-md bg-black rounded-full"
-            }
+            btnClasses={"shadow-md bg-black !rounded-full"}
           >
             <div className="flex flex-row gap-4 p-4">
               <img src={avatar} alt="" height={45} width={45} />
@@ -112,9 +110,18 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
             </div>
             <Divider />
             <div className="p-2">
-              <MButton title="My Profile" startIcon={<MdAccountCircle className="text-xl"/>} />
-              <MButton title="Account Settings" startIcon={<IoSettings className="text-xl"/>}/>
-              <MButton title="Account logs" startIcon={<MdDocumentScanner className="text-xl"/>} />
+              <MButton
+                title="My Profile"
+                startIcon={<MdAccountCircle className="text-xl" />}
+              />
+              <MButton
+                title="Account Settings"
+                startIcon={<IoSettings className="text-xl" />}
+              />
+              <MButton
+                title="Account logs"
+                startIcon={<MdDocumentScanner className="text-xl" />}
+              />
             </div>
             <Divider />
             <MenuItem className="flex flex-row gap-3 custom-btn !shadow-none">
@@ -124,7 +131,6 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
           </CustomMenu>
         </div>
       </div>
-
     </div>
   );
 };

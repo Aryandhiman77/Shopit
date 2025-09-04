@@ -1,12 +1,10 @@
 import { Tooltip } from "@mui/joy";
-import React, { useState } from "react";
+import { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import CollapsablePanel from "../../Reusables/CollapsablePanel";
-import Table from "..";
 
-const Row = ({ order }) => {
+const OrderRow = ({ order }) => {
   const [itemsHidden, setItemsHidden] = useState(true);
   return (
     <>
@@ -136,4 +134,4 @@ const Row = ({ order }) => {
   );
 };
 
-export default Row;
+export default OrderRow;
