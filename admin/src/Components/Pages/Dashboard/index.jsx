@@ -7,6 +7,7 @@ import {
   PiChartPieSliceDuotone,
   PiExportDuotone,
   PiGiftDuotone,
+  PiPlus,
 } from "react-icons/pi";
 import { IoStatsChart } from "react-icons/io5";
 import Search from "../../Reusables/Search";
@@ -36,13 +37,14 @@ const Dashboard = () => {
     "Category(L1)",
     "SubCategory(L2)",
     "Leaf Category(L3)",
-    "Variants",
     "Sales",
+    "Variants",
     "Created at",
     "Modified at",
+    "Status",
     "Operations",
   ];
-  const { orders,products } = useContext(DataContext);
+  const { orders, products } = useContext(DataContext);
 
   return (
     <div className="px-4 my-1 flex flex-col gap-y-5 w-full">
@@ -130,11 +132,14 @@ const Dashboard = () => {
         <div className="flex justify-between items-center">
           <p className="heading-1">Product List</p>
           <div className="flex flex-row items-center gap-3">
-          <button className="custom-btn !bg-green-600 !text-white flex items-center gap-1 text-sm">
-            <PiExportDuotone className="text-lg"/>
-            Export
+            <button className="custom-btn !bg-green-600 !text-white flex items-center gap-1 text-sm">
+              <PiExportDuotone className="text-lg" />
             </button>
-          <Search placeholder={"Search product ..."} />
+
+            <button className="custom-btn !bg-blue-500 !text-white flex items-center gap-1 text-sm">
+              <PiPlus className="text-lg" />
+            </button>
+            <Search placeholder={"Search product ..."} />
           </div>
         </div>
         <div className="my-3">

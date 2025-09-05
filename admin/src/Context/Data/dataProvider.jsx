@@ -168,19 +168,22 @@ const [products,setProducts] = useState([{
   "sales":"3",
   "createdAt":"August 1, 2024",
   "modifiedAt":"August 1, 2024",
+  "status":"active",
   "variants": [
     {
       "id": "var_123_1",
       "sku": "SHOE-BLK-42",
       "attributes": {
         "color": "green",
-        "size": "42"
+        "size": "42",
       },
       "thumbnail": "https://static.nike.com/a/images/t_PDP_936_v1/f_auto,q_auto:eco/75bc7c02-f18c-43d3-9456-2d00bb6d5e30/NIKE+JOURNEY+RUN.png",
       "price": 3999,
       "discountPrice": 3499,
       "stock": 25,
-      "images": ["shoe-black-42.jpg", "shoe-black-side.jpg"]
+      "images": ["shoe-black-42.jpg", "shoe-black-side.jpg"],
+      "rating":3.4,
+      "status":"active"
     },
     {
       "id": "var_123_2",
@@ -192,7 +195,9 @@ const [products,setProducts] = useState([{
       "price": 3999,
       "discountPrice": 3499,
       "stock": 15,
-      "images": ["shoe-black-43.jpg"]
+      "images": ["shoe-black-43.jpg"],
+      "rating":3.4,
+      "status":"inactive"
     }
   ]
 }]

@@ -1,12 +1,13 @@
 import { Button } from "@mui/material";
 import React from "react";
 
-const MButton = ({ bg, textColor, startIcon, title = "button", endIcon,className }) => {
+const MButton = ({ bg, textColor, startIcon, title = "button", endIcon,className,onClick }) => {
   return (
     <div>
       <Button
         className={`!w-full !text-gray-600 flex gap-2 !justify-start !capitalize !px-8 items-center ${className}`}
         style={{ background: bg, color: textColor }}
+        onClick={onClick}
       >
         <div className="flex gap-2 items-center">
           {startIcon}

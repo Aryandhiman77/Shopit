@@ -56,7 +56,7 @@ const OrderRow = ({ order }) => {
       </tr>
 
       {!itemsHidden && (
-        <>
+        <tr>
           <tr className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400 w-full">
             <th scope="col" class="px-16 py-3">
               <span class="sr-only">Image</span>
@@ -98,7 +98,7 @@ const OrderRow = ({ order }) => {
                 {item?.price}
               </td>
               <td className={`px-6 py-4`}>
-                <td
+                <div
                   className={`px-6 py-2  ${
                     item?.status === "pending"
                       ? "bg-blue-800"
@@ -116,7 +116,7 @@ const OrderRow = ({ order }) => {
                   } text-white rounded-2xl text-[12px] capitalize`}
                 >
                   {item?.status}
-                </td>
+                </div>
               </td>
               <td class="px-6 py-4">
                 <a
@@ -128,7 +128,7 @@ const OrderRow = ({ order }) => {
               </td>
             </tr>
           ))}
-        </>
+        </tr>
       )}
     </>
   );

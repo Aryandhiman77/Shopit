@@ -9,12 +9,11 @@ const Layout = ({ children }) => {
     <div>
       <div className="flex flex-row z-60">
         <div
-          className={` shadow-md transition-all duration-300 ${
+          className={`shadow-md border-r-1 border-gray-200 transition-all duration-300 ${
             sideBarOpened ? "w-[18%]" : "w-[0%]  overflow-hidden"
           }`}
         >
           <SideBar />
-          
         </div>
         <div className=" h-fit overflow-x-hidden" style={{width:sideBarOpened?"82%":"100%"}}>
           <Header

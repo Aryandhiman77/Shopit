@@ -57,17 +57,23 @@ const ProductRow = ({ product }) => {
         <td className="px-6 py-4 whitespace-nowrap">
           {product?.categories?.level3.name}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          {product?.variants?.length}
-        </td>
+       
         <td className="px-6 py-4 whitespace-nowrap">
           <div className="flex flex-col items-center" >
           <ProgressBar value={2}/>
           <p className="text-[12px]"><span className="text-gray-600 font-[600]">23</span> sales</p>
           </div>
         </td>
+         <td className="px-6 py-4 whitespace-nowrap">
+          {product?.variants?.length}
+        </td>
         <td className="px-6 py-4 whitespace-nowrap">{product?.createdAt}</td>
         <td className="px-6 py-4 whitespace-nowrap">{product?.modifiedAt}</td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div className={`p-2  rounded-2xl text-white text-[12px] font-[500] tracking-wide ${product?.status==="active"?"bg-green-700":product?.status==="inactive"?"bg-red-700":"bg-black"}`}>
+            {product?.status}
+          </div>
+        </td>
 
         <td className="px-6 py-4">
           <div className="flex gap-1">
@@ -93,50 +99,50 @@ const ProductRow = ({ product }) => {
       {!itemsHidden && (
         <>
           <tr className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400 w-full">
-            <th scope="col" class="px-16 py-3">
-              <span class="sr-only">Image</span>
+            <th scope="col" className="px-16 py-3">
+              <span className="sr-only">Image</span>
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Product
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Qty
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Price
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Order Status
             </th>
-            <th scope="col" class="px-6 py-3">
+            <th scope="col" className="px-6 py-3">
               Action
             </th>
           </tr>
           {product.variants?.map((item, i) => (
             <tr
               key={i}
-              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
             >
-              <td class="p-4">
+              <td className="p-4">
                 <img
                   src={item?.image}
-                  class="w-16 md:w-32 max-w-full max-h-full"
+                  className="w-16 md:w-32 max-w-full max-h-full"
                   alt="product image"
                 />
               </td>
-              <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+              <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
                 {item?.name}
               </td>
-              <td class="px-6 py-4">
-                <div class="flex items-center">
+              <td className="px-6 py-4">
+                <div className="flex items-center">
                   <div>{item?.quantity}</div>
                 </div>
               </td>
-              <td class="px-6 py-4 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+              <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white whitespace-nowrap">
                 {item?.price}
               </td>
               <td className={`px-6 py-4`}>
-                <td
+                <div
                   className={`px-6 py-2  ${
                     item?.status === "pending"
                       ? "bg-blue-800"
@@ -154,12 +160,12 @@ const ProductRow = ({ product }) => {
                   } text-white rounded-2xl text-[12px] capitalize`}
                 >
                   {item?.status}
-                </td>
+                </div>
               </td>
-              <td class="px-6 py-4">
+              <td className="px-6 py-4">
                 <a
                   href="#"
-                  class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                  className="font-medium text-red-600 dark:text-red-500 hover:underline"
                 >
                   Remove
                 </a>
