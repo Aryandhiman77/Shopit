@@ -22,7 +22,7 @@ body.dark {
   --text-color: #ffffff;
 }
 .darkmode {
-  @apply dark:bg-gray-800 dark:text-white;
+  @apply dark:bg-slate-900 dark:!text-white;
 }
 .custom-border{
     @apply border-[1px] border-[#e5e5e5]

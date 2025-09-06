@@ -15,8 +15,8 @@ import Search from "../Reusables/Search";
 const Header = ({ sidebarOpened, setSidebarOpened }) => {
   //   const [isSideBarOpen, setSideBarOpen] = useState(false);
   return (
-    <div className="w-full flex flex-row justify-between items-center p-4 z-50 relative">
-      <div className="part-1 flex gap-5 ">
+    <div className="w-full flex flex-row justify-between items-center p-2 z-50 relative">
+      <div className="part-1 flex gap-5">
         <button
           className="custom-btn custom-border text-xl text-gray-600"
           onClick={() => setSidebarOpened(!sidebarOpened)}

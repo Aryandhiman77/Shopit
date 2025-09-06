@@ -16,6 +16,9 @@ import Table from "../../Table";
 import DataContext from "../../../Context/Data/DataContext";
 import OrderRow from "../../Table/OrdersRow";
 import ProductRow from "../../Table/ProductRow";
+import LinesChart from "../../Reusables/Charts/LinesChart";
+import { GoDotFill } from "react-icons/go";
+
 
 const Dashboard = () => {
   const orderTableHeadings = [
@@ -44,11 +47,11 @@ const Dashboard = () => {
     "Status",
     "Operations",
   ];
-  const { orders, products } = useContext(DataContext);
+  const { orders, products,lineChartData } = useContext(DataContext);
 
   return (
-    <div className="px-4 my-1 flex flex-col gap-y-5 w-full">
-      <Box className={"flex justify-between items-center"}>
+    <div className="p-4 my-1 flex flex-col gap-y-5 w-full">
+      <Box className={"flex justify-between items-center bg-white darkmode"}>
         <div>
           <div>
             <p className="text-3xl font-[700]">Good Morning,</p>
@@ -70,7 +73,7 @@ const Dashboard = () => {
         />
       </Box>
       <div className="data-highlights flex gap-4 w-full">
-        <Box className={" w-1/3"}>
+        <Box className={" w-1/3 bg-white darkmode"}>
           <button className="flex justify-between gap-8 items-center w-full">
             <div className="flex items-center gap-4">
               <PiGiftDuotone className="text-5xl text-blue-500" />
@@ -89,7 +92,7 @@ const Dashboard = () => {
             Increased last month
           </p>
         </Box>
-        <Box className={" w-1/3"}>
+        <Box className={" w-1/3 bg-white darkmode"}>
           <button className="flex justify-between gap-8 items-center w-full">
             <div className="flex items-center gap-4">
               <PiChartPieSliceDuotone className="text-5xl text-green-500" />
@@ -108,7 +111,7 @@ const Dashboard = () => {
             Increased last month
           </p>
         </Box>
-        <Box className={" w-1/3"}>
+        <Box className={" w-1/3 bg-white darkmode"}>
           <button className="flex justify-between gap-8 items-center w-full">
             <div className="flex items-center gap-4">
               <PiBankDuotone className="text-5xl text-purple-700" />
@@ -128,14 +131,13 @@ const Dashboard = () => {
           </p>
         </Box>
       </div>
-      <Box className={"relative"}>
+      <Box className={"bg-white"}>
         <div className="flex justify-between items-center">
           <p className="heading-1">Product List</p>
           <div className="flex flex-row items-center gap-3">
             <button className="custom-btn !bg-green-600 !text-white flex items-center gap-1 text-sm">
               <PiExportDuotone className="text-lg" />
             </button>
-
             <button className="custom-btn !bg-blue-500 !text-white flex items-center gap-1 text-sm">
               <PiPlus className="text-lg" />
             </button>
@@ -152,7 +154,7 @@ const Dashboard = () => {
           ))}
         </Table>
       </Box>
-      <Box className={"relative"}>
+      <Box className={"bg-white"}>
         <div className="flex justify-between items-center">
           <p className="heading-1">Recent Orders</p>
           <Search placeholder={"Search order ID"} />
@@ -167,6 +169,22 @@ const Dashboard = () => {
           ))}
         </Table>
       </Box>
+      <Box className={"bg-white"}>
+        <div className="flex justify-between items-center">
+          <p className="heading-1">Total Users vs Total Sales</p>
+           <div className="flex items-center gap-4 m-4">
+          <p className="text-[13px] flex gap-2 items-center"><GoDotFill className="text-[#82ca9d]"/> Total Users</p>
+          <p className="text-[13px] flex gap-2 items-center"><GoDotFill className="text-[#8884d8]"/> Total Sales</p>
+        </div>
+        </div>
+          <div className="my-3">
+          <Divider />
+        </div>
+         
+        <LinesChart data={lineChartData}/>
+      </Box>
+      
+
     </div>
   );
 };
