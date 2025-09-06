@@ -13,7 +13,6 @@ import MButton from "../Reusables/Elements/MButton";
 import Search from "../Reusables/Search";
 
 const Header = ({ sidebarOpened, setSidebarOpened }) => {
-  //   const [isSideBarOpen, setSideBarOpen] = useState(false);
   return (
     <div className="w-full flex flex-row justify-between items-center p-2 z-50 relative">
       <div className="part-1 flex gap-5">

@@ -13,11 +13,11 @@ import { IoStatsChart } from "react-icons/io5";
 import Search from "../../Reusables/Search";
 import { Divider } from "@mui/joy";
 import Table from "../../Table";
-import DataContext from "../../../Context/Data/DataContext";
 import OrderRow from "../../Table/OrdersRow";
 import ProductRow from "../../Table/ProductRow";
 import LinesChart from "../../Reusables/Charts/LinesChart";
 import { GoDotFill } from "react-icons/go";
+import { useData } from "../../../Context/Data/DataContext";
 
 
 const Dashboard = () => {
@@ -47,7 +47,7 @@ const Dashboard = () => {
     "Status",
     "Operations",
   ];
-  const { orders, products,lineChartData } = useContext(DataContext);
+  const { orders, products,lineChartData } = useData();
 
   return (
     <div className="p-4 my-1 flex flex-col gap-y-5 w-full">

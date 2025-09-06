@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import logo from "../../assets/admin-logo.jpg";
 import { Divider } from "@mui/material";
 import { useLocation } from "react-router-dom";
@@ -70,7 +70,6 @@ const menuConfig = [
 const SideBar = () => {
   const { pathname } = useLocation();
   const [openDropdown, setOpenDropdown] = useState(null);
-
   const toggleDropdown = (title) => {
     setOpenDropdown(openDropdown === title ? null : title);
   };
@@ -137,4 +136,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default memo(SideBar);
