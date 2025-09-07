@@ -7,11 +7,10 @@ const Layout = () => {
   const [sideBarOpened, setSideBarOpened] = useState(true);
 
   return (
-    <div>
-      
+    <>
       <div className="flex flex-row z-60 ">
         <div
-          className={`shadow-md border-r-1 border-gray-200 transition-all duration-300  ${ 
+          className={`shadow-md border-r-1 border-gray-200 transition-all duration-300 min-h-[100vh]  ${ 
             sideBarOpened ? "w-[18%]" : "w-[0%]  overflow-hidden"
           }`}
         >
@@ -22,12 +21,12 @@ const Layout = () => {
             sidebarOpened={sideBarOpened}
             setSidebarOpened={setSideBarOpened}
           />
-          <div className="z-40 relative w-full bg-[#f1f1f1] darkmode">
+          <div className="z-40 relative w-full bg-[#f1f1f1] darkmode p-4">
             <Outlet/>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -1,17 +1,22 @@
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useState } from "react";
 import logo from "../../assets/admin-logo.jpg";
 import { Divider } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // Icons
-import { MdOutlineDashboard, MdSupervisedUserCircle } from "react-icons/md";
-import { RiArrowDropDownLine } from "react-icons/ri";
+import {
+  MdOutlineAddBox,
+  MdOutlineDashboard,
+  MdSupervisedUserCircle,
+} from "react-icons/md";
+import { RiArrowDropDownLine, RiProductHuntLine } from "react-icons/ri";
 import { PiSlideshowDuotone } from "react-icons/pi";
 import {
   IoBagCheckOutline,
   IoEye,
   IoList,
   IoLogOutOutline,
+  IoTrendingUpOutline,
 } from "react-icons/io5";
 import { TbCategory } from "react-icons/tb";
 import { FaBoxOpen } from "react-icons/fa6";
@@ -31,47 +36,72 @@ const menuConfig = [
   {
     title: "Home Slides",
     icon: <PiSlideshowDuotone className="text-xl" />,
+    path: "/home-slides",
     dropdown: [
-      { title: "Add Slide", icon: <BsPlus className="text-lg" /> },
-      { title: "View Slides", icon: <IoEye className="text-lg" /> },
+      { title: "Add Slide", icon: <BsPlus className="text-lg" />, path: "/add-slide" },
+      { title: "View Slides", icon: <IoEye className="text-lg" />, path: "/view-slides" },
     ],
   },
   {
     title: "Users",
     icon: <MdSupervisedUserCircle className="text-xl" />,
+    path: "/users",
   },
   {
     title: "Products",
-    icon: <FaBoxOpen className="text-xl" />,
+    icon: <RiProductHuntLine className="text-xl" />,
+    path: "/products",
     dropdown: [
-      { title: "Product List", icon: <IoList className="text-lg" /> },
-      { title: "Add Product", icon: <BsPlus className="text-lg" /> },
+      { title: "Product List", icon: <IoList className="text-lg" />, path: "/products" },
+      { title: "Trending Products", icon: <IoTrendingUpOutline className="text-lg" />, path: "/trending-products" },
+      { title: "Featured Products", icon: <FaBoxOpen className="text-lg" />, path: "/featured-products" },
+      { title: "Add Product", icon: <MdOutlineAddBox className="text-lg" />, path: "/products/add" },
     ],
   },
   {
     title: "Categories",
     icon: <TbCategory className="text-xl" />,
+    path: "/categories",
     dropdown: [
-      { title: "Level 1", icon: <MdOutlineDashboard className="text-lg" /> },
-      { title: "Level 2", icon: <MdOutlineDashboard className="text-lg" /> },
-      { title: "Level 3", icon: <MdOutlineDashboard className="text-lg" /> },
+      { title: "Categories", icon: <MdOutlineDashboard className="text-lg" />, path: "/categories" },
+      { title: "Level 2", icon: <MdOutlineDashboard className="text-lg" />, path: "/sub-categories" },
+      { title: "Level 3", icon: <MdOutlineDashboard className="text-lg" />, path: "/leaf-categories" },
     ],
   },
   {
     title: "Orders",
     icon: <IoBagCheckOutline className="text-xl" />,
+    path: "/orders",
   },
   {
     title: "Logout",
     icon: <IoLogOutOutline className="text-xl" />,
+    path: "/logout",
   },
 ];
 
 const SideBar = () => {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(null);
-  const toggleDropdown = (title) => {
-    setOpenDropdown(openDropdown === title ? null : title);
+
+  const toggleDropdown = (item) => {
+    if (openDropdown === item.title) {
+      setOpenDropdown(null);
+    } else {
+      setOpenDropdown(item.title);
+      if (item.dropdown?.length > 0) {
+        navigate(item.dropdown[0].path); 
+      }
+    }
+  };
+
+  const isParentActive = (item) => {
+    if (pathname === item.path) return true;
+    if (item.dropdown) {
+      return item.dropdown.some((sub) => pathname === sub.path);
+    }
+    return false;
   };
 
   return (
@@ -85,51 +115,53 @@ const SideBar = () => {
       </div>
       <Divider />
 
-      {/* Sidebar Menu */}
       <div className="sidebar-content">
         <ul className="flex flex-col gap-1">
-          {menuConfig.map((item, index) => (
-            <div key={index}>
-              <li>
-                <MButton
-                  title={item.title}
-                  className={`${pathname === item.path && "!bg-[#e7e6e6d7]"}`}
-                  startIcon={item.icon}
-                  endIcon={
-                    item.dropdown && (
-                      <RiArrowDropDownLine
-                        className={`text-xl transition-transform duration-300 ${
-                          openDropdown === item.title
-                            ? "rotate-180"
-                            : "rotate-0"
-                        }`}
-                      />
-                    )
-                  }
-                  onClick={
-                    item.dropdown ? () => toggleDropdown(item.title) : undefined
-                  }
-                />
+          {menuConfig.map((item, index) => {
+            const active = isParentActive(item);
 
-                {item.dropdown && (
-                  <CollapablePanel
-                    isOpened={openDropdown === item.title}
-                    className="px-5"
-                  >
-                    {item.dropdown.map((sub, i) => (
-                      <MButton
-                        key={i}
-                        className="!text-[13px] !font-[500]"
-                        title={sub.title}
-                        startIcon={sub.icon}
-                      />
-                    ))}
-                  </CollapablePanel>
-                )}
-              </li>
-              <Divider />
-            </div>
-          ))}
+            return (
+              <div key={index}>
+                <li>
+                  <MButton
+                    title={item.title}
+                    className={`${active ? "!text-primary !border-l-[5px] !rounded-none" : ""}`}
+                    startIcon={item.icon}
+                    endIcon={
+                      item.dropdown && (
+                        <RiArrowDropDownLine
+                          className={`text-xl transition-transform duration-300 ${
+                            openDropdown === item.title ? "rotate-180" : "rotate-0"
+                          }`}
+                        />
+                      )
+                    }
+                    onClick={
+                      item.dropdown ? () => toggleDropdown(item) : () => navigate(item.path)
+                    }
+                  />
+
+                  {item.dropdown && (
+                    <CollapablePanel
+                      isOpened={openDropdown === item.title || active}
+                      className="px-5"
+                    >
+                      {item.dropdown.map((sub, i) => (
+                        <Link to={sub.path} key={i}>
+                          <MButton
+                            className={`!text-[13px] !font-[500] ${pathname === sub.path ? "!text-primary" : ""}`}
+                            title={sub.title}
+                            startIcon={sub.icon}
+                          />
+                        </Link>
+                      ))}
+                    </CollapablePanel>
+                  )}
+                </li>
+                <Divider />
+              </div>
+            );
+          })}
         </ul>
       </div>
     </div>

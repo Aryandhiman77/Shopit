@@ -14,40 +14,15 @@ import Search from "../../Reusables/Search";
 import { Divider } from "@mui/joy";
 import Table from "../../Table";
 import OrderRow from "../../Table/OrdersRow";
-import ProductRow from "../../Table/ProductRow";
+
 import LinesChart from "../../Reusables/Charts/LinesChart";
 import { GoDotFill } from "react-icons/go";
 import { useData } from "../../../Context/Data/DataContext";
-
+import ProductList from "./ProductList";
+import OrderList from "./OrderList";
 
 const Dashboard = () => {
-  const orderTableHeadings = [
-    "",
-    "Order ID",
-    "Payment ID",
-    "Username",
-    "Phone Number",
-    "Items",
-    "Price",
-    "Created at",
-    "Modified at",
-    "Operations",
-  ];
-  const productTableHeadings = [
-    "",
-    "Product ID",
-    "Product",
-    "Category(L1)",
-    "SubCategory(L2)",
-    "Leaf Category(L3)",
-    "Sales",
-    "Variants",
-    "Created at",
-    "Modified at",
-    "Status",
-    "Operations",
-  ];
-  const { orders, products,lineChartData } = useData();
+  const { lineChartData } = useData();
 
   return (
     <div className="p-4 my-1 flex flex-col gap-y-5 w-full">
@@ -147,12 +122,7 @@ const Dashboard = () => {
         <div className="my-3">
           <Divider />
         </div>
-
-        <Table attributes={productTableHeadings}>
-          {products?.map((product) => (
-            <ProductRow product={product} key={product?.id} />
-          ))}
-        </Table>
+        <ProductList />
       </Box>
       <Box className={"bg-white"}>
         <div className="flex justify-between items-center">
@@ -162,29 +132,26 @@ const Dashboard = () => {
         <div className="my-3">
           <Divider />
         </div>
-
-        <Table attributes={orderTableHeadings}>
-          {orders?.map((order, i) => (
-            <OrderRow order={order} key={i} />
-          ))}
-        </Table>
+        <OrderList />
       </Box>
       <Box className={"bg-white"}>
         <div className="flex justify-between items-center">
           <p className="heading-1">Total Users vs Total Sales</p>
-           <div className="flex items-center gap-4 m-4">
-          <p className="text-[13px] flex gap-2 items-center"><GoDotFill className="text-[#82ca9d]"/> Total Users</p>
-          <p className="text-[13px] flex gap-2 items-center"><GoDotFill className="text-[#8884d8]"/> Total Sales</p>
+          <div className="flex items-center gap-4 m-4">
+            <p className="text-[13px] flex gap-2 items-center">
+              <GoDotFill className="text-[#82ca9d]" /> Total Users
+            </p>
+            <p className="text-[13px] flex gap-2 items-center">
+              <GoDotFill className="text-[#8884d8]" /> Total Sales
+            </p>
+          </div>
         </div>
-        </div>
-          <div className="my-3">
+        <div className="my-3">
           <Divider />
         </div>
-         
-        <LinesChart data={lineChartData}/>
-      </Box>
-      
 
+        <LinesChart data={lineChartData} />
+      </Box>
     </div>
   );
 };

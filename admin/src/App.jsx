@@ -10,7 +10,8 @@ import Signup from "./Components/Pages/Auth/Signup";
 import { AuthProvider } from "./Context/Auth/authProvider";
 import ProtectedRoute from "./Components/Reusables/Routes/ProtectedRoute";
 import PublicRoute from "./Components/Reusables/Routes/PublicRoute";
-
+import Products from "./Components/Pages/Products/AllProducts";
+import AddProduct from "./Components/Pages/Products/AddProduct";
 const App = () => {
   return (
     <BrowserRouter>
@@ -26,6 +27,8 @@ const App = () => {
               <Route element={<ProtectedRoute />}>
                 <Route element={<Layout />}>
                   <Route path="/" element={<Dashboard />} />
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/add" element={<AddProduct />} />
                 </Route>
               </Route>
 
