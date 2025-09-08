@@ -22,8 +22,8 @@ export const DataProvider = ({ children }) => {
         },
       ],
       price: 2000,
-      createdAt: "September 2,2025",
-      modifiedAt: "September 2,2025",
+      createdAt: "2025-09-08T11:24:00.000Z",
+      modifiedAt: "2025-09-08T11:24:00.000Z",
     },
   ]);
 

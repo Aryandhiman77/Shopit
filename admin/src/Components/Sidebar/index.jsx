@@ -39,8 +39,16 @@ const menuConfig = [
     icon: <PiSlideshowDuotone className="text-xl" />,
     path: "/home-slides",
     dropdown: [
-      { title: "Add Slide", icon: <BsPlus className="text-lg" />, path: "/add-slide" },
-      { title: "View Slides", icon: <IoEye className="text-lg" />, path: "/view-slides" },
+      {
+        title: "Add Slide",
+        icon: <BsPlus className="text-lg" />,
+        path: "/add-slide",
+      },
+      {
+        title: "View Slides",
+        icon: <IoEye className="text-lg" />,
+        path: "/view-slides",
+      },
     ],
   },
   {
@@ -53,10 +61,26 @@ const menuConfig = [
     icon: <RiProductHuntLine className="text-xl" />,
     path: "/products",
     dropdown: [
-      { title: "Product List", icon: <IoList className="text-lg" />, path: "/products" },
-      { title: "Trending Products", icon: <IoTrendingUpOutline className="text-lg" />, path: "/trending-products" },
-      { title: "Featured Products", icon: <FaBoxOpen className="text-lg" />, path: "/featured-products" },
-      { title: "Add Product", icon: <MdOutlineAddBox className="text-lg" />, path: "/products/add" },
+      {
+        title: "Product List",
+        icon: <IoList className="text-lg" />,
+        path: "/products",
+      },
+      {
+        title: "Trending Products",
+        icon: <IoTrendingUpOutline className="text-lg" />,
+        path: "/trending-products",
+      },
+      {
+        title: "Featured Products",
+        icon: <FaBoxOpen className="text-lg" />,
+        path: "/featured-products",
+      },
+      {
+        title: "Add Product",
+        icon: <MdOutlineAddBox className="text-lg" />,
+        path: "/products/add",
+      },
     ],
   },
   {
@@ -64,9 +88,26 @@ const menuConfig = [
     icon: <TbCategory className="text-xl" />,
     path: "/categories",
     dropdown: [
-      { title: "Categories", icon: <MdOutlineDashboard className="text-lg" />, path: "/categories" },
-      { title: "Level 2", icon: <MdOutlineDashboard className="text-lg" />, path: "/sub-categories" },
-      { title: "Level 3", icon: <MdOutlineDashboard className="text-lg" />, path: "/leaf-categories" },
+      {
+        title: "Categories List",
+        icon: <IoList className="text-lg" />,
+        path: "/categories",
+      },
+      {
+        title: "Add Category",
+        icon: <MdOutlineDashboard className="text-lg" />,
+        path: "/categories/add",
+      },
+      {
+        title: "Add Sub-category",
+        icon: <MdOutlineDashboard className="text-lg" />,
+        path: "/categories/add-subcategory",
+      },
+      {
+        title: "Add Leaf-category",
+        icon: <MdOutlineDashboard className="text-lg" />,
+        path: "/categories/add-leafcategory",
+      },
     ],
   },
   {
@@ -92,16 +133,12 @@ const SideBar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
 
   const toggleDropdown = (item) => {
-    if (openDropdown === item.title) {
-      setOpenDropdown(null);
-    } else {
-      setOpenDropdown(item.title);
-      if (item.dropdown?.length > 0) {
-        navigate(item.dropdown[0].path); 
-      }
-    }
-  };
-
+  if (openDropdown === item.title) {
+    setOpenDropdown(null); // close dropdown if it's open
+  } else {
+    setOpenDropdown(item.title); // open dropdown
+  }
+};
   const isParentActive = (item) => {
     if (pathname === item.path) return true;
     if (item.dropdown) {
@@ -131,19 +168,27 @@ const SideBar = () => {
                 <li>
                   <MButton
                     title={item.title}
-                    className={`${active ? "!text-primary !border-l-[5px] !rounded-none" : ""}`}
+                    className={`${
+                      active
+                        ? "!text-primary !border-l-[5px] !rounded-none"
+                        : ""
+                    }`}
                     startIcon={item.icon}
                     endIcon={
                       item.dropdown && (
                         <RiArrowDropDownLine
                           className={`text-xl transition-transform duration-300 ${
-                            openDropdown === item.title ? "rotate-180" : "rotate-0"
+                            openDropdown === item.title
+                              ? "rotate-180"
+                              : "rotate-0"
                           }`}
                         />
                       )
                     }
                     onClick={
-                      item.dropdown ? () => toggleDropdown(item) : () => navigate(item.path)
+                      item.dropdown
+                        ? () => toggleDropdown(item)
+                        : () => navigate(item.path)
                     }
                   />
 
@@ -155,7 +200,9 @@ const SideBar = () => {
                       {item.dropdown.map((sub, i) => (
                         <Link to={sub.path} key={i}>
                           <MButton
-                            className={`!text-[13px] !font-[500] ${pathname === sub.path ? "!text-primary" : ""}`}
+                            className={`!text-[13px] !font-[500] ${
+                              pathname === sub.path ? "!text-primary" : ""
+                            }`}
                             title={sub.title}
                             startIcon={sub.icon}
                           />

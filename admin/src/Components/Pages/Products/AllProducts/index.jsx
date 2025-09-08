@@ -27,7 +27,7 @@ const Products = () => {
             Export{" "}
           </Link>
           <Link
-            to={"/"}
+            to={"/products/add"}
             className="custom-btn custom-border flex items-center gap-2 !bg-blue-600 !text-white text-sm font-[500]"
           >
             <PiPlus />
