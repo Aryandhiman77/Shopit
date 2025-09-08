@@ -61,6 +61,37 @@ const AddProduct = () => {
             <h3 className="px-1 py-3 text-sm font-[500]">Product Gallery</h3>
             <ImageDropBox maxFiles={10} setImages={setGallery}/>
           </div>
+          <div>
+            <h1 className="heading-1 py-4">Price</h1>
+            <div className="flex flex-row gap-10">
+              
+            <TextField
+              className="w-1/2"
+              label="MRP"
+              variant="outlined"
+              required={true}
+              size="small"
+              type={"text"}
+            />
+            <TextField
+              className="w-1/2"
+              label="Discount in percentage (%)"
+              variant="outlined"
+              required={true}
+              size="small"
+              type={"text"}
+            />
+            <TextField
+              className="w-1/2"
+              label="Sale Price (tax incl.)"
+              variant="outlined"
+              required={true}
+              size="small"
+              type={"text"}
+            />
+           
+          </div>
+          </div>
         </div>
       </form>
     </div>

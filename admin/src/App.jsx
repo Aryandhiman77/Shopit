@@ -12,6 +12,7 @@ import ProtectedRoute from "./Components/Reusables/Routes/ProtectedRoute";
 import PublicRoute from "./Components/Reusables/Routes/PublicRoute";
 import Products from "./Components/Pages/Products/AllProducts";
 import AddProduct from "./Components/Pages/Products/AddProduct";
+import StoreSettings from "./Components/Pages/Settings";
 const App = () => {
   return (
     <BrowserRouter>
@@ -29,6 +30,7 @@ const App = () => {
                   <Route path="/" element={<Dashboard />} />
                   <Route path="/products" element={<Products />} />
                   <Route path="/products/add" element={<AddProduct />} />
+                  <Route path="/settings" element={<StoreSettings />} />
                 </Route>
               </Route>
 

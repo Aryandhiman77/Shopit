@@ -16,6 +16,7 @@ import {
   IoEye,
   IoList,
   IoLogOutOutline,
+  IoSettingsOutline,
   IoTrendingUpOutline,
 } from "react-icons/io5";
 import { TbCategory } from "react-icons/tb";
@@ -72,6 +73,11 @@ const menuConfig = [
     title: "Orders",
     icon: <IoBagCheckOutline className="text-xl" />,
     path: "/orders",
+  },
+  {
+    title: "Store Settings",
+    icon: <IoSettingsOutline className="text-xl" />,
+    path: "/settings",
   },
   {
     title: "Logout",
