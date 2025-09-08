@@ -28,7 +28,6 @@ const StoreSettings = () => {
 
   const handleSave = () => {
     console.log("Saved Store Settings:", settings);
-    // here you will call API to save settings in DB
   };
 
   return (
