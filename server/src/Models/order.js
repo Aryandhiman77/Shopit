@@ -12,10 +12,11 @@ const orderItemSchema = new mongoose.Schema({
   quantity: { type: Number, required: true },
   price: { type: Number, required: true },
   seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  trackingNumber: { type: String, unique: true },
   status: {
     type: String,
     enum: [
-      "pending",
+      "pending", 
       "confirmed",
       "shipped",
       "delivered",

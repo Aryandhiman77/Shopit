@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import { customAlphabet } from "nanoid";
 import crypto from "crypto";
+import JWT from "jsonwebtoken";
+
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
@@ -35,7 +37,7 @@ const userSchema = new mongoose.Schema(
       default: "active",
     },
     refreshToken: {
-      type: String, 
+      type: String,
     },
     passwordResetCode: String,
     passwordResetCodeExpires: Date,
@@ -45,15 +47,22 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.methods.createResetPasswordCode = function () {
-  const generateResetCode = nanoid.customAlphabet("1234567890", 6);
+  const generateResetCode = customAlphabet("1234567890", 6);
   const resetCode = generateResetCode();
   this.passwordResetCode = crypto
     .createHash("sha256")
     .update(resetCode)
     .digest("hex");
   this.passwordResetCodeExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
-  console.log(resetCode, this.passwordResetCode);
+  // console.log(resetCode, this.passwordResetCode);
   return resetCode;
+};
+userSchema.methods.generateToken = function ({ userId, role }) {
+  const payload = { userId, role };
+  const token = JWT.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRY,
+  });
+  return token;
 };
 
 const User = mongoose.model("User", userSchema);
