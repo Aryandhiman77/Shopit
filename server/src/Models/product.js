@@ -1,52 +1,81 @@
 import mongoose from "mongoose";
-import slugify from "slugify";
+import category from "./category";
 
-const variantSchema = new mongoose.Schema({
-  sku: { type: String, required: true, unique: true },
-  attributes: { type: Map, of: String },
-  price: { type: Number, required: true, min: 0 },
-  mrp: { type: Number },
-  stock: { type: Number, default: 0 },
-  images: [String],
-});
+// Variant Schema (for size, color, etc.)
+const variantSchema = new mongoose.Schema(
+  {
+    sku: { type: String, required: true, unique: true },
+    attributes: {
+      type: Map,
+      of: String,
+    },
+    price: { type: Number, required: true },
+    mrp: { type: Number },
+    stock: { type: Number, default: 0 },
+    images: {
+      type: [String],
+      validate: [(arr) => arr.length <= 10, "Maximum 10 images allowed"],
+    },
+  },
+  { _id: true }
+);
 
 const productSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
-    slug: { type: String, unique: true, lowercase: true },
+    title: { type: String, required: true, trim: true },
+    sku: { type: String, required: true, unique: true },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      index: true,
+    },
+    shortDescription: { type: String, maxlength: 200 },
     description: { type: String },
-    category: { type: mongoose.Schema.Types.ObjectId, ref: "Category" },
-    tags: [String],
-    thumbnail: String,
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+      index: true,
+    },
 
-    // For simple products
-    price: { type: Number, min: 0 },
+    tags: [{ type: String }], // searchable keywords
+
+    // For simple products (without variants)
+    price: { type: Number, index: true },
     mrp: { type: Number },
-    stock: { type: Number },
+    stock: { type: Number, default: 0 },
+    images: {
+      type: [String],
+      validate: [(arr) => arr.length <= 10, "Maximum 10 images allowed"],
+    },
 
-    // For complex products
-    variants: [variantSchema],
+    // Variants
+    variants: {
+      type: [variantSchema],
+      validate: [(arr) => arr.length <= 50, "Too many variants"],
+    },
+
+    isFeatured: { type: Boolean, default: false },
+    isTrending: { type: Boolean, default: false },
+    isActive: {
+      type: String,
+      enum: ["draft", "active", "inactive"],
+      default: "active",
+    },
+    seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
   },
   { timestamps: true }
 );
-
-// For Full-text search
-productSchema.index({ name: "text", description: "text", tags: "text" });
-
-// Auto slug
-productSchema.pre("save", function (next) {
-  if (this.isModified("name")) {
-    this.slug = slugify(this.name, { lower: true });
-  }
-  next();
-});
-
-// Ensure MRP >= Price
-productSchema.pre("save", function (next) {
-  if (this.price && this.mrp && this.price > this.mrp) {
-    return next(new Error("Price cannot be greater than MRP"));
-  }
-  next();
+productSchema.index({
+  category: 1,
+  price: 1,
+  slug: 1,
+  isFeatured: 1,
+  isTrending: 1,
+  tags: 1,
+  isActive: 1,
 });
 
 export default mongoose.model("Product", productSchema);

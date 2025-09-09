@@ -43,6 +43,7 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 userSchema.methods.createResetPasswordCode = function () {
   const generateResetCode = nanoid.customAlphabet("1234567890", 6);
   const resetCode = generateResetCode();
@@ -55,5 +56,5 @@ userSchema.methods.createResetPasswordCode = function () {
   return resetCode;
 };
 
-const User = mongoose.model("user", userSchema);
+const User = mongoose.model("User", userSchema);
 module.exports = User;

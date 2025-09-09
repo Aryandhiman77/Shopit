@@ -1,41 +1,58 @@
 import mongoose from "mongoose";
 import Product from "./product.js";
+const nanoid = customAlphabet("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 14); 
 
 const orderItemSchema = new mongoose.Schema({
-  product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
-  variantSku: { type: String },
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Product",
+    required: true,
+  },
+  variant: { type: mongoose.Schema.Types.ObjectId, ref: "ProductVariant" },
   quantity: { type: Number, required: true },
-  price: { type: Number, required: true }, 
+  price: { type: Number, required: true },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  status: {
+    type: String,
+    enum: [
+      "pending",
+      "confirmed",
+      "shipped",
+      "delivered",
+      "cancelled",
+      "returned",
+    ],
+    default: "pending",
+  },
 });
 
 const orderSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     items: [orderItemSchema],
-    total: { type: Number, required: true },
-    status: {
-      type: String,
-      enum: ["pending", "paid", "shipped", "delivered", "cancelled"],
-      default: "pending",
-    },
+    orderNumber: { type: String, unique: true,default:()=>`ORD-${nanoid()}`},
+    totalAmount: { type: Number, required: true },
     paymentInfo: {
       method: String,
       transactionId: String,
-      status: { type: String, enum: ["pending", "success", "failed"], default: "pending" },
+      status: {
+        type: String,
+        enum: ["pending", "success", "failed"],
+        default: "pending",
+      },
     },
     shippingAddress: {
-      street: String,
-      city: String,
-      state: String,
-      country: String,
-      postalCode: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Address",
+      required: true,
     },
+    placedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
 
 //  Index for faster queries
-orderSchema.index({ user: 1, status: 1 });
+orderSchema.index({ user: 1, status: 1,orderNumber:1 });
 
 //  Hook: reduce stock after order is placed
 orderSchema.post("save", async function (doc, next) {
@@ -47,7 +64,7 @@ orderSchema.post("save", async function (doc, next) {
 
       if (item.variantSku) {
         // Update variant stock
-        const variant = product.variants.find(v => v.sku === item.variantSku);
+        const variant = product.variants.find((v) => v.sku === item.variantSku);
         if (variant) {
           variant.stock = Math.max(0, variant.stock - item.quantity);
         }
