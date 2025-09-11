@@ -34,6 +34,9 @@ export const loginController = AsyncWrapper(async (req, res) => {
   const user = await User.findOne({
     $or: [{ email }, { UUID }, { phoneNumber }],
   });
+  if (!user) {
+    throw new ApiError(404, "User not found.");
+  }
 
   // 2. Check suspension &  roles validity
   if (user.isSuspended()) {
@@ -42,16 +45,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
       `Max login attempts exceeded. Account Suspended until ${user.suspensionExpires.toLocaleString()}`
     );
   }
-  if (role === "admin" && user.role !== "admin") {
-    throw new ApiError(403, "Access denied.");
-  }
-  if (role === "seller" && user.role !== "seller") {
-    throw new ApiError(403, "Access denied.");
-  }
-  if (
-    role === "customer" &&
-    (user.role === "admin" || user.role === "seller")
-  ) {
+  if (user.role !== role) {
     throw new ApiError(403, "Access denied.");
   }
 
@@ -74,22 +68,14 @@ export const loginController = AsyncWrapper(async (req, res) => {
   }
 
   // 5. Max device limit
-  if (
-    (user.role === "admin" || user.role === "seller") &&
-    user.loggedInUserCount >= 1
-  ) {
-    throw new ApiError(
-      403,
-      "Login unsuccessfull.",
-      "Exceeded max login devices."
-    );
-  }
-  if (user.role === "customer" && user.loggedInUserCount >= 2) {
-    throw new ApiError(
-      403,
-      "Login unsuccessfull.",
-      "Exceeded max login devices."
-    );
+  const DEVICE_LIMITS = {
+    admin: 1,
+    seller: 1,
+    customer: 2,
+  };
+
+  if (user.loggedInUserCount >= DEVICE_LIMITS[user.role]) {
+    throw new ApiError(403, "Exceeded max login devices.");
   }
 
   // 6. Tokens
@@ -111,7 +97,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
       400,
       "Login unsuccessfull.",
       "Technical error, try again."
-    )();
+    );
   }
 
   // 7.Send refreshToken as secure cookie
