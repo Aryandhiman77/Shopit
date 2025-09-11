@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import { connectDB } from "./src/Config/dbConfig.js";
 import authRoutes from "./src/Routes/auth/authRoute.js";
+import errorHandler from "./src/Middlewares/errorHandler.js";
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use("/api/auth/", authRoutes); // common auth route
 app.use("/admin/", authRoutes); // admin route
 // app.use("/api/seller/", AuthRouter); // admin routes
 // app.use("/api/", AuthRouter);  // customer routes
+app.use(errorHandler);
 
 connectDB().then(() => {
   app.listen(process.env.PORT, () => {

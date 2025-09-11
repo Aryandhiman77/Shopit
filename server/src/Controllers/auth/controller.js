@@ -29,77 +29,111 @@ export const registerAsAdmin = AsyncWrapper(async (req, res) => {
 
 export const loginController = AsyncWrapper(async (req, res) => {
   const { email, UUID, phoneNumber, password, role } = req.data;
-  console.log(req.data);
 
-  //1. GET THE USER  FROM DB and return if blocked or user not found
+  // 1. Find user
   const user = await User.findOne({
     $or: [{ email }, { UUID }, { phoneNumber }],
   });
-  if (user.accountStatus === "blocked") {
-    return res
-      .status(400)
-      .json(
-        new ApiError(400, "Login unsuccessfull.", "Your account is blocked.")
-      );
+
+  // 2. Check suspension
+  if (user.isSuspended()) {
+    throw new ApiError(
+      403,
+      `Max login attempts exceeded. Account Suspended until ${user.suspensionExpires.toLocaleString()}`
+    );
   }
-  if (!user) {
-    return res
-      .status(404)
-      .json(new ApiError(404, "Login unsuccessfull.", "User not found."));
+  //2. Check roles
+  if (role === "admin" && user.role !== "admin") {
+    throw new ApiError(403, "Access denied.");
   }
-  //2. COMPARE THE PASSWORD USING BCRYPTJS WITH HASH STORED IN DB
+  if (role === "seller" && user.role !== "seller") {
+    throw new ApiError(403, "Access denied.");
+  }
+  if (
+    role === "customer" &&
+    (user.role === "admin" || user.role === "seller")
+  ) {
+    throw new ApiError(403, "Access denied.");
+  }
+
+  // 3. Too many attempts
+  if (user.loginAttempts > 10) {
+    await user.suspendUser();
+    await user.save();
+    throw new ApiError(
+      403,
+      `Max login attempts exceeded. Account Suspended until ${user.suspensionExpires.toLocaleString()}`
+    );
+  }
+
+  // 4. Verify password
   const isTrueUser = await bcrypt.compare(password, user.passwordHash);
   if (!isTrueUser) {
-    return res
-      .status(400)
-      .json(new ApiError(400, "Login unsuccessfull.", "Invalid Credentials."));
+    user.loginAttempts++;
+    await user.save();
+    throw new ApiError(400, "Invalid credentials.");
   }
-  //3. GENERATE AUTH TOKENS AND STORE REFRESH TOKEN IN DB
-  const authToken = await user.generateAuthToken({ userId: user.id, role });
+
+  // 7. Max device limit
+  if (
+    (user.role === "admin" || user.role === "seller") &&
+    user.loggedInUserCount >= 1
+  ) {
+    throw new ApiError(
+      403,
+      "Login unsuccessfull.",
+      "Exceeded max login devices."
+    );
+  }
+  if (user.role === "customer" && user.loggedInUserCount >= 2) {
+    throw new ApiError(
+      403,
+      "Login unsuccessfull.",
+      "Exceeded max login devices."
+    );
+  }
+
+  // 8. Tokens
+  const authToken = await user.generateAuthToken({
+    userId: user.id,
+    role: user.role,
+  });
   const refreshToken = await user.generateRefreshToken({
     userId: user.id,
-    role,
+    role: user.role,
   });
-  const tokensGenerated = Promise.all([authToken, refreshToken]);
-  if (!tokensGenerated) {
-    return res
-      .status(400)
-      .json(
-        new ApiError(
-          400,
-          "Login unsuccessfull.",
-          "Please try logging in again."
-        )
-      );
-  }
-  user.refreshToken = refreshToken;
 
-  // 4. INCREASE LOGIN COUNT, SAVE USER IN DB
-  user.loginCount = user.loginCount + 1;
+  user.loggedInUserCount++;
+  user.loginAttempts = 0;
   const saved = await user.save();
 
-  // 5 . DELETE INTERNAL DETAILS AND RETURN THE USER DETAILS TO CLIENT
-
   if (!saved) {
-    return res
-      .status(400)
-      .json(
-        new ApiError(
-          400,
-          "Login unsuccessfull.",
-          "Cannot login due to some technical issue."
-        )
-      );
+    throw new ApiError(
+      400,
+      "Login unsuccessfull.",
+      "Technical error, try again."
+    )();
   }
+
+  // Send refreshToken as secure cookie
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  // Return safe user details
   const savedUser = {
     UUID: saved.UUID,
     name: saved.name,
     email: saved.email,
-    loginCount: saved.loginCount,
-    refreshToken: saved.refreshToken,
     phoneNumber: saved.phoneNumber,
+    loginCount: saved.loginCount,
+    authToken,
+    loggedInUserCount: saved.loggedInUserCount,
   };
+
   return res
     .status(200)
-    .json(new ApiResponse(200, savedUser, "Login successfull."));
+    .json(new ApiResponse(200, savedUser, "Login successful."));
 });
