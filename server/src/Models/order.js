@@ -63,9 +63,9 @@ orderSchema.post("save", async function (doc, next) {
 
       if (!product) continue;
 
-      if (item.variantSku) {
+      if (item.variant.sku) {
         // Update variant stock
-        const variant = product.variants.find((v) => v.sku === item.variantSku);
+        const variant = product.variants.find((v) => v.sku === item.variant.sku);
         if (variant) {
           variant.stock = Math.max(0, variant.stock - item.quantity);
         }

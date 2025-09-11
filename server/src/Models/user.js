@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { customAlphabet } from "nanoid";
+import {customAlphabet} from "nanoid";
 import crypto from "crypto";
 import JWT from "jsonwebtoken";
 
@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     UUID: {
       type: String,
-      default: () => customAlphabet("1234567890", 10),
+      default: () => customAlphabet("1234567890", 10)(),
       unique: true,
     },
     email: {
@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
+    loginCount:{
+      type:Number,
+      default:0
+    },
     passwordResetCode: String,
     passwordResetCodeExpires: Date,
     passwordChangedAt: Date,
@@ -66,4 +70,4 @@ userSchema.methods.generateToken = function ({ userId, role }) {
 };
 
 const User = mongoose.model("User", userSchema);
-module.exports = User;
+export default User;

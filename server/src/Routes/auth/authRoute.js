@@ -1,10 +1,14 @@
 import express from "express";
-import { nanoid } from "nanoid";
-const AuthRouter = express.Router();
+import {loginController,registerAsAdmin} from "../../Controllers/auth/controller.js";
 
 
-AuthRouter.get("/login",(req,res)=>{
-    res.json({message:"login working..",UUID:nanoid(10)});
-})
+const authRoutes = express.Router();
+    
+// one time manual postman registration --> no admin panel
+// authRoutes.post("/register-as-admin",registerAsAdmin);
 
-export default AuthRouter;
+// authRoutes.post("/login",loginController);
+
+
+
+export default authRoutes;

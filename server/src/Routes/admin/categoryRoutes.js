@@ -1,8 +1,6 @@
 import express from "express";
-import { nanoid } from "nanoid";
 const adminRoutes = express.Router();
 
-
-// adminRoutes.get("/products",createProduct)
+adminRoutes.post("/category",createCategory);
 
 export default adminRoutes;
