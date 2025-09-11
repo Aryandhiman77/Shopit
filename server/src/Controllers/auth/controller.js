@@ -35,14 +35,13 @@ export const loginController = AsyncWrapper(async (req, res) => {
     $or: [{ email }, { UUID }, { phoneNumber }],
   });
 
-  // 2. Check suspension
+  // 2. Check suspension &  roles validity
   if (user.isSuspended()) {
     throw new ApiError(
       403,
       `Max login attempts exceeded. Account Suspended until ${user.suspensionExpires.toLocaleString()}`
     );
   }
-  //2. Check roles
   if (role === "admin" && user.role !== "admin") {
     throw new ApiError(403, "Access denied.");
   }
@@ -74,7 +73,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
     throw new ApiError(400, "Invalid credentials.");
   }
 
-  // 7. Max device limit
+  // 5. Max device limit
   if (
     (user.role === "admin" || user.role === "seller") &&
     user.loggedInUserCount >= 1
@@ -93,7 +92,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
     );
   }
 
-  // 8. Tokens
+  // 6. Tokens
   const authToken = await user.generateAuthToken({
     userId: user.id,
     role: user.role,
@@ -115,14 +114,14 @@ export const loginController = AsyncWrapper(async (req, res) => {
     )();
   }
 
-  // Send refreshToken as secure cookie
+  // 7.Send refreshToken as secure cookie
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
 
-  // Return safe user details
+  // 8.Return safe user details
   const savedUser = {
     UUID: saved.UUID,
     name: saved.name,
