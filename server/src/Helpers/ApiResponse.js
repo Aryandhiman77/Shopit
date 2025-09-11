@@ -1,9 +1,10 @@
-class ApiResponse{
-    constructor(statusCode,data,message="Something went wrong"){
-        this.status = statusCode < 400;
-        this.success = statusCode===200?true:false;
-        this.data = data;
-        this.message = message;
-    }
+class ApiResponse {
+  constructor(statusCode, data = null, message = "Something went wrong") {
+    this.statusCode = statusCode;
+    this.success = statusCode >= 200 && statusCode < 300;
+    this.data = data;
+    this.message = message;
+  }
 }
-module.exports = ApiResponse;
+
+export default ApiResponse;

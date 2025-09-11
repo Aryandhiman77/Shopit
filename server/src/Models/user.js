@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {customAlphabet} from "nanoid";
+import { customAlphabet } from "nanoid";
 import crypto from "crypto";
 import JWT from "jsonwebtoken";
 
@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     UUID: {
       type: String,
-      default: () => customAlphabet("1234567890", 10)(),
+      default: () => customAlphabet("1234567890", 12)(),
       unique: true,
     },
     email: {
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       index: true,
     },
-    password: {
+    passwordHash: {
       type: String,
       required: true,
     },
@@ -39,9 +39,9 @@ const userSchema = new mongoose.Schema(
     refreshToken: {
       type: String,
     },
-    loginCount:{
-      type:Number,
-      default:0
+    loginCount: {
+      type: Number,
+      default: 0,
     },
     passwordResetCode: String,
     passwordResetCodeExpires: Date,
@@ -61,10 +61,17 @@ userSchema.methods.createResetPasswordCode = function () {
   // console.log(resetCode, this.passwordResetCode);
   return resetCode;
 };
-userSchema.methods.generateToken = function ({ userId, role }) {
+userSchema.methods.generateAuthToken = function ({ userId, role }) {
   const payload = { userId, role };
-  const token = JWT.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRY,
+  const token = JWT.sign(payload, process.env.JWT_AUTH_SECRET, {
+    expiresIn: process.env.JWT_AUTH_EXPIRY,
+  });
+  return token;
+};
+userSchema.methods.generateRefreshToken = function ({ userId, role }) {
+  const payload = { userId, role };
+  const token = JWT.sign(payload, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRY,
   });
   return token;
 };
