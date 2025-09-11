@@ -113,7 +113,6 @@ export const loginController = AsyncWrapper(async (req, res) => {
     name: saved.name,
     email: saved.email,
     phoneNumber: saved.phoneNumber,
-    loginCount: saved.loginCount,
     authToken,
     loggedInUserCount: saved.loggedInUserCount,
   };
