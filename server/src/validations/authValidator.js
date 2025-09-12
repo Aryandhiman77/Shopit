@@ -23,7 +23,7 @@ const baseSchema = {
 export const LoginSchema = Joi.object({
   ...baseSchema,
   UUID: Joi.string().length(20).messages({
-    "string.length": "Please enter a valid 20-digit user ID.",
+    "string.length": "Please enter a valid 20-digit admin ID.",
   }),
 })
   .or("email", "phoneNumber", "UUID")

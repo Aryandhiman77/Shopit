@@ -10,14 +10,14 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     UUID: {
       type: String,
-      default: () => customAlphabet("1234567890", 12)(),
+      default: () => customAlphabet("1234567890", 20)(),
       unique: true,
     },
     email: {
       type: String,
       required: true,
-      unique: true,
       lowercase: true,
+      unique: true,
       index: true,
     },
     passwordHash: {
@@ -25,8 +25,10 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     phoneNumber: {
-      type: Number,
+      type: String,
       required: false,
+      unique: true,
+      max: 10,
     },
     role: {
       type: String,

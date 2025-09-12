@@ -99,7 +99,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
 
   if (!saved) {
     throw new ApiError(
-      400,
+      500,
       "Login unsuccessfull.",
       "Technical error, try again."
     );
@@ -127,8 +127,63 @@ export const loginController = AsyncWrapper(async (req, res) => {
     .json(new ApiResponse(200, savedUser, "Login successful."));
 });
 
-export const registrationController = AsyncWrapper((req, res) => {
+export const registrationController = AsyncWrapper(async (req, res) => {
+  const { name, email, password, phoneNumber, role } = req.data;
+  // 1. CHECK IF EXISTING USER CONFLICT
+  const isExistingUser = await User.findOne({
+    $or: [{ email }, { phoneNumber }],
+  });
+  if (isExistingUser) {
+    if (isExistingUser.email === email) {
+      throw new ApiError(409, `User already exists with this email.`);
+    }
+    if (isExistingUser.phoneNumber === phoneNumber) {
+      throw new ApiError(409, `User already exists with this phone number.`);
+    }
+  }
+  // 2. Encrypt the password
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+
+  //3.Create user
+  const createdUser = await User.create({
+    name,
+    email,
+    passwordHash: hash,
+    phoneNumber,
+    role,
+  });
+  if (!createdUser) {
+    throw new ApiError(500, `Technical issue, cannot create user.`);
+  }
+  // 3. GENERATE TOKENS
+  const authToken = await createdUser.generateAuthToken({
+    userId: createdUser.id,
+    role: createdUser.role,
+  });
+  const refreshToken = await createdUser.generateRefreshToken({
+    userId: createdUser.id,
+    role: createdUser.role,
+  });
+
+  // 4.Send refreshToken as secure cookie
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+
+  // 8.Return safe user details
+  const savedUser = {
+    UUID: createdUser.UUID,
+    name: createdUser.name,
+    email: createdUser.email,
+    phoneNumber: createdUser.phoneNumber,
+    authToken,
+    loggedInUserCount: createdUser.loggedInUserCount + 1,
+  };
+
   return res
     .status(200)
-    .json(new ApiResponse(200, req.data, "register successful."));
+    .json(new ApiResponse(200, savedUser, "Registration successful."));
 });
