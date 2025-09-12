@@ -4,6 +4,7 @@ import User from "../../Models/user.js";
 import { customAlphabet } from "nanoid";
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import ApiError from "../../Helpers/ApiError.js";
+import { formatDate, formatTime } from "../../Helpers/DateTime.js";
 
 export const registerAsAdmin = AsyncWrapper(async (req, res) => {
   const { name, email, password, phoneNumber } = req.body;
@@ -55,7 +56,9 @@ export const loginController = AsyncWrapper(async (req, res) => {
     await user.save();
     throw new ApiError(
       403,
-      `Max login attempts exceeded. Account Suspended until ${user.suspensionExpires.toLocaleString()}`
+      `Max login attempts exceeded. Account Suspended until ${formatDate(
+        user.suspensionExpires
+      )} ${formatTime(user.suspensionExpires)}`
     );
   }
 

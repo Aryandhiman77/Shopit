@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { customAlphabet } from "nanoid";
 import crypto from "crypto";
 import JWT from "jsonwebtoken";
+import mailSender from "../Helpers/nodeMailer.js";
+import { formatDate, formatTime } from "../Helpers/DateTime.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -95,6 +97,19 @@ const suspensionDurations = [
   24 * 60 * 60 * 1000, // 1 day
   30 * 24 * 60 * 60 * 1000, // 1 month
 ];
+const sendSuspensionEmail = async (email, duration) => {
+  const sent = await mailSender({
+    from: "Shopit@gmail.com",
+    to: email,
+    subject: "Shopit Account Suspended",
+    html: `<h1>Someone is trying to login in your account, your account is suspended until ${formatDate(
+      duration
+    )} ${formatTime(
+      duration
+    )}. If not you, report otherwise your account might be suspended again.</h1>`,
+  });
+  if (sent) console.log("email sent:", email);
+};
 userSchema.methods.suspendUser = function () {
   this.suspensionCount += 1;
 
@@ -103,6 +118,7 @@ userSchema.methods.suspendUser = function () {
   if (this.suspensionCount <= suspensionDurations.length) {
     // Pick from predefined list
     duration = suspensionDurations[this.suspensionCount - 1];
+    sendSuspensionEmail(this.email, new Date(Date.now() + duration));
   } else {
     // Beyond 1 month → keep doubling until 6 months max
     const months = Math.min(
@@ -110,6 +126,7 @@ userSchema.methods.suspendUser = function () {
       180
     );
     duration = months * 24 * 60 * 60 * 1000;
+    sendSuspensionEmail(this.email, new Date(Date.now() + duration));
   }
 
   this.accountStatus = "suspended";
@@ -118,7 +135,7 @@ userSchema.methods.suspendUser = function () {
 userSchema.methods.isSuspended = function () {
   if (this.accountStatus === "suspended") {
     if (this.suspensionExpires && Date.now() < this.suspensionExpires) {
-      return true; // still suspended
+      return true;
     } else {
       this.accountStatus = "active";
       this.loginAttempts = 0;
