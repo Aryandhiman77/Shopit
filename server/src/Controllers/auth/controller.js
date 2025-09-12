@@ -50,7 +50,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
   }
 
   // 3. Too many attempts
-  if (user.loginAttempts > 10) {
+  if (user.loginAttempts >= 10) {
     await user.suspendUser();
     await user.save();
     throw new ApiError(
@@ -73,12 +73,11 @@ export const loginController = AsyncWrapper(async (req, res) => {
     seller: 1,
     customer: 2,
   };
-
   if (user.loggedInUserCount >= DEVICE_LIMITS[user.role]) {
     throw new ApiError(403, "Exceeded max login devices.");
   }
 
-  // 6. Tokens
+  // 6. Tokens for giving successful login.
   const authToken = await user.generateAuthToken({
     userId: user.id,
     role: user.role,
@@ -90,6 +89,9 @@ export const loginController = AsyncWrapper(async (req, res) => {
 
   user.loggedInUserCount++;
   user.loginAttempts = 0;
+  user.suspensionCount = 0;
+  user.suspensionExpires = null;
+
   const saved = await user.save();
 
   if (!saved) {

@@ -87,6 +87,14 @@ userSchema.methods.generateRefreshToken = function ({ userId, role }) {
   return token;
 };
 
+const suspensionDurations = [
+  1 * 60 * 1000, // 1 min
+  5 * 60 * 1000, // 5 min
+  30 * 60 * 1000, // 30 min
+  60 * 60 * 1000, // 1 hour
+  24 * 60 * 60 * 1000, // 1 day
+  30 * 24 * 60 * 60 * 1000, // 1 month
+];
 userSchema.methods.suspendUser = function () {
   this.suspensionCount += 1;
 
@@ -113,6 +121,7 @@ userSchema.methods.isSuspended = function () {
       return true; // still suspended
     } else {
       this.accountStatus = "active";
+      this.loginAttempts = 0;
       this.suspensionExpires = null;
       return false;
     }
