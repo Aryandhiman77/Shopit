@@ -33,4 +33,23 @@ export const LoginSchema = Joi.object({
 
 // /^[0-9]{10}$/ --> digits starting from 0 to 9 and must be of length 10
 
-const RegistrationSchema = Joi.object({});
+export const RegistrationSchema = Joi.object({
+  ...baseSchema,
+  name: Joi.string().lowercase().min(3).max(30).required().messages({
+    "string.min": "Name must be at least 3 characters long.",
+    "string.max": "Name must be less than 30 characters.",
+    "any.required": "Name is required.",
+  }),
+  email: Joi.string().email().lowercase().required().messages({
+    "string.email": "Please enter a valid email address.",
+    "any.required": "Email is required.",
+  }),
+  confirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
+    "any.only": "Confirm Password must match Password.",
+    "any.required": "Confirm Password is required.",
+  }),
+  role: Joi.string().valid("seller", "customer").required().messages({
+    "any.only": "Role must be either Seller or Customer.",
+    "any.required": "Role is required.",
+  }),
+});

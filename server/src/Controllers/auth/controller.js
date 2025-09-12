@@ -126,3 +126,9 @@ export const loginController = AsyncWrapper(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, savedUser, "Login successful."));
 });
+
+export const registrationController = AsyncWrapper((req, res) => {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.data, "register successful."));
+});
