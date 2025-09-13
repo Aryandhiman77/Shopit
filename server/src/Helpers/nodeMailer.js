@@ -2,11 +2,10 @@ import nodemailer from "nodemailer";
 
 //todo : transporter to be configured for gmail
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
-  port: 587,
+  service: "gmail",
   auth: {
-    user: process.env.USER_EMAIL,
-    pass: process.env.USER_PASS,
+    user: process.env.COMPANY_GMAIL,
+    pass: process.env.GOOGLE_APP_PASSWORD,
   },
 });
 export default async function mailSender({ from, to, subject, html }) {

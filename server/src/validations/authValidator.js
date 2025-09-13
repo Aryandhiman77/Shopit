@@ -53,3 +53,17 @@ export const RegistrationSchema = Joi.object({
     "any.required": "Role is required.",
   }),
 });
+
+export const otpVerificationSchema = Joi.object({
+  email: Joi.string().email().lowercase().required().messages({
+    "string.email": "Please enter a valid email address.",
+    "any.required": "Email is required.",
+  }),
+  otp: Joi.string()
+    .pattern(/^[0-9]{6}$/)
+    .required()
+    .messages({
+      "string.pattern.base": "Otp must contain 6-digits.",
+      "any.required": "Otp is required.",
+    }),
+});

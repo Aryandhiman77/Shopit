@@ -5,6 +5,7 @@ import ApiError from "../Helpers/ApiError.js";
 import { formatDate, formatTime } from "../Helpers/DateTime.js";
 import { verificationOtp } from "../Helpers/html/verificationOtp.js";
 import mailSender from "../Helpers/nodeMailer.js";
+import crypto from "crypto";
 export const loginUserService = async ({
   email,
   UUID,
@@ -50,13 +51,9 @@ export const loginUserService = async ({
   }
 
   // 5. Max device limit
-  const DEVICE_LIMITS = {
-    admin: 1,
-    seller: 1,
-    customer: 2,
-  };
-  if (user.loggedInUserCount >= DEVICE_LIMITS[user.role]) {
-    throw new ApiError(403, "Exceeded max login devices.");
+  const isMaxDevicesHit = await user.checkMaxDevicesLimit();
+  if (isMaxDevicesHit) {
+    throw new ApiError(403, "Exceeded max login devices limit.");
   }
 
   // 6. Tokens for giving successful login.
@@ -117,31 +114,51 @@ export const registerUserService = async ({
     phoneNumber,
     role,
   });
-  if (!createdUser) {
-    throw new ApiError(500, `Technical issue, try again .`);
-  }
+
   //   6.Authorize using verification otp
-
-  // 3. GENERATE TOKENS
-  //   const authToken = await createdUser.generateAuthToken({
-  //     userId: createdUser.id,
-  //     role: createdUser.role,
-  //   });
-  //   const refreshToken = await createdUser.generateRefreshToken({
-  //     userId: createdUser.id,
-  //     role: createdUser.role,
-  //   });
-
-  //   createdUser.loggedInUserCount++;
-  //   createdUser.refreshToken = refreshToken;
-
+  const OTP = await createdUser.createResetCode();
   await createdUser.save();
-  const OTP = createdUser.createResetCode();
   mailSender({
     from: "support@shopit.com",
     to: email,
     subject: "Shopit phone verification",
     html: verificationOtp({ OTP }),
   });
-  return { OTP,email };
+  return { email };
+};
+
+export const otpVerificationService = async ({ otp, email }) => {
+  const resetCode = crypto.createHash("sha256").update(otp).digest("hex");
+  //1. VERIFY THE USER'S RESET TOKEN AND INVALIDATE AFTER 10 MINUTES
+  const verifiedUser = await User.findOne({
+    $and: [{ email }, { resetCode }, { resetCodeExpires: { $gt: Date.now() } }],
+  });
+  if (!verifiedUser) {
+    throw new ApiError(400, `Invalid verification code.`);
+  }
+
+  // 2. GENERATE TOKENS TO GIVE LOGIN
+  const authToken = await verifiedUser.generateAuthToken({
+    userId: verifiedUser.id,
+    role: verifiedUser.role,
+  });
+  const refreshToken = await verifiedUser.generateRefreshToken({
+    userId: verifiedUser.id,
+    role: verifiedUser.role,
+  });
+  const isMaxDevicesHit = await verifiedUser.maxDeviceLimitHit();
+  console.log(isMaxDevicesHit);
+  if (isMaxDevicesHit) {
+    throw new ApiError(403, "Exceeded max login devices limit.");
+  }
+
+  verifiedUser.loggedInUserCount++;
+  verifiedUser.refreshToken = refreshToken;
+  verifiedUser.verifiedEmail = true;
+  verifiedUser.resetCode = null;
+  verifiedUser.resetCodeExpires = null;
+
+  await verifiedUser.save();
+
+  return { user: verifiedUser, refreshToken, authToken };
 };

@@ -1,5 +1,5 @@
 export const verificationOtp = ({
-  COMPANY_LOGO = "/public/logo.svg",
+  COMPANY_LOGO = "http://localhost:8000/logo.svg",
   COMPANY_NAME = "Shopit",
   SUPPORT_EMAIL = "support@shopit.in",
   OTP,
@@ -78,7 +78,7 @@ export const verificationOtp = ({
           <!-- Notice -->
           <tr>
             <td class="notice" style="padding:18px 28px; background:#fff7ed; color:#92400e; border-top:1px solid #ffedd5; font-size:13px;">
-              If you did not request this code, please ignore this email or contact support at <a href="mailto:${SUPPORT_EMAIL}" style="color:#92400e; text-decoration:underline;"></a>.
+              If you did not request this code, please ignore this email or contact support at <a href="mailto:${SUPPORT_EMAIL}" style="color:#92400e; text-decoration:underline;">Shopit support.</a>.
             </td>
           </tr>
 

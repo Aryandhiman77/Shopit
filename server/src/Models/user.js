@@ -35,11 +35,11 @@ const userSchema = new mongoose.Schema(
       enum: ["customer", "seller", "admin"],
       default: "customer",
     },
-    verifyEmail: {
+    verifiedEmail: {
       type: Boolean,
       default: false,
     },
-    verifyNumber: {
+    verifiedNumber: {
       type: Boolean,
       default: false,
     },
@@ -78,7 +78,7 @@ userSchema.methods.createResetCode = function () {
   const resetCode = generateResetCode();
   this.resetCode = crypto.createHash("sha256").update(resetCode).digest("hex");
   this.resetCodeExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
-  // console.log(resetCode, this.passwordResetCode);
+  // console.log(resetCode, this.resetCodeExpires);
   return resetCode;
 };
 userSchema.methods.generateAuthToken = function ({ userId, role }) {
@@ -153,6 +153,18 @@ userSchema.methods.isSuspended = function () {
   }
 
   return false; // active
+};
+
+const DEVICE_LIMITS = {
+  admin: 1,
+  seller: 1,
+  customer: 2,
+};
+userSchema.methods.maxDeviceLimitHit = function () {
+  if (this.loggedInUserCount >= DEVICE_LIMITS[this.role]) {
+    return true;
+  }
+  return false; // max device limit hit
 };
 
 const User = mongoose.model("User", userSchema);
