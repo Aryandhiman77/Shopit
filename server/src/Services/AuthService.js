@@ -1,0 +1,147 @@
+import AsyncWrapper from "../Helpers/AsyncWrapper.js";
+import User from "../Models/user.js";
+import bcrypt from "bcryptjs";
+import ApiError from "../Helpers/ApiError.js";
+import { formatDate, formatTime } from "../Helpers/DateTime.js";
+import { verificationOtp } from "../Helpers/html/verificationOtp.js";
+import mailSender from "../Helpers/nodeMailer.js";
+export const loginUserService = async ({
+  email,
+  UUID,
+  phoneNumber,
+  password,
+  role,
+}) => {
+  // 1. Find user
+  const user = await User.findOne({
+    $or: [{ email }, { UUID }, { phoneNumber }],
+  });
+  if (!user) throw new ApiError(404, "User not found.");
+
+  // 2. Check suspension &  roles validity
+  if (user.isSuspended()) {
+    throw new ApiError(
+      403,
+      `Account Suspended until ${user.suspensionExpires.toLocaleString()}`
+    );
+  }
+  if (user.role !== role) {
+    throw new ApiError(403, "Access denied.");
+  }
+
+  // 3. Too many attempts
+  if (user.loginAttempts >= 10) {
+    await user.suspendUser();
+    await user.save();
+    throw new ApiError(
+      403,
+      `Max login attempts exceeded. Account Suspended until ${formatDate(
+        user.suspensionExpires
+      )} ${formatTime(user.suspensionExpires)}`
+    );
+  }
+
+  // 4. Verify password
+  const isTrueUser = await bcrypt.compare(password, user.passwordHash);
+  if (!isTrueUser) {
+    user.loginAttempts++;
+    await user.save();
+    throw new ApiError(400, "Invalid credentials.");
+  }
+
+  // 5. Max device limit
+  const DEVICE_LIMITS = {
+    admin: 1,
+    seller: 1,
+    customer: 2,
+  };
+  if (user.loggedInUserCount >= DEVICE_LIMITS[user.role]) {
+    throw new ApiError(403, "Exceeded max login devices.");
+  }
+
+  // 6. Tokens for giving successful login.
+  const authToken = await user.generateAuthToken({
+    userId: user.id,
+    role: user.role,
+  });
+  const refreshToken = await user.generateRefreshToken({
+    userId: user.id,
+    role: user.role,
+  });
+
+  user.loggedInUserCount++;
+  user.loginAttempts = 0;
+  user.suspensionCount = 0;
+  user.suspensionExpires = null;
+  user.refreshToken = refreshToken;
+
+  const saved = await user.save();
+
+  if (!saved) {
+    throw new ApiError(
+      500,
+      "Login unsuccessfull.",
+      "Technical error, try again."
+    );
+  }
+  return { user, refreshToken, authToken };
+};
+
+export const registerUserService = async ({
+  name,
+  email,
+  password,
+  phoneNumber,
+  role,
+}) => {
+  const isExistingUser = await User.findOne({
+    $or: [{ email }, { phoneNumber }],
+  });
+  if (isExistingUser) {
+    if (isExistingUser.email === email) {
+      throw new ApiError(409, `User already exists with this email.`);
+    }
+    if (isExistingUser.phoneNumber === phoneNumber) {
+      throw new ApiError(409, `User already exists with this phone number.`);
+    }
+  }
+  // 2. Encrypt the password
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+
+  //3.Create user
+  const createdUser = await User.create({
+    name,
+    email,
+    passwordHash: hash,
+    phoneNumber,
+    role,
+  });
+  if (!createdUser) {
+    throw new ApiError(500, `Technical issue, try again .`);
+  }
+  //   6.Authorize using verification otp
+
+  // 3. GENERATE TOKENS
+  //   const authToken = await createdUser.generateAuthToken({
+  //     userId: createdUser.id,
+  //     role: createdUser.role,
+  //   });
+  //   const refreshToken = await createdUser.generateRefreshToken({
+  //     userId: createdUser.id,
+  //     role: createdUser.role,
+  //   });
+
+  //   createdUser.loggedInUserCount++;
+  //   createdUser.refreshToken = refreshToken;
+
+  await createdUser.save();
+  const OTP = createdUser.createResetCode();
+  mailSender({
+    from: "support@shopit.com",
+    to: email,
+    subject: "Shopit phone verification",
+    html: verificationOtp({ OTP }),
+  });
+  return { OTP,email };
+};

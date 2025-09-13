@@ -4,6 +4,7 @@ import crypto from "crypto";
 import JWT from "jsonwebtoken";
 import mailSender from "../Helpers/nodeMailer.js";
 import { formatDate, formatTime } from "../Helpers/DateTime.js";
+import { verificationOtp } from "../Helpers/html/verificationOtp.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -26,7 +27,6 @@ const userSchema = new mongoose.Schema(
     },
     phoneNumber: {
       type: String,
-      required: false,
       unique: true,
       max: 10,
     },
@@ -34,6 +34,14 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["customer", "seller", "admin"],
       default: "customer",
+    },
+    verifyEmail: {
+      type: Boolean,
+      default: false,
+    },
+    verifyNumber: {
+      type: Boolean,
+      default: false,
     },
     accountStatus: {
       type: String,
@@ -58,21 +66,18 @@ const userSchema = new mongoose.Schema(
     suspensionExpires: {
       type: Date,
     },
-    passwordResetCode: String,
-    passwordResetCodeExpires: Date,
+    resetCode: String,
+    resetCodeExpires: Date,
     passwordChangedAt: Date,
   },
   { timestamps: true }
 );
 
-userSchema.methods.createResetPasswordCode = function () {
+userSchema.methods.createResetCode = function () {
   const generateResetCode = customAlphabet("1234567890", 6);
   const resetCode = generateResetCode();
-  this.passwordResetCode = crypto
-    .createHash("sha256")
-    .update(resetCode)
-    .digest("hex");
-  this.passwordResetCodeExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
+  this.resetCode = crypto.createHash("sha256").update(resetCode).digest("hex");
+  this.resetCodeExpires = Date.now() + 10 * 60 * 1000; // 10 minutes
   // console.log(resetCode, this.passwordResetCode);
   return resetCode;
 };
@@ -101,7 +106,7 @@ const suspensionDurations = [
 ];
 const sendSuspensionEmail = async (email, duration) => {
   const sent = await mailSender({
-    from: "Shopit@gmail.com",
+    from: "support@Shopit.com",
     to: email,
     subject: "Shopit Account Suspended",
     html: `<h1>Someone is trying to login in your account, your account is suspended until ${formatDate(
@@ -109,6 +114,7 @@ const sendSuspensionEmail = async (email, duration) => {
     )} ${formatTime(
       duration
     )}. If not you, report otherwise your account might be suspended again.</h1>`,
+    // html: verificationOtp({ otp }),
   });
   if (sent) console.log("email sent:", email);
 };

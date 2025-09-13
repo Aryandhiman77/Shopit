@@ -13,7 +13,7 @@ const addressSchema = new mongoose.Schema(
       default: "home",
     },
     fullName: { type: String, required: true },
-    phone: { type: String, required: true },
+    phoneNumber: { type: String, required: true },
     line1: { type: String, required: true },
     line2: { type: String, required: false },
     city: { type: String, required: true },

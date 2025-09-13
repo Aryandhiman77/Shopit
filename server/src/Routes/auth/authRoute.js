@@ -3,6 +3,8 @@ import {
   loginController,
   registerAsAdmin,
   registrationController,
+  logoutController,
+  verifyOTP,
 } from "../../Controllers/auth/controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
@@ -15,10 +17,12 @@ import tokenMiddleware from "../../Middlewares/tokenMiddleware.js";
 const authRoutes = express.Router();
 
 // one time manual postman registration --> no admin panel
-authRoutes.post("/register-as-admin", registerAsAdmin);
+// authRoutes.post("/register-as-admin", registerAsAdmin);
 
 authRoutes
   .post("/login", validate(LoginSchema), loginController)
-  .post("/register", validate(RegistrationSchema), registrationController);
+  .post("/register", validate(RegistrationSchema), registrationController) // redirect to otp verification
+  .post("/verify-otp", verifyOTP)
+  .post("/logout", validate(RegistrationSchema), logoutController);
 
 export default authRoutes;

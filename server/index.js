@@ -3,13 +3,26 @@ import cors from "cors";
 import { connectDB } from "./src/Config/dbConfig.js";
 import authRoutes from "./src/Routes/auth/authRoute.js";
 import errorHandler from "./src/Middlewares/errorHandler.js";
+import morgan from "morgan";
+import helmet from "helmet";
+import path from "path";
+import { fileURLToPath } from "node:url";
 
 const app = express();
 
 // MIDDLEWARES
 app.use(cors());
+// app.use(morgan());
+app.use(
+  helmet({
+    crossOriginResourcePolicy: false,
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname, "/public")));
 
 // ROUTES
 app.use("/api/auth/", authRoutes); // common auth route
