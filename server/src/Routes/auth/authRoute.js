@@ -13,7 +13,7 @@ import {
   RegistrationSchema,
 } from "../../validations/authValidator.js";
 import { requireRole } from "../../Middlewares/requireRole.js";
-import tokenMiddleware from "../../Middlewares/tokenMiddleware.js";
+import tokenVerification from "../../Middlewares/tokenVerification.js";
 
 const authRoutes = express.Router();
 
@@ -22,8 +22,10 @@ const authRoutes = express.Router();
 
 authRoutes
   .post("/login", validate(LoginSchema), loginController)
-  .post("/register", validate(RegistrationSchema), registrationController) // redirect to otp verification
+
+  .post("/register", validate(RegistrationSchema), registrationController)
   .post("/verify-otp", validate(otpVerificationSchema), verifyOTP)
-  .post("/logout", validate(RegistrationSchema), logoutController);
+
+  .post("/logout", logoutController);
 
 export default authRoutes;

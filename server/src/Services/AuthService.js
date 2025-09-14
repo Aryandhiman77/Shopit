@@ -6,6 +6,7 @@ import { formatDate, formatTime } from "../Helpers/DateTime.js";
 import { verificationOtp } from "../Helpers/html/verificationOtp.js";
 import mailSender from "../Helpers/nodeMailer.js";
 import crypto from "crypto";
+import JWT from "jsonwebtoken";
 export const loginUserService = async ({
   email,
   UUID,
@@ -26,9 +27,7 @@ export const loginUserService = async ({
       `Account Suspended until ${user.suspensionExpires.toLocaleString()}`
     );
   }
-  if (user.role !== role) {
-    throw new ApiError(403, "Access denied.");
-  }
+  if (user.role !== role) throw new ApiError(403, "Access denied.");
 
   // 3. Too many attempts
   if (user.loginAttempts >= 10) {
@@ -51,10 +50,9 @@ export const loginUserService = async ({
   }
 
   // 5. Max device limit
-  const isMaxDevicesHit = await user.checkMaxDevicesLimit();
-  if (isMaxDevicesHit) {
+  const isMaxDevicesHit = await user.maxDeviceLimitHit();
+  if (isMaxDevicesHit)
     throw new ApiError(403, "Exceeded max login devices limit.");
-  }
 
   // 6. Tokens for giving successful login.
   const authToken = await user.generateAuthToken({
@@ -70,17 +68,10 @@ export const loginUserService = async ({
   user.loginAttempts = 0;
   user.suspensionCount = 0;
   user.suspensionExpires = null;
-  user.refreshToken = refreshToken;
+  user.refreshToken.push(refreshToken);
 
-  const saved = await user.save();
+  await user.save();
 
-  if (!saved) {
-    throw new ApiError(
-      500,
-      "Login unsuccessfull.",
-      "Technical error, try again."
-    );
-  }
   return { user, refreshToken, authToken };
 };
 
@@ -115,7 +106,7 @@ export const registerUserService = async ({
     role,
   });
 
-  //   6.Authorize using verification otp
+  //   4.Authorize using verification otp
   const OTP = await createdUser.createResetCode();
   await createdUser.save();
   mailSender({
@@ -151,9 +142,9 @@ export const otpVerificationService = async ({ otp, email }) => {
   if (isMaxDevicesHit) {
     throw new ApiError(403, "Exceeded max login devices limit.");
   }
-
+  // 3. SAVING MODIFIED USER INFO
   verifiedUser.loggedInUserCount++;
-  verifiedUser.refreshToken = refreshToken;
+  verifiedUser.refreshToken.push(refreshToken);
   verifiedUser.verifiedEmail = true;
   verifiedUser.resetCode = null;
   verifiedUser.resetCodeExpires = null;
@@ -161,4 +152,15 @@ export const otpVerificationService = async ({ otp, email }) => {
   await verifiedUser.save();
 
   return { user: verifiedUser, refreshToken, authToken };
+};
+
+export const logoutUserService = async ({ refreshToken }) => {
+  if (!refreshToken) {
+    throw new ApiError(403, "Already logged out.");
+  }
+  const user = await User.findOne({ refreshToken });
+  if (!user) throw new ApiError(403, "Already logged out.");
+  user.refreshToken = user.refreshToken.filter((t) => t !== refreshToken);
+  user.loggedInUserCount--;
+  await user.save();
 };

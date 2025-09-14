@@ -9,6 +9,7 @@ import {
   loginUserService,
   otpVerificationService,
   registerUserService,
+  logoutUserService,
 } from "../../Services/AuthService.js";
 
 export const registerAsAdmin = AsyncWrapper(async (req, res) => {
@@ -40,12 +41,16 @@ export const loginController = AsyncWrapper(async (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
+  res.cookie("authToken", authToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
   const savedUser = {
     UUID: user.UUID,
     name: user.name,
     email: user.email,
     phoneNumber: user.phoneNumber,
-    authToken,
     loggedInUserCount: user.loggedInUserCount,
   };
 
@@ -70,16 +75,28 @@ export const verifyOTP = AsyncWrapper(async (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
+  res.cookie("authToken", authToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
   const savedUser = {
     UUID: user.UUID,
     name: user.name,
     email: user.email,
     phoneNumber: user.phoneNumber,
-    authToken,
     loggedInUserCount: user.loggedInUserCount,
   };
   return res
     .status(200)
     .json(new ApiResponse(200, savedUser, "Registration successful."));
 });
-export const logoutController = AsyncWrapper(() => {});
+export const logoutController = AsyncWrapper(async (req, res) => {
+  await logoutUserService(req.cookies);
+  res.clearCookie("refreshToken");
+  res.clearCookie("authToken");
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, req.cookies, "Logout successful."));
+});

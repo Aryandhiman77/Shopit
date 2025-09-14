@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema(
       default: "active",
     },
     refreshToken: {
-      type: String,
+      type: [String],
     },
     loggedInUserCount: {
       type: Number,
@@ -61,7 +61,7 @@ const userSchema = new mongoose.Schema(
     },
     suspensionCount: {
       type: Number,
-      default: 0, // how many times suspended
+      default: 0, // how many times suspended,
     },
     suspensionExpires: {
       type: Date,
@@ -158,7 +158,7 @@ userSchema.methods.isSuspended = function () {
 const DEVICE_LIMITS = {
   admin: 1,
   seller: 1,
-  customer: 2,
+  customer: 3,
 };
 userSchema.methods.maxDeviceLimitHit = function () {
   if (this.loggedInUserCount >= DEVICE_LIMITS[this.role]) {

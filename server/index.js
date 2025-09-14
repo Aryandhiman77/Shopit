@@ -5,6 +5,7 @@ import authRoutes from "./src/Routes/auth/authRoute.js";
 import errorHandler from "./src/Middlewares/errorHandler.js";
 import morgan from "morgan";
 import helmet from "helmet";
+import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "node:url";
 
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "/public")));
+app.use(cookieParser());
 
 // ROUTES
 app.use("/api/auth/", authRoutes); // common auth route
