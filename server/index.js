@@ -8,6 +8,7 @@ import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { fileURLToPath } from "node:url";
+import { APP_URL } from "./src/Config/appConfig.js";
 
 const app = express();
 
@@ -32,9 +33,8 @@ app.use("/admin/", authRoutes); // admin route
 // app.use("/api/seller/", AuthRouter); // admin routes
 // app.use("/api/", AuthRouter);  // customer routes
 app.use(errorHandler);
-
 connectDB().then(() => {
   app.listen(process.env.PORT, () => {
-    console.log(`Shopit running on http://localhost:${process.env.PORT}`);
+    console.log(`Shopit running on ${APP_URL}`);
   });
 });

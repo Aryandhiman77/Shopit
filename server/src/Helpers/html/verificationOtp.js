@@ -1,7 +1,9 @@
+import { APP_URL } from "../../Config/appConfig.js";
+
 export const verificationOtp = ({
-  COMPANY_LOGO = "http://localhost:8000/logo.svg",
-  COMPANY_NAME = "Shopit",
-  SUPPORT_EMAIL = "support@shopit.in",
+  COMPANY_LOGO = `${APP_URL}/logo.svg`,
+  COMPANY_NAME = process.env.COMPANY_NAME || "Shopit",
+  SUPPORT_EMAIL = process.env.SUPPORT_EMAIL || "support@shopit.in",
   OTP,
 }) => `<!doctype html>
 <html lang="en">
@@ -45,7 +47,7 @@ export const verificationOtp = ({
           <tr>
             <td class="header" style="background:#111827; padding:24px; text-align:center;">
               <!-- logo -->
-              <img src="${COMPANY_LOGO}" alt="${COMPANY_NAME} logo" class="logo" style="height:42px; display:block; margin:0 auto;" />
+              <img src=${COMPANY_LOGO} alt="${COMPANY_NAME} logo" class="logo" style="height:42px; display:block; margin:0 auto;" />
               <div style="font-size:14px; opacity:0.9;">${COMPANY_NAME}</div>
             </td>
           </tr>

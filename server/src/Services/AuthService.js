@@ -138,7 +138,6 @@ export const otpVerificationService = async ({ otp }) => {
     role: verifiedUser.role,
   });
   const isMaxDevicesHit = await verifiedUser.maxDeviceLimitHit();
-  console.log(isMaxDevicesHit);
   if (isMaxDevicesHit) {
     throw new ApiError(403, "Exceeded max login devices limit.");
   }
