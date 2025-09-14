@@ -4,14 +4,20 @@ import {
   registerAsAdmin,
   registrationController,
   logoutController,
+  forgotPassController,
   verifyOTP,
+  forgotPassOTPCheckController,
+  resetPassController,
 } from "../../Controllers/auth/controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
+  resetPasswordSchema,
+  forgotPasswordSchema,
   LoginSchema,
   otpVerificationSchema,
   RegistrationSchema,
 } from "../../validations/authValidator.js";
+import tokenVerification from "../../Middlewares/tokenVerification.js";
 
 const authRoutes = express.Router();
 
@@ -22,7 +28,18 @@ authRoutes
   .post("/login", validate(LoginSchema), loginController)
   .post("/register", validate(RegistrationSchema), registrationController)
   .post("/verify-otp", validate(otpVerificationSchema), verifyOTP)
-  .post("/forgot-pass", validate(otpVerificationSchema))
+  .post("/forgot-pass", validate(forgotPasswordSchema), forgotPassController)
+  .post(
+    "/verify-reset-otp",
+    validate(otpVerificationSchema),
+    forgotPassOTPCheckController
+  )
+  .post(
+    "/reset-password",
+    validate(resetPasswordSchema),
+    tokenVerification,
+    resetPassController
+  )
   .post("/logout", logoutController);
 
 export default authRoutes;

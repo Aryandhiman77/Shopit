@@ -1,4 +1,3 @@
-import AsyncWrapper from "../Helpers/AsyncWrapper.js";
 import User from "../Models/user.js";
 import bcrypt from "bcryptjs";
 import ApiError from "../Helpers/ApiError.js";
@@ -6,7 +5,12 @@ import { formatDate, formatTime } from "../Helpers/DateTime.js";
 import { verificationOtp } from "../Helpers/html/verificationOtp.js";
 import mailSender from "../Helpers/nodeMailer.js";
 import crypto from "crypto";
-import JWT from "jsonwebtoken";
+import cryptoHash from "../Helpers/cryptoHash.js";
+import {
+  createPasswordHash,
+  deviceLimitChecker,
+  generateTokens,
+} from "../Helpers/Auth/authHelper.js";
 export const loginUserService = async ({
   email,
   UUID,
@@ -94,8 +98,7 @@ export const registerUserService = async ({
     }
   }
   // 2. Encrypt the password
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(password, salt);
+  const hash = await createPasswordHash(password);
 
   //3.Create user
   const createdUser = await User.create({
@@ -111,46 +114,25 @@ export const registerUserService = async ({
   await createdUser.save();
   mailSender({
     from: "support@shopit.com",
-    to: email,
-    subject: "Shopit phone verification",
+    to: createdUser.email,
+    subject: "Shopit OTP verification",
     html: verificationOtp({ OTP }),
   });
   return { email };
 };
 
 export const otpVerificationService = async ({ otp }) => {
-  const resetCode = crypto.createHash("sha256").update(otp).digest("hex");
-  //1. VERIFY THE USER'S RESET TOKEN AND INVALIDATE AFTER 10 MINUTES
+  const resetCode = cryptoHash(otp);
   const verifiedUser = await User.findOne({
     $and: [{ resetCode }, { resetCodeExpires: { $gt: Date.now() } }],
   });
   if (!verifiedUser) {
     throw new ApiError(400, `Invalid verification code.`);
   }
-
-  // 2. GENERATE TOKENS TO GIVE LOGIN
-  const authToken = await verifiedUser.generateAuthToken({
-    userId: verifiedUser.id,
-    role: verifiedUser.role,
-  });
-  const refreshToken = await verifiedUser.generateRefreshToken({
-    userId: verifiedUser.id,
-    role: verifiedUser.role,
-  });
-  const isMaxDevicesHit = await verifiedUser.maxDeviceLimitHit();
-  if (isMaxDevicesHit) {
-    throw new ApiError(403, "Exceeded max login devices limit.");
-  }
-  // 3. SAVING MODIFIED USER INFO
-  verifiedUser.loggedInUserCount++;
-  verifiedUser.refreshToken.push(refreshToken);
-  verifiedUser.verifiedEmail = true;
   verifiedUser.resetCode = null;
   verifiedUser.resetCodeExpires = null;
 
-  await verifiedUser.save();
-
-  return { user: verifiedUser, refreshToken, authToken };
+  return { user: verifiedUser };
 };
 
 export const logoutUserService = async ({ refreshToken }) => {
@@ -162,4 +144,21 @@ export const logoutUserService = async ({ refreshToken }) => {
   user.refreshToken = user.refreshToken.filter((t) => t !== refreshToken);
   user.loggedInUserCount--;
   await user.save();
+};
+
+export const forgotPassService = async ({ email, phoneNumber }) => {
+  const user = await User.findOne({ $or: [{ email }, { phoneNumber }] });
+  if (!user) throw new ApiError(404, "User not found.");
+
+  const OTP = await user.createResetCode();
+  if (!OTP) throw new ApiError(403, "Technical issue, try again.");
+  mailSender({
+    from: "support@shopit.com",
+    to: user.email,
+    subject: "Shopit OTP verification",
+    html: verificationOtp({ OTP }),
+  });
+  await user.save();
+
+  return { email: user.email };
 };

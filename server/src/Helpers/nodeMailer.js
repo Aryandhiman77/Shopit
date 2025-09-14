@@ -16,10 +16,7 @@ export default async function mailSender({ from, to, subject, html }) {
     html: html,
   });
   if (info) {
-    console.log(
-      "Mail sent to https://ethereal.email/messages with id: %s",
-      info.messageId
-    );
+    console.log(`Mail sent to ${to} with id: ${info.messageId}`);
     return true;
   } else {
     return false;
