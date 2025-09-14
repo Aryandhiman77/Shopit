@@ -118,11 +118,11 @@ export const registerUserService = async ({
   return { email };
 };
 
-export const otpVerificationService = async ({ otp, email }) => {
+export const otpVerificationService = async ({ otp }) => {
   const resetCode = crypto.createHash("sha256").update(otp).digest("hex");
   //1. VERIFY THE USER'S RESET TOKEN AND INVALIDATE AFTER 10 MINUTES
   const verifiedUser = await User.findOne({
-    $and: [{ email }, { resetCode }, { resetCodeExpires: { $gt: Date.now() } }],
+    $and: [{ resetCode }, { resetCodeExpires: { $gt: Date.now() } }],
   });
   if (!verifiedUser) {
     throw new ApiError(400, `Invalid verification code.`);

@@ -3,7 +3,6 @@ import bcrypt from "bcryptjs";
 import User from "../../Models/user.js";
 import { customAlphabet } from "nanoid";
 import ApiResponse from "../../Helpers/ApiResponse.js";
-import ApiError from "../../Helpers/ApiError.js";
 
 import {
   loginUserService,
@@ -91,6 +90,7 @@ export const verifyOTP = AsyncWrapper(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, savedUser, "Registration successful."));
 });
+
 export const logoutController = AsyncWrapper(async (req, res) => {
   await logoutUserService(req.cookies);
   res.clearCookie("refreshToken");

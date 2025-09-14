@@ -55,10 +55,6 @@ export const RegistrationSchema = Joi.object({
 });
 
 export const otpVerificationSchema = Joi.object({
-  email: Joi.string().email().lowercase().required().messages({
-    "string.email": "Please enter a valid email address.",
-    "any.required": "Email is required.",
-  }),
   otp: Joi.string()
     .pattern(/^[0-9]{6}$/)
     .required()
