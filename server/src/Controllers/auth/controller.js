@@ -96,7 +96,5 @@ export const logoutController = AsyncWrapper(async (req, res) => {
   res.clearCookie("refreshToken");
   res.clearCookie("authToken");
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, req.cookies, "Logout successful."));
+  return res.status(200).json(new ApiResponse(200, null, "Logout successful."));
 });
