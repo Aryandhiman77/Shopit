@@ -133,6 +133,7 @@ export const forgotPassOTPCheckController = AsyncWrapper(async (req, res) => {
     userId: user.id,
     role: user.role,
   });
+  console.log(authToken);
   res.cookie("authToken", authToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -154,6 +155,7 @@ export const resetPassController = AsyncWrapper(async (req, res) => {
   user.passwordHash = hashPassword;
   user.passwordChangedAt = Date.now();
   await user.save();
+  res.clearCookie("authToken");
   return res
     .status(200)
     .json(new ApiResponse(200, true, "Password changed successfully."));

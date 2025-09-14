@@ -4,7 +4,7 @@ import User from "../Models/user.js";
 import ApiError from "../Helpers/ApiError.js";
 
 const tokenVerification = AsyncWrapper(async (req, res, next) => {
-  const token = req.headers.authorization.split(" ")[1];
+  const token = req.cookies.authToken;
 
   if (!token) {
     return res

@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 export const generateTokens = async (user) => {
   const authToken = await user.generateAuthToken({
     userId: user.id,

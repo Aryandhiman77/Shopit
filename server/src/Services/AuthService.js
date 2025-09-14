@@ -54,9 +54,7 @@ export const loginUserService = async ({
   }
 
   // 5. Max device limit
-  const isMaxDevicesHit = await user.maxDeviceLimitHit();
-  if (isMaxDevicesHit)
-    throw new ApiError(403, "Exceeded max login devices limit.");
+  await deviceLimitChecker();
 
   // 6. Tokens for giving successful login.
   const authToken = await user.generateAuthToken({
