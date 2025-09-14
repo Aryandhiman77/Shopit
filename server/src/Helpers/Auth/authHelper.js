@@ -1,4 +1,5 @@
 import bcrypt from "bcryptjs";
+import ApiError from "../ApiError.js";
 export const generateTokens = async (user) => {
   const authToken = await user.generateAuthToken({
     userId: user.id,

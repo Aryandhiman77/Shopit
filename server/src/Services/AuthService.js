@@ -54,7 +54,7 @@ export const loginUserService = async ({
   }
 
   // 5. Max device limit
-  await deviceLimitChecker();
+  await deviceLimitChecker(user);
 
   // 6. Tokens for giving successful login.
   const authToken = await user.generateAuthToken({
