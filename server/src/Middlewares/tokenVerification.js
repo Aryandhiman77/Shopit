@@ -11,9 +11,7 @@ const tokenVerification = AsyncWrapper(async (req, res, next) => {
       .status(401)
       .json(new ApiError(401, "No authorization provided."));
   }
-  console.log(token);
   const decoded = JWT.verify(token, process.env.JWT_AUTH_SECRET);
-  console.log(decoded);
   const user = await User.findById(decoded.userId);
   if (!user) {
     return res

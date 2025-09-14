@@ -147,14 +147,14 @@ export const forgotPassOTPCheckController = AsyncWrapper(async (req, res) => {
 export const resetPassController = AsyncWrapper(async (req, res) => {
   const { password } = req.data;
   const { _id } = await req.user;
-  const user = await User.findById(_id);
-  if (!user) {
-    throw new ApiError(404, "User not found.");
-  }
   const hashPassword = await createPasswordHash(password);
-  user.passwordHash = hashPassword;
-  user.passwordChangedAt = Date.now();
-  await user.save();
+  const user = await User.findByIdAndUpdate(_id, {
+    $set: {
+      passwordHash: hashPassword,
+      passwordChangedAt: Date.now(),
+    },
+  });
+  if (!user) throw new ApiError(500, "Techical issue, try again");
   res.clearCookie("authToken");
   return res
     .status(200)
