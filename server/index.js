@@ -38,3 +38,5 @@ connectDB().then(() => {
     console.log(`Shopit running on ${APP_URL}`);
   });
 });
+
+console.log(process.cwd());
