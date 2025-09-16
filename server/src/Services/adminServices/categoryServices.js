@@ -25,7 +25,10 @@ export const createCategoryService = async ({ name, parent, level }, file) => {
     name,
     parentCategory: parentCategory.id,
     level,
-    image: uploaded.url,
+    image: {
+      url: uploaded.url,
+      public_id: uploaded.public_id,
+    },
   });
   if (!createdCategory)
     throw new ApiError(400, "Technical issue, cannot create category.");
