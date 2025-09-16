@@ -12,6 +12,7 @@ const variantSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
+    thumbnail: { type: String, required: true },
     images: {
       type: [String],
       validate: [(arr) => arr.length <= 10, "Maximum 10 images allowed"],
@@ -45,6 +46,7 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, index: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
+    thumbnail: { type: String, required: true },
     images: {
       type: [String],
       validate: [(arr) => arr.length <= 10, "Maximum 10 images allowed"],

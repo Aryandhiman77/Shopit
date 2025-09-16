@@ -4,7 +4,7 @@ import slugify from "slugify";
 const categorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
-    slug: { type: String, unique: true, lowercase: true },
+    slug: { type: String, unique: true, lowercase: true, index: true },
     parentCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -12,8 +12,11 @@ const categorySchema = new mongoose.Schema(
     },
     level: {
       type: Number,
-      required: true,
       enum: [1, 2, 3],
+      default: 1,
+    },
+    image: {
+      type: String,
     },
     isActive: {
       type: Boolean,
@@ -22,8 +25,6 @@ const categorySchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-
-categorySchema.index({ slug: 1 });
 
 // Auto-generate slug
 categorySchema.pre("save", function (next) {
