@@ -48,4 +48,14 @@ export async function uploadWithRetry(
     lastError.message
   );
 }
+
+export async function deleteFromCloudinary(public_id) {
+  try {
+    const deleted = await cloudinary.uploader.destroy(public_id);
+    if (!deleted) throw new ApiError(500, "Unable to delete file.");
+  } catch (error) {
+    console.log(error);
+     throw new ApiError(500, "Unable to delete file.");
+  }
+}
 export default uploadOnCloudinary;
