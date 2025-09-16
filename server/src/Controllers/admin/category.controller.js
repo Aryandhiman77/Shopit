@@ -37,6 +37,7 @@ export const getCategories = AsyncWrapper(async (req, res) => {
 
 export const updateCategory = AsyncWrapper(async (req, res, next) => {
   const { slug } = req.params;
+  console.log(req.data);
   const { category } = await updateCategoryService(
     { ...req.data, slug },
     req.file

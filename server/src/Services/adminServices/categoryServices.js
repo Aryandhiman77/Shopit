@@ -72,7 +72,7 @@ export const getCategoryService = async ({ level }) => {
 };
 
 export const updateCategoryService = async (
-  { slug, level, name, isActive },
+  { slug, level = 1, name, isActive },
   file
 ) => {
   const category = await Categories.findOne({ slug, level }).populate(

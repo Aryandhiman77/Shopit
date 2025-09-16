@@ -33,6 +33,6 @@ export const updateCategorySchema = Joi.object({
   }),
   isActive: Joi.boolean().required().messages({
     "boolean.base": "Category status must be either true or false",
-    "any.required": "Category slug is required.",
+    "any.required": "Category status is required.",
   }),
 });

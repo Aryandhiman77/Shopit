@@ -55,7 +55,7 @@ export async function deleteFromCloudinary(public_id) {
     if (!deleted) throw new ApiError(500, "Unable to delete file.");
   } catch (error) {
     console.log(error);
-     throw new ApiError(500, "Unable to delete file.");
+    throw new ApiError(500, "Unable to delete file.");
   }
 }
 export default uploadOnCloudinary;
