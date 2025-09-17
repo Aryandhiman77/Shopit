@@ -160,3 +160,32 @@ export const resetPassController = AsyncWrapper(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, true, "Password changed successfully."));
 });
+
+export const renewUserTokens = AsyncWrapper(async (req, res) => {
+  const { refreshToken: oldToken } = req.cookies.refreshToken;
+  if (!oldToken) {
+    throw new ApiError(500, null, "No refresh authorization received.");
+  }
+  const { authToken, refreshToken: new_token } = await user.renewTokens(user);
+
+  const updated = await User.updateOne(
+    { refreshToken: oldToken },
+    { $set: { "refreshToken.$": new_token } }
+  );
+  if (!updated) {
+    throw new ApiError(500, "Login again.", "Already logged out.");
+  }
+  res.cookie("authToken", authToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  res.cookie("refreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+  });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, true, "Authorization refreshed."));
+});

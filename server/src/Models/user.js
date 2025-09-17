@@ -5,7 +5,7 @@ import JWT from "jsonwebtoken";
 import mailSender from "../Helpers/nodeMailer.js";
 import { formatDate, formatTime } from "../Helpers/DateTime.js";
 import { verificationOtp } from "../Helpers/html/verificationOtp.js";
-
+import { generateTokens } from "../Helpers/Auth/authHelper.js";
 const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
@@ -94,6 +94,10 @@ userSchema.methods.generateRefreshToken = function ({ userId, role }) {
     expiresIn: process.env.JWT_REFRESH_EXPIRY,
   });
   return token;
+};
+userSchema.methods.renewTokens = async function (user) {
+  const { authToken, refreshToken } = await generateTokens(user);
+  return { authToken, refreshToken };
 };
 
 const suspensionDurations = [

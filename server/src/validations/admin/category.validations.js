@@ -1,4 +1,4 @@
-import Joi, { options } from "joi";
+import Joi from "joi";
 
 const attributeSchema = Joi.object({
   name: Joi.string().lowercase().min(3).max(25).required().messages({
