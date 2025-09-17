@@ -132,7 +132,7 @@ export const updateCategoryService = async (
 export const recursiveDeleteCategoryService = async (categoryId) => {
   //1. find category
   const category = await Categories.findById(categoryId);
-  if (!category) return;
+  if (!category) throw new ApiError(400, "Cannot find category.");
 
   // 2. delete its images from cloudinary
   if (category.image?.public_id) {
@@ -149,6 +149,5 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
     recursiveDeleteCategoryService(child._id);
   }
   // 5.Delete this category
-  const deleted = await Categories.deleteOne(category._id);
-  console.log(deleted._id);
+  await Categories.deleteOne(category._id);
 };

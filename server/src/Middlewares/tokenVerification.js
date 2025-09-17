@@ -5,7 +5,6 @@ import ApiError from "../Helpers/ApiError.js";
 
 const tokenVerification = AsyncWrapper(async (req, res, next) => {
   const token = req.cookies.authToken;
-  console.log(token);
   if (!token) {
     throw new ApiError(401, "No authorization provided.");
   }

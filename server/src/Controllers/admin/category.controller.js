@@ -55,11 +55,10 @@ export const updateCategory = AsyncWrapper(async (req, res, next) => {
     );
 });
 
-export const deleteCategory = AsyncWrapper(async () => {
+export const deleteCategory = AsyncWrapper(async (req, res) => {
   const { slug, level } = req.params;
-  console.log(slug,level);
   const categoryId = await Categories.find({ slug, level }).select("_id");
-  const deleteCategory = await recursiveDeleteCategoryService(categoryId);
+  await recursiveDeleteCategoryService(categoryId);
   return res
     .status(200)
     .json(new ApiResponse(200, null, `category deleted along with childrens.`));
