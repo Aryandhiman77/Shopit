@@ -8,8 +8,6 @@ import {
 } from "../../Services/adminServices/categoryServices.js";
 import Categories from "../../Models/category.js";
 import fs from "fs";
-import ApiError from "../../Helpers/ApiError.js";
-import e from "express";
 
 export const createCategory = AsyncWrapper(async (req, res, next) => {
   try {

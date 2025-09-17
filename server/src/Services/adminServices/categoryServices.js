@@ -48,8 +48,8 @@ export const createCategoryService = async ({ name, parent, level }, file) => {
   const savedCategory = {
     name: createdCategory.name,
     parentCategory: {
-      name: createdCategory.parentCategory.name,
-      slug: createdCategory.parentCategory.slug,
+      name: createdCategory.parentCategory?.name,
+      slug: createdCategory.parentCategory?.slug,
     },
     level: createdCategory.level,
     image: createdCategory.image.url,
@@ -146,7 +146,7 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
 
   // 4. Recursively delete children
   for (const child of childrens) {
-    recursiveDeleteCategoryService(child._id);
+    await recursiveDeleteCategoryService(child._id);
   }
   // 5.Delete this category
   await Categories.deleteOne(category._id);
