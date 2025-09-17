@@ -53,7 +53,7 @@ export const createCategoryService = async (
   };
 
   if (level === 3) {
-    if (attributes?.length > 0) createdCategory.attributes = attributes;
+    if (attributes?.length > 0) categoryData.attributes = attributes;
   } else if (level < 3) {
     fs.unlinkSync(file.path);
     throw new ApiError(
@@ -134,7 +134,7 @@ export const updateCategoryService = async (
   if (isActive !== undefined) category.isActive = isActive;
 
   if (level === 3) {
-    if (attributes?.length > 0) createdCategory.attributes = attributes;
+    if (attributes?.length > 0) category.attributes = attributes;
   } else if (level < 3) {
     fs.unlinkSync(file.path);
     throw new ApiError(

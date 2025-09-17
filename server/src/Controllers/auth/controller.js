@@ -162,25 +162,29 @@ export const resetPassController = AsyncWrapper(async (req, res) => {
 });
 
 export const renewUserTokens = AsyncWrapper(async (req, res) => {
-  const { refreshToken: oldToken } = req.cookies.refreshToken;
+  const { refreshToken: oldToken } = req.cookies;
+
   if (!oldToken) {
-    throw new ApiError(500, null, "No refresh authorization received.");
+    throw new ApiError(400, null, "No refresh authorization received.");
   }
-  const { authToken, refreshToken: new_token } = await user.renewTokens(user);
+  const user = await User.findOne({ refreshToken: oldToken });
+
+  const { authToken, refreshToken: new_token } = await generateTokens(user);
 
   const updated = await User.updateOne(
     { refreshToken: oldToken },
     { $set: { "refreshToken.$": new_token } }
   );
   if (!updated) {
-    throw new ApiError(500, "Login again.", "Already logged out.");
+    throw new ApiError(400, "Login again.", "Already logged out.");
   }
+
   res.cookie("authToken", authToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
   });
-  res.cookie("refreshToken", refreshToken, {
+  res.cookie("refreshToken", new_token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",

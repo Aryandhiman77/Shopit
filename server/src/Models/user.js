@@ -95,10 +95,7 @@ userSchema.methods.generateRefreshToken = function ({ userId, role }) {
   });
   return token;
 };
-userSchema.methods.renewTokens = async function (user) {
-  const { authToken, refreshToken } = await generateTokens(user);
-  return { authToken, refreshToken };
-};
+
 
 const suspensionDurations = [
   1 * 60 * 1000, // 1 min

@@ -11,12 +11,14 @@ import {
   createCategorySchema,
   updateCategorySchema,
 } from "../../validations/admin/category.validations.js";
+import { jsonParser } from "../../Helpers/jsonParser.js";
 const categoryRoutes = express.Router();
 
 categoryRoutes
   .post(
     "/create",
     upload.single("image"),
+    jsonParser(["attributes"]),
     validate(createCategorySchema),
     createCategory
   )
@@ -24,6 +26,7 @@ categoryRoutes
   .patch(
     "/update/:slug",
     upload.single("image"),
+    jsonParser(["attributes"]),
     validate(updateCategorySchema),
     updateCategory
   )
