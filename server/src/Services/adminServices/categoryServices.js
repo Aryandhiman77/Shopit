@@ -128,3 +128,27 @@ export const updateCategoryService = async (
     },
   };
 };
+
+export const recursiveDeleteCategoryService = async (categoryId) => {
+  //1. find category
+  const category = await Categories.findById(categoryId);
+  if (!category) return;
+
+  // 2. delete its images from cloudinary
+  if (category.image?.public_id) {
+    await deleteFromCloudinary(category.image.public_id);
+  }
+
+  // 3. find its children categories
+  const childrens = await Categories.find({
+    parentCategory: categoryId,
+  }).select("_id");
+
+  // 4. Recursively delete children
+  for (const child of childrens) {
+    recursiveDeleteCategoryService(child._id);
+  }
+  // 5.Delete this category
+  const deleted = await Categories.deleteOne(category._id);
+  console.log(deleted._id);
+};

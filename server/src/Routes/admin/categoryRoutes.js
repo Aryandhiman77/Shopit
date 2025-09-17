@@ -4,6 +4,7 @@ import {
   createCategory,
   getCategories,
   updateCategory,
+  deleteCategory
 } from "../../Controllers/admin/category.controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
@@ -25,6 +26,7 @@ categoryRoutes
     upload.single("image"),
     validate(updateCategorySchema),
     updateCategory
-  );
+  )
+  .delete("/delete/:slug/:level", deleteCategory);
 
 export default categoryRoutes;

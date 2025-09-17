@@ -5,18 +5,14 @@ import ApiError from "../Helpers/ApiError.js";
 
 const tokenVerification = AsyncWrapper(async (req, res, next) => {
   const token = req.cookies.authToken;
-
+  console.log(token);
   if (!token) {
-    return res
-      .status(401)
-      .json(new ApiError(401, "No authorization provided."));
+    throw new ApiError(401, "No authorization provided.");
   }
   const decoded = JWT.verify(token, process.env.JWT_AUTH_SECRET);
   const user = await User.findById(decoded.userId);
   if (!user) {
-    return res
-      .status(404)
-      .json(new ApiError(404, "Invalid credentials.", "User not found."));
+    new ApiError(404, "Invalid credentials.", "User not found.");
   }
   req.user = user;
   next();
