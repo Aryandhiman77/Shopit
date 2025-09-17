@@ -23,6 +23,16 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    attributes: {
+      name: { type: String, required: true },
+      inputType: {
+        type: String,
+        enum: ["string", "number", "boolean", "select"],
+        default: "string",
+      },
+      options: [String], // for dropdown
+      required: { type: Boolean, default: false }, // is required or not
+    },
   },
   { timestamps: true }
 );

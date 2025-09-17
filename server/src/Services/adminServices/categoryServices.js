@@ -139,7 +139,7 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
     await deleteFromCloudinary(category.image.public_id);
   }
 
-  // 3. find its children categories
+  // 3. find its children categories  --> Post-order Depth First Search
   const childrens = await Categories.find({
     parentCategory: categoryId,
   }).select("_id");
@@ -151,3 +151,4 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
   // 5.Delete this category
   await Categories.deleteOne(category._id);
 };
+

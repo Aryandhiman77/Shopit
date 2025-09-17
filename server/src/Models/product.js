@@ -5,10 +5,7 @@ import category from "./category";
 const variantSchema = new mongoose.Schema(
   {
     sku: { type: String, required: true, unique: true },
-    attributes: {
-      type: Map,
-      of: String,
-    },
+    attributes: Map,
     price: { type: Number, required: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
@@ -65,12 +62,14 @@ const productSchema = new mongoose.Schema(
       enum: ["draft", "active", "inactive"],
       default: "active",
     },
+    attributes: Map,
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
   },
+
   { timestamps: true }
 );
 productSchema.index({
