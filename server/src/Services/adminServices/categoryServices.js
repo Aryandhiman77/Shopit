@@ -188,3 +188,30 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
   // 5.Delete this category
   await Categories.deleteOne(category._id);
 };
+
+const recursivelyBuildCategoryTree = async (parentId = null) => {
+  const categories = await Categories.find({ parentCategory: parentId });
+
+  let result = [];
+  for (const category of categories) {
+    const children = await recursivelyBuildCategoryTree(category._id);
+    result.push({
+      name: category.name,
+      slug: category.slug,
+      subcategories: children,
+      image: category.image,
+    });
+  }
+
+  return result;
+};
+
+export const getStructuredCategories = async () => {
+  const structuredCategories = await recursivelyBuildCategoryTree(null);
+
+  if (!structuredCategories.length) {
+    throw new ApiError(400, "No categories found.");
+  }
+
+  return structuredCategories;
+};

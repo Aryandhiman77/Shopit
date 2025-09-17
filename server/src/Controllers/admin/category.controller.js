@@ -3,6 +3,7 @@ import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import {
   createCategoryService,
   getCategoryService,
+  getStructuredCategories,
   recursiveDeleteCategoryService,
   updateCategoryService,
 } from "../../Services/adminServices/categoryServices.js";
@@ -30,6 +31,12 @@ export const createCategory = AsyncWrapper(async (req, res, next) => {
 
 export const getCategories = AsyncWrapper(async (req, res) => {
   const categories = await getCategoryService(req.params);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, categories, `Categories found.`));
+});
+export const getAllStructuredCategories = AsyncWrapper(async (req, res) => {
+  const categories = await getStructuredCategories();
   return res
     .status(200)
     .json(new ApiResponse(200, categories, `Categories found.`));
