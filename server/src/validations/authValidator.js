@@ -32,11 +32,11 @@ export const LoginSchema = Joi.object({
   }),
 })
   .or("email", "phoneNumber", "UUID")
+  .unknown(false)
   .messages({
     "object.missing": "Please provide either Email, Phone Number, or User ID.",
+    "object.unknown": "Extra fields are not allowed.",
   });
-
-// /^[0-9]{10}$/ --> digits starting from 0 to 9 and must be of length 10
 
 export const RegistrationSchema = Joi.object({
   ...baseSchema,
@@ -61,8 +61,13 @@ export const RegistrationSchema = Joi.object({
     "any.required": "Role is required.",
     "string.empty": "Role cannot be empty.",
   }),
-});
+})
+  .unknown(false)
+  .messages({
+    "object.unknown": "Extra fields are not allowed.",
+  });
 
+// ✅ OTP Verification Schema
 export const otpVerificationSchema = Joi.object({
   otp: Joi.string()
     .pattern(/^[0-9]{6}$/)
@@ -72,8 +77,13 @@ export const otpVerificationSchema = Joi.object({
       "any.required": "Otp is required.",
       "string.empty": "OTP cannot be empty.",
     }),
-});
+})
+  .unknown(false)
+  .messages({
+    "object.unknown": "Extra fields are not allowed.",
+  });
 
+// ✅ Forgot Password Schema
 export const forgotPasswordSchema = Joi.object({
   email: Joi.string().email().lowercase().messages({
     "string.email": "Please enter a valid email address.",
@@ -87,10 +97,13 @@ export const forgotPasswordSchema = Joi.object({
     }),
 })
   .or("email", "phoneNumber")
+  .unknown(false)
   .messages({
     "object.missing": "Please provide either Email or Phone Number.",
+    "object.unknown": "Extra fields are not allowed.",
   });
 
+// ✅ Reset Password Schema
 export const resetPasswordSchema = Joi.object({
   password: Joi.string().min(6).max(20).required().messages({
     "string.min": "Password must be at least 6 characters long.",
@@ -103,4 +116,8 @@ export const resetPasswordSchema = Joi.object({
     "any.required": "Confirm Password is required.",
     "string.empty": "Confirm Password cannot be empty.",
   }),
-});
+})
+  .unknown(false)
+  .messages({
+    "object.unknown": "Extra fields are not allowed.",
+  });

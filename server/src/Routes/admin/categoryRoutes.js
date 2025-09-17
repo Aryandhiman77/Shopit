@@ -4,7 +4,7 @@ import {
   createCategory,
   getCategories,
   updateCategory,
-  deleteCategory
+  deleteCategory,
 } from "../../Controllers/admin/category.controller.js";
 import validate from "../../Middlewares/validate.js";
 import {

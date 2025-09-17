@@ -5,7 +5,10 @@ import {
   deleteFromCloudinary,
 } from "../../Helpers/cloudinary.js";
 import fs from "fs";
-export const createCategoryService = async ({ name, parent, level }, file) => {
+export const createCategoryService = async (
+  { name, parent, level, attributes },
+  file
+) => {
   if (level >= 2 && !parent) {
     throw new ApiError(400, "Parent category is required.");
   }
@@ -17,43 +20,63 @@ export const createCategoryService = async ({ name, parent, level }, file) => {
     fs.unlinkSync(file.path);
     throw new ApiError(400, "Category already exists with this name.");
   }
-  const parentCategory = await Categories.findOne({ slug: parent }).select(
-    "_id level"
-  );
+  let parentCategory = null;
+  if (level >= 2) {
+    parentCategory = await Categories.findOne({ slug: parent }).select(
+      "_id level name slug"
+    );
 
-  if (level >= 2 && !parentCategory) {
-    throw new ApiError(404, "Parent category not found.");
-  }
-  if (level === 3 && parentCategory.level < 2) {
-    throw new ApiError(404, "Parent level-2 subcategory not found.");
+    if (!parentCategory) {
+      fs.unlinkSync(file.path);
+      throw new ApiError(404, "Parent category not found.");
+    }
+
+    if (level === 3 && parentCategory.level < 2) {
+      fs.unlinkSync(file.path);
+      throw new ApiError(400, "Parent must be a level-2 subcategory.");
+    }
   }
 
   const uploaded = await uploadWithRetry(file.path);
   if (!uploaded) {
+    fs.unlinkSync(file.path);
     throw new ApiError(400, "Technical issue, cannot upload image.");
   }
-
-  const createdCategory = await Categories.create({
+  const categoryData = {
     name,
-    parentCategory,
+    parentCategory: parentCategory ? parentCategory._id : null,
     level,
     image: {
       url: uploaded.url,
       public_id: uploaded.public_id,
     },
-  });
+  };
+
+  if (level === 3) {
+    if (attributes?.length > 0) createdCategory.attributes = attributes;
+  } else if (level < 3) {
+    fs.unlinkSync(file.path);
+    throw new ApiError(
+      400,
+      "Attributes can only be added to level-3 categories only."
+    );
+  }
+  const createdCategory = await Categories.create(categoryData);
+  fs.unlinkSync(file.path);
   if (!createdCategory)
     throw new ApiError(400, "Technical issue, cannot create category.");
-  fs.unlinkSync(file.path);
+
   const savedCategory = {
     name: createdCategory.name,
     parentCategory: {
-      name: createdCategory.parentCategory?.name,
-      slug: createdCategory.parentCategory?.slug,
+      name: parentCategory.name,
+      slug: parentCategory.slug,
     },
     level: createdCategory.level,
     image: createdCategory.image.url,
     slug: createdCategory.slug,
+    attributes: createdCategory.attributes,
+    isActive: createdCategory.isActive,
   };
   return { category: savedCategory };
 };
@@ -72,7 +95,7 @@ export const getCategoryService = async ({ level }) => {
 };
 
 export const updateCategoryService = async (
-  { slug, level = 1, name, isActive },
+  { slug, level = 1, name, isActive, attributes },
   file
 ) => {
   const category = await Categories.findOne({ slug, level }).populate(
@@ -110,7 +133,20 @@ export const updateCategoryService = async (
   if (name) category.name = name;
   if (isActive !== undefined) category.isActive = isActive;
 
-  await category.save();
+  if (level === 3) {
+    if (attributes?.length > 0) createdCategory.attributes = attributes;
+  } else if (level < 3) {
+    fs.unlinkSync(file.path);
+    throw new ApiError(
+      400,
+      "Attributes can only be added to level-3 categories only."
+    );
+  }
+  const saved = await category.save();
+  if (!saved) {
+    fs.unlinkSync(file.path);
+    throw new ApiError(500, "Technical issue, cannot save category.");
+  }
 
   return {
     category: {
@@ -125,6 +161,7 @@ export const updateCategoryService = async (
       image: category.image?.url || null,
       slug: category.slug,
       isActive: category.isActive,
+      attributes: category.attributes,
     },
   };
 };
@@ -151,4 +188,3 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
   // 5.Delete this category
   await Categories.deleteOne(category._id);
 };
-
