@@ -69,6 +69,16 @@ export const RegistrationSchema = Joi.object({
 
 // ✅ OTP Verification Schema
 export const otpVerificationSchema = Joi.object({
+  email: Joi.string().email().lowercase().messages({
+    "string.email": "Please enter a valid email address.",
+    "string.empty": "Email cannot be empty.",
+  }),
+  phoneNumber: Joi.string()
+    .pattern(/^[0-9]{10}$/)
+    .messages({
+      "string.pattern.base": "Please enter a valid 10-digit phone number.",
+      "string.empty": "Phone Number cannot be empty.",
+    }),
   otp: Joi.string()
     .pattern(/^[0-9]{6}$/)
     .required()
@@ -78,8 +88,10 @@ export const otpVerificationSchema = Joi.object({
       "string.empty": "OTP cannot be empty.",
     }),
 })
+  .or("email", "phoneNumber")
   .unknown(false)
   .messages({
+    "object.missing": "Please provide either Email or Phone Number.",
     "object.unknown": "Extra fields are not allowed.",
   });
 

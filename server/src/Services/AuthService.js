@@ -53,6 +53,17 @@ export const loginUserService = async ({
     throw new ApiError(400, "Invalid credentials.");
   }
 
+  if (user.loggedInUserCount > 0 && user.loggedInUserCount <= 3) {
+    const OTP = await user.createResetCode();
+    mailSender({
+      from: "support@shopit.com",
+      to: user.email,
+      subject: "Shopit OTP verification",
+      html: verificationOtp({ OTP }),
+    });
+    await user.save();
+    return { email: user.email };
+  }
   // 5. Max device limit
   await deviceLimitChecker(user);
 
@@ -119,10 +130,15 @@ export const registerUserService = async ({
   return { email };
 };
 
-export const otpVerificationService = async ({ otp }) => {
+export const otpVerificationService = async ({ otp, email, phoneNumber }) => {
+
   const resetCode = cryptoHash(otp);
   const verifiedUser = await User.findOne({
-    $and: [{ resetCode }, { resetCodeExpires: { $gt: Date.now() } }],
+    $and: [
+      { $or: [{ email }, { phoneNumber }] },
+      { resetCode },
+      { resetCodeExpires: { $gt: Date.now() } },
+    ],
   });
   if (!verifiedUser) {
     throw new ApiError(400, `Invalid verification code.`);

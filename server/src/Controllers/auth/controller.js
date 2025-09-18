@@ -40,7 +40,20 @@ export const registerAsAdmin = AsyncWrapper(async (req, res) => {
 });
 
 export const loginController = AsyncWrapper(async (req, res) => {
-  const { user, authToken, refreshToken } = await loginUserService(req.data);
+  const { email, user, authToken, refreshToken } = await loginUserService(
+    req.data
+  );
+  if (email) {
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          null,
+          `6-digit verification code sent to ${email}.`
+        )
+      );
+  }
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -71,6 +84,7 @@ export const registrationController = AsyncWrapper(async (req, res) => {
     .json(
       new ApiResponse(
         200,
+        null,
         `Registration successful. 6-digit verification code sent to ${email}.`
       )
     );
@@ -80,8 +94,10 @@ export const verifyOTP = AsyncWrapper(async (req, res) => {
   const { user } = await otpVerificationService(req.data);
   const { authToken, refreshToken } = await generateTokens(user);
 
-  await deviceLimitChecker(user);
   // 3. SAVING MODIFIED USER INFO
+
+  user.loggedInUserCount = 0;
+  user.refreshToken = [];
   user.loggedInUserCount++;
   user.refreshToken.push(refreshToken);
   user.verifiedEmail = true;

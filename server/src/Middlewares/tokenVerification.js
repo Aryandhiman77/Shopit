@@ -8,8 +8,15 @@ const tokenVerification = AsyncWrapper(async (req, res, next) => {
   if (!token) {
     throw new ApiError(401, "No authorization provided.");
   }
-  const decoded = JWT.verify(token, process.env.JWT_AUTH_SECRET);
-  const user = await User.findById(decoded.userId);
+  const { err, data } = JWT.verify(
+    token,
+    process.env.JWT_AUTH_SECRET,
+    (err, data) => ({ err, data })
+  );
+  if (err && err.message === "jwt expired") {
+    throw new ApiError(401, "Invalid Authorization.");
+  }
+  const user = await User.findById(data.userId);
   if (!user) {
     new ApiError(404, "Invalid credentials.", "User not found.");
   }

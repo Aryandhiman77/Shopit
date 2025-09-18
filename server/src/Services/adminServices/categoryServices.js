@@ -191,7 +191,6 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
 
 const recursivelyBuildCategoryTree = async (parentId = null) => {
   const categories = await Categories.find({ parentCategory: parentId });
-
   let result = [];
   for (const category of categories) {
     const children = await recursivelyBuildCategoryTree(category._id);
@@ -202,7 +201,7 @@ const recursivelyBuildCategoryTree = async (parentId = null) => {
       image: category.image,
     });
   }
-
+  
   return result;
 };
 
