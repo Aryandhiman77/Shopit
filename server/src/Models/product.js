@@ -5,6 +5,7 @@ import { slugify } from "slugify";
 // Variant Schema (for size, color, etc.)
 const variantSchema = new mongoose.Schema(
   {
+    variantTitle: { type: String, required: true, trim: true },
     slug: {
       type: String,
       unique: true,
@@ -12,7 +13,7 @@ const variantSchema = new mongoose.Schema(
       index: true,
     },
     sku: { type: String, required: true, unique: true },
-    attributes: Map,
+    attributes: mongoose.Schema.Types.Mixed,
     price: { type: Number, required: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
@@ -69,7 +70,7 @@ const productSchema = new mongoose.Schema(
       enum: ["draft", "active", "inactive"],
       default: "active",
     },
-    attributes: Map,
+    attributes: mongoose.Schema.Types.Mixed,
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -90,7 +91,11 @@ productSchema.index({
 });
 
 productSchema.pre("save", async function (next) {
-  if (!this.isModified("name") && !this.isModified("variants") && !this.isModified("category")) {
+  if (
+    !this.isModified("name") &&
+    !this.isModified("variants") &&
+    !this.isModified("category")
+  ) {
     return next();
   }
 
@@ -100,24 +105,32 @@ productSchema.pre("save", async function (next) {
   }
 
   let categoryCode = category.name
-    .replace(/-/g, "")     // remove existing hyphens
-    .replace(/\s+/g, "-")  // spaces -> hyphen
+    .replace(/-/g, "") // remove existing hyphens
+    .replace(/\s+/g, "-") // spaces -> hyphen
     .toUpperCase();
 
   // ---------- SLUG ----------
-  let baseSlug = slugify(`${category.slug}-${this.name}`, { lower: true, strict: true });
+  let baseSlug = slugify(`${category.slug}-${this.name}`, {
+    lower: true,
+    strict: true,
+  });
   let uniqueSlug = baseSlug;
   let counter = 1;
 
   // Ensure product slug is unique
-  while (await mongoose.models.Product.findOne({ slug: uniqueSlug, _id: { $ne: this._id } })) {
+  while (
+    await mongoose.models.Product.findOne({
+      slug: uniqueSlug,
+      _id: { $ne: this._id },
+    })
+  ) {
     uniqueSlug = `${baseSlug}-${counter++}`;
   }
   this.slug = uniqueSlug;
 
   // ---------- SKU ----------
   let baseSku = `${categoryCode}-${this.name
-    .replace(/-/g, "")    // remove hyphens
+    .replace(/-/g, "") // remove hyphens
     .replace(/\s+/g, "-") // spaces -> hyphen
     .toUpperCase()}`;
 
@@ -126,7 +139,10 @@ productSchema.pre("save", async function (next) {
   // ---------- VARIANTS ----------
   if (this.variants && this.isModified("variants")) {
     this.variants = this.variants.map((variant, index) => {
-      let variantSlug = `${uniqueSlug}-${slugify(variant.option || `variant-${index + 1}`, { lower: true, strict: true })}`;
+      let variantSlug = `${uniqueSlug}-${slugify(
+        variant.option || `variant-${index + 1}`,
+        { lower: true, strict: true }
+      )}`;
 
       let optionSku = (variant.option || `VARIANT${index + 1}`)
         .replace(/-/g, "")
