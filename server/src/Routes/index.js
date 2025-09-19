@@ -7,8 +7,7 @@ import authRoutes from "./auth/index.js";
 
 router.use("/auth", authRoutes);
 router.use("/admin", adminRoutes);
-
-// router.use("/seller", sellerRoutes);
+router.use("/seller", sellerRoutes);
 // router.use("/", customerRoutes);
 
 export default router;

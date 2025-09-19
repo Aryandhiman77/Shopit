@@ -4,13 +4,13 @@ import ApiError from "../Helpers/ApiError.js";
 import { formatDate, formatTime } from "../Helpers/DateTime.js";
 import { verificationOtp } from "../Helpers/html/verificationOtp.js";
 import mailSender from "../Helpers/nodeMailer.js";
-import crypto from "crypto";
 import cryptoHash from "../Helpers/cryptoHash.js";
 import {
   createPasswordHash,
   deviceLimitChecker,
-  generateTokens,
 } from "../Helpers/Auth/authHelper.js";
+
+
 export const loginUserService = async ({
   email,
   UUID,
@@ -165,7 +165,6 @@ export const forgotPassService = async ({ email, phoneNumber }) => {
   if (!user) throw new ApiError(404, "User not found.");
 
   const OTP = await user.createResetCode();
-  if (!OTP) throw new ApiError(403, "Technical issue, try again.");
   mailSender({
     from: "support@shopit.com",
     to: user.email,

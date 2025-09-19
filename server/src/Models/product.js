@@ -1,9 +1,16 @@
 import mongoose from "mongoose";
 import category from "./category";
+import { slugify } from "slugify";
 
 // Variant Schema (for size, color, etc.)
 const variantSchema = new mongoose.Schema(
   {
+    slug: {
+      type: String,
+      unique: true,
+      lowercase: true,
+      index: true,
+    },
     sku: { type: String, required: true, unique: true },
     attributes: Map,
     price: { type: Number, required: true },
@@ -82,20 +89,57 @@ productSchema.index({
   isActive: 1,
 });
 
-// Auto-generate slug
 productSchema.pre("save", async function (next) {
-  if (!this.isModified("name")) return next();
+  if (!this.isModified("name") && !this.isModified("variants") && !this.isModified("category")) {
+    return next();
+  }
 
-  let baseSlug = slugify(this.name, { lower: true, strict: true });
+  const category = await mongoose.models.Category.findById(this.category);
+  if (!category) {
+    return next(new Error("Category not found"));
+  }
+
+  let categoryCode = category.name
+    .replace(/-/g, "")     // remove existing hyphens
+    .replace(/\s+/g, "-")  // spaces -> hyphen
+    .toUpperCase();
+
+  // ---------- SLUG ----------
+  let baseSlug = slugify(`${category.slug}-${this.name}`, { lower: true, strict: true });
   let uniqueSlug = baseSlug;
   let counter = 1;
 
-  // Ensure slug is unique
-  while (await mongoose.models.Product.findOne({ slug: uniqueSlug })) {
+  // Ensure product slug is unique
+  while (await mongoose.models.Product.findOne({ slug: uniqueSlug, _id: { $ne: this._id } })) {
     uniqueSlug = `${baseSlug}-${counter++}`;
   }
-
   this.slug = uniqueSlug;
+
+  // ---------- SKU ----------
+  let baseSku = `${categoryCode}-${this.name
+    .replace(/-/g, "")    // remove hyphens
+    .replace(/\s+/g, "-") // spaces -> hyphen
+    .toUpperCase()}`;
+
+  this.sku = baseSku;
+
+  // ---------- VARIANTS ----------
+  if (this.variants && this.isModified("variants")) {
+    this.variants = this.variants.map((variant, index) => {
+      let variantSlug = `${uniqueSlug}-${slugify(variant.option || `variant-${index + 1}`, { lower: true, strict: true })}`;
+
+      let optionSku = (variant.option || `VARIANT${index + 1}`)
+        .replace(/-/g, "")
+        .replace(/\s+/g, "-")
+        .toUpperCase();
+
+      return {
+        ...variant,
+        slug: variantSlug,
+        sku: `${baseSku}-${optionSku}`,
+      };
+    });
+  }
   next();
 });
 
