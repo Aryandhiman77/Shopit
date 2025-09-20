@@ -10,7 +10,6 @@ import {
   deviceLimitChecker,
 } from "../Helpers/Auth/authHelper.js";
 
-
 export const loginUserService = async ({
   email,
   UUID,
@@ -53,6 +52,7 @@ export const loginUserService = async ({
     throw new ApiError(400, "Invalid credentials.");
   }
 
+  // 5. If already login verify using otp (may be both tokens are removed)
   if (user.loggedInUserCount > 0 && user.loggedInUserCount <= 3) {
     const OTP = await user.createResetCode();
     mailSender({
@@ -64,10 +64,11 @@ export const loginUserService = async ({
     await user.save();
     return { email: user.email };
   }
-  // 5. Max device limit
+
+  // 6. Max device limit
   await deviceLimitChecker(user);
 
-  // 6. Tokens for giving successful login.
+  // 7. Tokens for giving successful login.
   const authToken = await user.generateAuthToken({
     userId: user.id,
     role: user.role,
@@ -77,6 +78,7 @@ export const loginUserService = async ({
     role: user.role,
   });
 
+  // 8. saving updated user info.
   user.loggedInUserCount++;
   user.loginAttempts = 0;
   user.suspensionCount = 0;
@@ -131,7 +133,6 @@ export const registerUserService = async ({
 };
 
 export const otpVerificationService = async ({ otp, email, phoneNumber }) => {
-
   const resetCode = cryptoHash(otp);
   const verifiedUser = await User.findOne({
     $and: [

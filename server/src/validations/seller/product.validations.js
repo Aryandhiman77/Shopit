@@ -1,6 +1,15 @@
 import Joi from "joi";
 import Categories from "../../Models/category.js";
 
+const attributeSchema = Joi.array().items(
+  Joi.object().external(async (value) => {
+    console.log(value);
+    // return value;
+
+    required: false;
+  })
+);
+
 const variantItemSchema = Joi.object({
   variantTitle: Joi.string().lowercase().min(5).max(80).required().messages({
     "string.min": "Product title be at least 3 characters long.",
@@ -8,8 +17,24 @@ const variantItemSchema = Joi.object({
     "any.required": "Product title is required.",
     "string.empty": "Product title cannot be empty.",
   }),
+  price: Joi.number().max(999999).required().messages({
+    "number.max": "Price must be less than ₹999999.",
+    "any.required": "Price is required.",
+    "number.base": "Price must be a number.",
+    "number.empty": "Price cannot be empty.",
+  }),
+  mrp: Joi.number().max(999999).required().messages({
+    "number.max": "MRP must be less than ₹999999.",
+    "any.required": "MRP is required.",
+    "number.base": "MRP must be a number.",
+    "number.empty": "MRP cannot be empty.",
+  }),
+  stock: Joi.number().max(999999).required().messages({
+    "number.max": "Stock quantity must be less than 999999 items.",
+    "any.required": "Stock quantity is required.",
+    "number.empty": "Stock quantity cannot be empty.",
+  }),
 });
-
 
 export const createProductSchema = Joi.object({
   title: Joi.string().lowercase().min(5).max(80).required().messages({
@@ -77,6 +102,7 @@ export const createProductSchema = Joi.object({
     "number.empty": "Stock quantity cannot be empty.",
   }),
   variants: [variantItemSchema],
+  attributes: attributeSchema,
 })
   .external(async (value) => {
     // 1. Validate category exists
