@@ -18,7 +18,7 @@ productRoutes.post(
       maxCount: 10,
     },
   ]),
-  jsonParser(["attributes"]),
+  jsonParser(["attributes", "variants"]),
   validate(createProductSchema),
   createProductController
 );
