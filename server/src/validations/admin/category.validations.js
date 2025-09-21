@@ -19,7 +19,7 @@ const attributeSchema = Joi.array()
         }),
       options: Joi.array()
         .items(Joi.string())
-        .max(30)
+        .max(50)
         .when("inputType", {
           is: "select",
           then: Joi.required().messages({

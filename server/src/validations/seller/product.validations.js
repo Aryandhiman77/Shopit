@@ -1,15 +1,6 @@
 import Joi from "joi";
 import Categories from "../../Models/category.js";
 
-const attributeSchema = Joi.array().items(
-  Joi.object().external(async (value) => {
-    console.log(value);
-    // return value;
-
-    required: false;
-  })
-);
-
 const variantItemSchema = Joi.object({
   variantTitle: Joi.string().lowercase().min(5).max(80).required().messages({
     "string.min": "Product title be at least 3 characters long.",
@@ -63,7 +54,7 @@ export const createProductSchema = Joi.object({
   category: Joi.string()
     .required()
     .external(async (value) => {
-      const category = await Categories.findOne({ slug: value });
+      const category = await Categories.findOne({ slug: value, level: 3 });
       if (!category) {
         throw new Joi.ValidationError("Category does not exists.", [
           {
@@ -102,27 +93,60 @@ export const createProductSchema = Joi.object({
     "number.empty": "Stock quantity cannot be empty.",
   }),
   variants: [variantItemSchema],
-  attributes: attributeSchema,
+  attributes: Joi.array().items(Joi.object()),
 })
   .external(async (value) => {
-    // 1. Validate category exists
-    const category = await Categories.findOne({ slug: value.category });
-    if (!category) throw new Error("Invalid category.");
+    const category = await Categories.findOne({
+      slug: value.category,
+      level: 3,
+    }).select("-_id attributes");
 
-    // 2. Validate attributes match category definition
-    if (value.variants?.length && category.attributes?.length) {
-      for (const variant of value.variants) {
-        for (const attr of category.attributes) {
-          if (!(attr.name in variant)) {
-            throw new Error(`Missing attribute: ${attr.name}`);
-          }
-          // validate option values for select type
-          if (
-            attr.inputType === "select" &&
-            !attr.options.includes(variant[attr.name])
-          ) {
-            throw new Error(`Invalid option for ${attr.name}`);
-          }
+    const productAttributes = value.attributes || [];
+    for (const att of category.attributes) {
+      const productAtt = productAttributes.find(
+        (pa) => pa?.name?.toLowerCase() === att.name.toLowerCase()
+      );
+
+      if (
+        att.required === true ||
+        (att.required === false && productAtt?.name)
+      ) {
+        if (!productAtt) {
+          throw new Joi.ValidationError("Missing required attribute.", [
+            {
+              message: "Some Required attribute is missing.",
+              path: ["attributes"],
+              type: "any.required",
+              context: { label: "attributes", value },
+            },
+          ]);
+        }
+
+        if (!productAtt.value || typeof productAtt.value !== "string") {
+          throw new Joi.ValidationError(
+            "Attribute value is required and must be a string.",
+            [
+              {
+                message: `${productAtt.name} attribute's value is required.`,
+                path: ["attributes"],
+                type: "any.valid",
+                context: { label: "attributes", value },
+              },
+            ]
+          );
+        }
+      }
+
+      if (productAtt && att.inputType === "select") {
+        if (!att.options.includes(productAtt.value)) {
+          throw new Joi.ValidationError("Invalid attribute value.", [
+            {
+              message: `${att.name} attribute's value must be one of the allowed options.`,
+              path: ["attributes"],
+              type: "any.valid",
+              context: { label: "attributes", value },
+            },
+          ]);
         }
       }
     }
