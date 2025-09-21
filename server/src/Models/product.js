@@ -160,3 +160,18 @@ productSchema.pre("save", async function (next) {
 });
 
 export default mongoose.model("Product", productSchema);
+
+[
+  {
+    variantTitle: "red black",
+    price: 3000,
+    mrp: 3000,
+    stock: 200,
+    attributes: [
+      {
+        name: "",
+
+      },
+    ],
+  },
+];

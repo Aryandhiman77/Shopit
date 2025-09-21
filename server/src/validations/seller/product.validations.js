@@ -174,8 +174,8 @@ export const createProductSchema = Joi.object({
             if (!varAtt) {
               throw new Joi.ValidationError("Missing variant attribute.", [
                 {
-                  message: `Variant attribute "${att.name}" is required.`,
-                  path: ["variants", variant.variantTitle, att.name],
+                  message: `Variant attribute ${att.name} is required.`,
+                  path: ["variants"],
                   type: "any.required",
                   context: { label: "variants", value },
                 },
@@ -187,8 +187,8 @@ export const createProductSchema = Joi.object({
                 "Invalid variant attribute value.",
                 [
                   {
-                    message: `Variant attribute "${att.name}" value is required and must be a string.`,
-                    path: ["variants", variant.variantTitle, att.name],
+                    message: `Variant attribute ${att.name} value is required and must be a string.`,
+                    path: ["variants"],
                     type: "any.valid",
                     context: { label: "variants", value },
                   },
@@ -203,10 +203,8 @@ export const createProductSchema = Joi.object({
                 "Invalid variant attribute option.",
                 [
                   {
-                    message: `Variant attribute "${
-                      att.name
-                    }" value must be one of: ${att.options.join(", ")}.`,
-                    path: ["variants", variant.variantTitle, att.name],
+                    message: `Variant's ${att.name} attribute value must be one of the allowed options.`,
+                    path: ["variants"],
                     type: "any.valid",
                     context: { label: "variants", value },
                   },
