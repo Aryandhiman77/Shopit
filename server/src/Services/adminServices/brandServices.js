@@ -1,5 +1,8 @@
 import ApiError from "../../Helpers/ApiError.js";
-import { uploadWithRetry } from "../../Helpers/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadWithRetry,
+} from "../../Helpers/cloudinary.js";
 import Brand from "../../Models/brand.js";
 import fs from "fs";
 export const createBrandService = async (
@@ -67,57 +70,58 @@ export const getSingleBrandService = async ({ slug }) => {
   return brand;
 };
 
-// export const updateCategoryService = async (
-//   { name, description, isActive, isVerified, categories },
-//   file
-// ) => {
-//   const brand = await Brand.findOne({ slug });
+export const updateBrandService = async (
+  { name, description, isActive, isVerified, categories, slug },
+  file
+) => {
+  const brand = await Brand.findOne({ slug });
 
-//   if (!brand) {
-//     if (file?.path) fs.unlinkSync(file.path);
-//     throw new ApiError(404, "Brand not found.");
-//   }
+  if (!brand) {
+    if (file?.path) fs.unlinkSync(file.path);
+    throw new ApiError(404, "Brand not found.");
+  }
 
-//   let uploaded;
+  let uploaded;
 
-//   // If file provided, upload new image
-//   if (file) {
-//     uploaded = await uploadWithRetry(file.path);
-//     fs.unlinkSync(file.path);
+  // If file provided, upload new image
+  if (file) {
+    uploaded = await uploadWithRetry(file.path);
+    fs.unlinkSync(file.path);
 
-//     if (!uploaded) {
-//       throw new ApiError(400, "Technical issue, cannot upload image.");
-//     }
+    if (!uploaded) {
+      throw new ApiError(400, "Technical issue, cannot upload image.");
+    }
 
-//     // delete old image from Cloudinary if exists
-//     if (brand.logo?.public_id) {
-//       await deleteFromCloudinary(brand.logo.public_id);
-//     }
+    // delete old image from Cloudinary if exists
+    if (brand.logo?.public_id) {
+      await deleteFromCloudinary(brand.logo.public_id);
+    }
 
-//     brand.logo = {
-//       url: uploaded.url,
-//       public_id: uploaded.public_id,
-//     };
-//   }
+    brand.logo = {
+      url: uploaded.url,
+      public_id: uploaded.public_id,
+    };
+  }
 
-//   if (name) brand.name = name;
-//   if (description) brand.description = description;
-//   if (isActive !== undefined) brand.isActive = isActive;
-//   if (isVerified !== undefined) brand.isVerified = isVerified;
+  if (name) brand.name = name;
+  if (description) brand.description = description;
+  if (isActive !== undefined) brand.isActive = isActive;
+  if (isVerified !== undefined) brand.isVerified = isVerified;
+  if (categories?.length > 0) brand.categories = categories;
 
-//   const saved = await brand.save();
-//   if (!saved) {
-//     fs.unlinkSync(file.path);
-//     throw new ApiError(500, "Technical issue, cannot save brand.");
-//   }
-//   return {
-//     brand: {
-//       name: createdBrand.name,
-//       description: createdBrand.description,
-//       logo: createdBrand.logo.url,
-//       slug: createdBrand.slug,
-//       isActive: createdBrand.isActive,
-//       isVerified: createdBrand.isVerified,
-//     },
-//   };
-// };
+  const createdBrand = await brand.save();
+  if (!createdBrand) {
+    fs.unlinkSync(file.path);
+    throw new ApiError(500, "Technical issue, cannot save brand.");
+  }
+  return {
+    brand: {
+      name: createdBrand.name,
+      description: createdBrand.description,
+      logo: createdBrand.logo.url,
+      slug: createdBrand.slug,
+      isActive: createdBrand.isActive,
+      isVerified: createdBrand.isVerified,
+    },
+  };
+};
