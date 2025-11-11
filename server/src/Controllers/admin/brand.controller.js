@@ -2,6 +2,7 @@ import ApiResponse from "../../Helpers/ApiResponse.js";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import {
   createBrandService,
+  deleteBrandService,
   getBrandsService,
   getSingleBrandService,
   updateBrandService,
@@ -51,4 +52,12 @@ export const updateBrand = AsyncWrapper(async (req, res, next) => {
     }
     next(err);
   }
+});
+
+export const deleteBrand = AsyncWrapper(async (req, res) => {
+  const { slug } = req.params;
+  await deleteBrandService({ slug });
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Brand deleted successfully."));
 });

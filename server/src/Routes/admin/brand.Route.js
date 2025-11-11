@@ -8,6 +8,7 @@ import {
 } from "../../validations/admin/brand.validations.js";
 import {
   createBrand,
+  deleteBrand,
   getAllBrands,
   getSingleBrand,
   updateBrand,
@@ -30,6 +31,7 @@ brandRoutes
     jsonParser(["categories"]),
     validate(updateBrandSchema),
     updateBrand
-  );
+  )
+  .delete("/delete/:slug", deleteBrand);
 
 export default brandRoutes;

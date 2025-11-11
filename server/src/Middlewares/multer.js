@@ -29,14 +29,14 @@ function customFileFilter(req, file, cb) {
   } else {
     cb(new Error("Only jpg, jpeg, png images can be uploaded."), false);
   }
-  if (
-    allowedFields.includes(file.fieldname) ||
-    /^variants\[\d+\]\[(image|gallery)\]$/.test(file.fieldname) 
-  ) {
-    cb(null, true); 
-  } else {
-    cb(new Error(`Upload not allowed for field: ${file.fieldname}`), false);
-  }
+  // if (
+  //   allowedFields.includes(file.fieldname) ||
+  //   /^variants\[\d+\]\[(image|gallery)\]$/.test(file.fieldname)
+  // ) {
+  //   cb(null, true);
+  // } else {
+  //   cb(new Error(`Upload not allowed for field: ${file.fieldname}`), false);
+  // }
 }
 
 const upload = multer({

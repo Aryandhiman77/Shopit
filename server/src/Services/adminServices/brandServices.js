@@ -125,3 +125,19 @@ export const updateBrandService = async (
     },
   };
 };
+
+export const deleteBrandService = async ({ slug }) => {
+  const brand = await Brand.findOne({ slug }).select("_id logo");
+  if (!brand) {
+    throw new ApiError(404, "Brand not found.");
+  }
+  // console.log(brand.logo.public_id);
+  if (brand?.logo?.public_id) {
+    await deleteFromCloudinary(brand.logo.public_id);
+  }
+
+  const deleted = await Brand.findByIdAndDelete(brand.id);
+  if (!deleted) {
+    throw new ApiError(404, "Cannot delete brand.");
+  }
+};
