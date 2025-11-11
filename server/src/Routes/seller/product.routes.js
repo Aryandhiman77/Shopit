@@ -8,16 +8,7 @@ const productRoutes = express.Router();
 
 productRoutes.post(
   "/create",
-  upload.fields([
-    {
-      name: "image",
-      maxCount: 1,
-    },
-    {
-      name: "gallery",
-      maxCount: 10,
-    },
-  ]),
+  upload.any(),
   jsonParser(["attributes", "variants"]),
   validate(createProductSchema),
   createProductController

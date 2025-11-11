@@ -47,6 +47,12 @@ export const createProductSchema = Joi.object({
     "any.required": "Product title is required.",
     "string.empty": "Product title cannot be empty.",
   }),
+  brand: Joi.string().lowercase().min(5).max(50).required().messages({
+    "string.min": "Product brand be at least 3 characters long.",
+    "string.max": "Product brand be less than 80 characters.",
+    "any.required": "Product brand is required.",
+    "string.empty": "Product brand cannot be empty.",
+  }),
   shortDescription: Joi.string()
     .lowercase()
     .min(20)
@@ -78,7 +84,7 @@ export const createProductSchema = Joi.object({
           },
         ]);
       }
-      return value;
+      return category._id;
     })
     .messages({
       "any.required": "Category is required.",

@@ -55,6 +55,9 @@ export const createCategorySchema = Joi.object({
     "number.base": "Category level must be a number.",
     "any.required": "Category level is required.",
   }),
+  isActive: Joi.boolean().messages({
+    "boolean.base": "isActive must be true or false.",
+  }),
   attributes: attributeSchema,
 })
   .unknown(false)

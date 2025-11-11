@@ -54,7 +54,7 @@ export const createCategoryService = async (
 
   if (level === 3) {
     if (attributes?.length > 0) categoryData.attributes = attributes;
-  } else if (level < 3) {
+  } else if (level < 3 && attributes?.length > 0) {
     fs.unlinkSync(file.path);
     throw new ApiError(
       400,
@@ -69,8 +69,8 @@ export const createCategoryService = async (
   const savedCategory = {
     name: createdCategory.name,
     parentCategory: {
-      name: parentCategory.name,
-      slug: parentCategory.slug,
+      name: parentCategory?.name,
+      slug: parentCategory?.slug,
     },
     level: createdCategory.level,
     image: createdCategory.image.url,
@@ -201,7 +201,7 @@ const recursivelyBuildCategoryTree = async (parentId = null) => {
       image: category.image,
     });
   }
-  
+
   return result;
 };
 

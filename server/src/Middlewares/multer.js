@@ -8,7 +8,7 @@ const MAX_FILE_SIZE = 2 * 1024 * 1024;
 // MULTER DISK STORAGE
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, path.join(cwd(), "public","temp"));
+    cb(null, path.join(cwd(), "public", "temp"));
   },
   filename: function (req, file, cb) {
     const encryptedUserId = cryptoHash(req.user.id.toString()).slice(0, 20);
@@ -21,13 +21,21 @@ const storage = multer.diskStorage({
   },
 });
 
-// ONLY ALLOWING JPEG, JPG, PNG IMAGES
+const allowedFields = ["image", "gallery"];
 function customFileFilter(req, file, cb) {
   const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
   if (allowedTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(new Error("Only jpg, jpeg, png images can be uploaded."), false);
+  }
+  if (
+    allowedFields.includes(file.fieldname) ||
+    /^variants\[\d+\]\[(image|gallery)\]$/.test(file.fieldname) 
+  ) {
+    cb(null, true); 
+  } else {
+    cb(new Error(`Upload not allowed for field: ${file.fieldname}`), false);
   }
 }
 

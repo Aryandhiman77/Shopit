@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import category from "./category";
-import { slugify } from "slugify";
+import category from "./category.js";
+import slugify from "slugify";
 
 // Variant Schema (for size, color, etc.)
 const variantSchema = new mongoose.Schema(
@@ -17,10 +17,23 @@ const variantSchema = new mongoose.Schema(
     price: { type: Number, required: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
-    thumbnail: { type: String, required: true },
+    thumbnail: {
+      url: { type: String },
+      public_id: { type: String },
+    },
     images: {
-      type: [String],
-      validate: [(arr) => arr.length <= 10, "Maximum 10 images allowed"],
+      type: [
+        {
+          url: { type: String, required: true },
+          public_id: { type: String, required: true },
+        },
+      ],
+      validate: {
+        validator: function (arr) {
+          return arr.length <= 10; // max 10 images
+        },
+        message: "Maximum 10 images allowed",
+      },
     },
   },
   { _id: true }
@@ -29,6 +42,7 @@ const variantSchema = new mongoose.Schema(
 const productSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
+    brand: { type: String, required: true, trim: true },
     sku: { type: String, required: true, unique: true },
     slug: {
       type: String,
@@ -51,10 +65,23 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, index: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
-    thumbnail: { type: String, required: true },
+    thumbnail: {
+      url: { type: String },
+      public_id: { type: String },
+    },
     images: {
-      type: [String],
-      validate: [(arr) => arr.length <= 10, "Maximum 10 images allowed"],
+      type: [
+        {
+          url: { type: String, required: true },
+          public_id: { type: String, required: true },
+        },
+      ],
+      validate: {
+        validator: function (arr) {
+          return arr.length <= 10; // max 10 images
+        },
+        message: "Maximum 10 images allowed",
+      },
     },
 
     // Variants
@@ -64,7 +91,8 @@ const productSchema = new mongoose.Schema(
     },
 
     isFeatured: { type: Boolean, default: false },
-    isTrending: { type: Boolean, default: false },
+    isTrending: { type: Boolean, default: false }, // set by admin
+
     isActive: {
       type: String,
       enum: ["draft", "active", "inactive"],
@@ -160,18 +188,3 @@ productSchema.pre("save", async function (next) {
 });
 
 export default mongoose.model("Product", productSchema);
-
-[
-  {
-    variantTitle: "red black",
-    price: 3000,
-    mrp: 3000,
-    stock: 200,
-    attributes: [
-      {
-        name: "",
-
-      },
-    ],
-  },
-];

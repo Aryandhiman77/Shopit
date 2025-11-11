@@ -1,0 +1,4 @@
+1.before products ->> work on brands. use generic for non branded products.
+
+admin can create brands 
+seller can register to create their brand, if request approved by admin -> brand created
