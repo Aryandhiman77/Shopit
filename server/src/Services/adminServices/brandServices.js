@@ -1,3 +1,4 @@
+import ApiError from "../../Helpers/ApiError.js";
 import { uploadWithRetry } from "../../Helpers/cloudinary.js";
 import Brand from "../../Models/brand.js";
 import fs from "fs";
@@ -11,13 +12,13 @@ export const createBrandService = async (
   const isExistingBrand = await Brand.findOne({ name });
   if (isExistingBrand) {
     fs.unlinkSync(file.path);
-    throw new ApiError(400, "Brand already exists with this name.");
+    throw new ApiError(400, "Brand already exists.");
   }
   const uploaded = await uploadWithRetry(file.path);
   console.log(uploaded);
   if (!uploaded) {
     fs.unlinkSync(file.path);
-    throw new ApiError(400, "Technical issue, cannot upload image.");
+    throw new ApiError(400, "Technical issue, cannot upload brand logo.");
   }
   const brandData = {
     name,
@@ -45,17 +46,25 @@ export const createBrandService = async (
   return { brand: savedBrand };
 };
 
-export const getBrandsService = async ({ slug }) => {
-  const brands = await Brand.find({ slug })
+export const getBrandsService = async () => {
+  const brands = await Brand.find({})
     .select("name slug createdAt updatedAt isActive image.url -_id")
-    .populate(
-      "parentCategory",
-      "name slug createdAt updatedAt isActive isVerified image.url -_id"
-    );
+    .populate("categories", "name slug isActive isVerified image.url -_id");
+
   if (brands.length <= 0) {
     throw new ApiError(404, "Brands not found.");
   }
   return brands;
+};
+
+export const getSingleBrandService = async ({ slug }) => {
+  const brand = await Brand.findOne({ slug })
+    .select("name slug createdAt updatedAt isActive image.url -_id")
+    .populate("categories", "name slug isActive isVerified image.url -_id");
+  if (!brand) {
+    throw new ApiError(404, "Brand not found.");
+  }
+  return brand;
 };
 
 // export const updateCategoryService = async (

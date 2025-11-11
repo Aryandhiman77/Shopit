@@ -8,5 +8,5 @@ const adminRoutes = express.Router();
 adminRoutes
   .use(tokenVerification)
   .use("/categories", requireRole("admin"), categoryRoutes)
-  .use("/brand", requireRole("admin"), brandRoutes);
+  .use("/brands", requireRole("admin"), brandRoutes);
 export default adminRoutes;
