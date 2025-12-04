@@ -34,6 +34,10 @@ const BrandRequestSchema = new mongoose.Schema(
       ref: "Brand",
       default: null, // set after brand approved by admin
     },
+    logo: {
+      public_id: String,
+      url: String,
+    },
     requestedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -48,10 +52,6 @@ const BrandRequestSchema = new mongoose.Schema(
             return uniqueTypes.size === arr.length; // prevent duplicates
           },
           message: "Duplicate documents is not allowed",
-        },
-        {
-          validator: (arr) => arr.length > 0,
-          message: "At least one document must be uploaded.",
         },
       ],
     },

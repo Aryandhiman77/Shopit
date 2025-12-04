@@ -40,6 +40,7 @@ export async function uploadWithRetry(
       if (attempt < CLOUDINARY_RETRY_COUNT) {
         await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS));
       }
+      return false;
     }
   }
   throw new ApiError(

@@ -9,3 +9,6 @@
 
 admin can create brands 
 seller can register to create their brand, if request approved by admin -> brand created
+
+
+// todo first-> brand req created.. but document upload pending..

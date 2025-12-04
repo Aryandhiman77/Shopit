@@ -8,9 +8,9 @@ const brandRoutes = express.Router();
 
 brandRoutes.post(
   "/create-request",
-  upload.array("doc_files", 5),
+  upload.single("logo"), // logo
+  jsonParser(["categories"]), // parsing arrays inside objects
   validate(brandRequestRules),
-  jsonParser(["doc_type", "categories"]), // parsing arrays inside objects
   requestBrand
 );
 
