@@ -1,0 +1,11 @@
+ this website can be used for t-shirts business.
+
+ 1. categories✅
+ 2. brands.✅
+ 3. products,variants, -> 
+ 4. order
+
+1.before products ->> work on brands. use generic for non branded products.✅
+
+admin can create brands 
+seller can register to create their brand, if request approved by admin -> brand created

@@ -3,7 +3,7 @@ import path from "path";
 import cryptoHash from "../Helpers/cryptoHash.js";
 import { cwd } from "process";
 
-const MAX_FILE_SIZE = 2 * 1024 * 1024;
+const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2 MB
 
 // MULTER DISK STORAGE
 const storage = multer.diskStorage({
@@ -21,7 +21,6 @@ const storage = multer.diskStorage({
   },
 });
 
-const allowedFields = ["image", "gallery"];
 function customFileFilter(req, file, cb) {
   const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
   if (allowedTypes.includes(file.mimetype)) {
@@ -29,14 +28,6 @@ function customFileFilter(req, file, cb) {
   } else {
     cb(new Error("Only jpg, jpeg, png images can be uploaded."), false);
   }
-  // if (
-  //   allowedFields.includes(file.fieldname) ||
-  //   /^variants\[\d+\]\[(image|gallery)\]$/.test(file.fieldname)
-  // ) {
-  //   cb(null, true);
-  // } else {
-  //   cb(new Error(`Upload not allowed for field: ${file.fieldname}`), false);
-  // }
 }
 
 const upload = multer({

@@ -117,7 +117,7 @@ const sendSuspensionEmail = async (email, duration) => {
     )}. If not you, report otherwise your account might be suspended again.</h1>`,
     // html: verificationOtp({ otp }),
   });
-  if (sent) console.log("email sent:", email);
+  if (sent) console.log("email sent:", email); return true;
 };
 userSchema.methods.suspendUser = function () {
   this.suspensionCount += 1;

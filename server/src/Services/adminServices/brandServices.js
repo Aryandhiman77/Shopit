@@ -18,7 +18,6 @@ export const createBrandService = async (
     throw new ApiError(400, "Brand already exists.");
   }
   const uploaded = await uploadWithRetry(file.path);
-  console.log(uploaded);
   if (!uploaded) {
     fs.unlinkSync(file.path);
     throw new ApiError(400, "Technical issue, cannot upload brand logo.");

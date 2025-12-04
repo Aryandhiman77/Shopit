@@ -55,14 +55,17 @@ export const loginUserService = async ({
   // 5. If already login verify using otp (may be both tokens are removed)
   if (user.loggedInUserCount > 0 && user.loggedInUserCount <= 3) {
     const OTP = await user.createResetCode();
-    mailSender({
+    const sent = mailSender({
       from: "support@shopit.com",
       to: user.email,
       subject: "Shopit OTP verification",
       html: verificationOtp({ OTP }),
     });
-    await user.save();
-    return { email: user.email };
+    if (sent) {
+      await user.save();
+      return { email: user.email };
+    }
+    return null;
   }
 
   // 6. Max device limit
@@ -122,14 +125,17 @@ export const registerUserService = async ({
 
   //   4.Authorize using verification otp
   const OTP = await createdUser.createResetCode();
-  await createdUser.save();
-  mailSender({
+  const sent = mailSender({
     from: "support@shopit.com",
     to: createdUser.email,
     subject: "Shopit OTP verification",
     html: verificationOtp({ OTP }),
   });
-  return { email };
+  if (sent) {
+    await createdUser.save();
+    return { email };
+  }
+  return null;
 };
 
 export const otpVerificationService = async ({ otp, email, phoneNumber }) => {
@@ -166,13 +172,15 @@ export const forgotPassService = async ({ email, phoneNumber }) => {
   if (!user) throw new ApiError(404, "User not found.");
 
   const OTP = await user.createResetCode();
-  mailSender({
+  const sent = mailSender({
     from: "support@shopit.com",
     to: user.email,
     subject: "Shopit OTP verification",
     html: verificationOtp({ OTP }),
   });
-  await user.save();
-
-  return { email: user.email };
+  if (sent) {
+    await user.save();
+    return { email: user.email };
+  }
+  return null;
 };
