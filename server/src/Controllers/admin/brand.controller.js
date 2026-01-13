@@ -1,11 +1,14 @@
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
+import BrandRequest from "../../Models/brandRequests.js";
 import {
+  approveSellerDocumentsAndCreateBrand,
   createBrandService,
   deleteBrandService,
   getBrandsService,
   getSingleBrandService,
   updateBrandService,
+  getAllSellersBrandRequests,
 } from "../../Services/adminServices/brandServices.js";
 import fs from "fs";
 
@@ -60,4 +63,30 @@ export const deleteBrand = AsyncWrapper(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, null, "Brand deleted successfully."));
+});
+
+// verify docs and create requested brand
+
+export const getAllBrandRequests = AsyncWrapper(async (req, res) => {
+  const requests = await getAllSellersBrandRequests();
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        requests,
+        "Seller Brand Requests fetched successfully."
+      )
+    );
+});
+
+export const approveSellerDocsAndCreateBrand = AsyncWrapper(async (req, res) => {
+  const { reqId } = req.params;
+
+  const brand = await approveSellerDocumentsAndCreateBrand(reqId);
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, brand, "Brand verified and created successfully.")
+    );
 });

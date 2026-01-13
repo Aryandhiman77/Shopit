@@ -7,8 +7,10 @@ import {
   updateBrandSchema,
 } from "../../validations/admin/brand.validations.js";
 import {
+  approveSellerDocsAndCreateBrand,
   createBrand,
   deleteBrand,
+  getAllBrandRequests,
   getAllBrands,
   getSingleBrand,
   updateBrand,
@@ -27,7 +29,7 @@ brandRoutes
     createBrand
   )
   .get("/", getAllBrands)
-  .get("/:slug", getSingleBrand)
+  .get("/get-brand/:slug", getSingleBrand)
   .patch(
     "/update/:slug",
     upload.single("image"),
@@ -35,6 +37,9 @@ brandRoutes
     validate(updateBrandSchema),
     updateBrand
   )
-  .delete("/delete/:slug", deleteBrand);
+  .delete("/delete/:slug", deleteBrand)
+  .get("/all-brand-requests", getAllBrandRequests)
+  .put("/approve-seller-docs/:reqId", approveSellerDocsAndCreateBrand);
+// .patch("/approve-seller-docs/:reqId", approveSellerDocsAndCreateBrand);
 
 export default brandRoutes;

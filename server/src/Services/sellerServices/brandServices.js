@@ -6,6 +6,8 @@ import fs from "fs";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import { upload } from "../../Middlewares/multer.js";
 import mongoose from "mongoose";
+import mailSender from "../../Helpers/nodeMailer.js";
+import { brandRequestMail } from "../../Helpers/html/seller/brandRequest.js";
 export const requestBrandToAdmin = async (
   { brandName, description, categories },
   file,
@@ -70,7 +72,7 @@ export const sendDocsToAdminForVerification = async (
   const request = await BrandRequest.findOne({
     requestedBy: userid,
     _id: requestId,
-  });
+  }).populate("requestedBy", "name email -_id");
 
   if (!request) {
     throw new ApiError(400, "No brand request found.");
@@ -111,5 +113,14 @@ export const sendDocsToAdminForVerification = async (
   if (!isUpdated) {
     throw new ApiError(400, "Failed to upload documents.");
   }
+  mailSender({
+    from: process.env.COMPANY_NAME,
+    to: request.requestedBy.email,
+    subject: "Brand Request submitted",
+    html: brandRequestMail({
+      SELLER_NAME: request.requestedBy.name,
+      BRAND_NAME: request.brandName,
+    }),
+  });
   return true;
 };

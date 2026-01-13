@@ -12,7 +12,8 @@ const brandSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    isVerified: { type: Boolean, default: false },
+    seller: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    isVerified: { type: Boolean, default: false }, // seller can make payment and get verified tick.
 
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   },

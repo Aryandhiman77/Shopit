@@ -5,6 +5,10 @@ import {
 } from "../../Helpers/cloudinary.js";
 import Brand from "../../Models/brand.js";
 import fs from "fs";
+import BrandRequest from "../../Models/brandRequests.js";
+import mailSender from "../../Helpers/nodeMailer.js";
+import { brandApprovedMail } from "../../Helpers/html/seller/brandApproved.js";
+
 export const createBrandService = async (
   { name, description, isActive, isVerified, categories },
   file
@@ -44,6 +48,7 @@ export const createBrandService = async (
     slug: createdBrand.slug,
     isActive: createdBrand.isActive,
     isVerified: createdBrand.isVerified,
+    // seller:"Shop-it" // ! should not be static
   };
   return { brand: savedBrand };
 };
@@ -138,5 +143,74 @@ export const deleteBrandService = async ({ slug }) => {
   const deleted = await Brand.findByIdAndDelete(brand.id);
   if (!deleted) {
     throw new ApiError(404, "Cannot delete brand.");
+  }
+};
+
+export const getAllSellersBrandRequests = async () => {
+  const requests = await BrandRequest.find({ status: "processing" });
+  return requests;
+};
+
+export const approveSellerDocumentsAndCreateBrand = async (reqId) => {
+  const request = await BrandRequest.findOne({
+    status: "processing",
+    _id: reqId,
+  }).populate("requestedBy", "name email -_id");
+  if (!request) {
+    throw new ApiError(404, "No request found.");
+  }
+
+  // CHANGE THE REQUEST AND DOCS STATUS TO APPROVED
+  request.documents.forEach((doc) => {
+    doc.verified = "approved";
+  });
+  request.status = "approved";
+
+  // CREATE BRAND
+  const brandData = {
+    name: request.brandName,
+    description: request.description,
+    isActive: true,
+    isVerified: false,
+    categories: request.categories,
+    logo: request.logo,
+    seller: request.requestedBy._id,
+  };
+
+  const isBrandCreated = await Brand.create(brandData);
+  if (!isBrandCreated) {
+    throw new ApiError(404, "Cannot create Brand.");
+  }
+  request.id = isBrandCreated.id;
+  await request.save();
+  mailSender({
+    from: process.env.COMPANY_NAME,
+    to: request.requestedBy.email,
+    subject: "Brand Approved",
+    html: brandApprovedMail({
+      BRAND_NAME: request.brandName,
+      SELLER_NAME: request.requestedBy.name,
+    }),
+  });
+
+  return isBrandCreated;
+};
+
+export const rejectSellerDocumentWithMessage = async (reqId, message) => {
+  const request = await BrandRequest.findOne({
+    status: "processing",
+    _id: reqId,
+  });
+  if (!request) {
+    throw new ApiError(404, "No request found.");
+  }
+};
+export const rejectSellerRequestWithMessage = async (reqId, message) => {
+  const request = await BrandRequest.findOne({
+    status: "processing",
+    _id: reqId,
+  });
+  if (!request) {
+    throw new ApiError(404, "No request found.");
   }
 };
