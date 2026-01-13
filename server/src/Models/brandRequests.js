@@ -5,11 +5,11 @@ const documentSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      enum: ["trademark", "gst", "pan", "authorization_letter", "certificate"],
+      enum: ["trademark", "gst", "pan"],
       required: true,
     },
     url: { type: String, required: true },
-    public_id: String, // if uploading to Cloudinary
+    public_id: String,
     verified: {
       type: String,
       enum: ["pending", "approved", "rejected"],
@@ -57,7 +57,7 @@ const BrandRequestSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["pending", "approved", "rejected"],
+      enum: ["pending", "processing", "approved", "rejected"],
       default: "pending",
     },
     adminNotes: String,

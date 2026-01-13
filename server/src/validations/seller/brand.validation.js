@@ -17,7 +17,6 @@ export const brandRequestRules = Joi.object({
   categories: Joi.array()
     .items(Joi.string())
     .external(async (value) => {
-      console.log(value);
       const categoryIds = [];
       for (const slug of value) {
         const category = await Categories.findOne({ slug });

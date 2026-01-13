@@ -4,6 +4,8 @@ import BrandRequest from "../../Models/brandRequests.js";
 import { uploadWithRetry } from "../../Helpers/cloudinary.js";
 import fs from "fs";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
+import { upload } from "../../Middlewares/multer.js";
+import mongoose from "mongoose";
 export const requestBrandToAdmin = async (
   { brandName, description, categories },
   file,
@@ -39,6 +41,7 @@ export const requestBrandToAdmin = async (
   if (!uploaded) {
     throw new ApiError(400, "Cannot upload logo.");
   }
+
   fs.unlinkSync(file.path);
 
   request.logo.public_id = uploaded.public_id;
@@ -52,3 +55,61 @@ export const requestBrandToAdmin = async (
   return true;
 };
 
+export const getAllBrandRequests = async (userid) => {
+  const requests = await BrandRequest.find({ requestedBy: userid });
+  return requests;
+};
+
+export const sendDocsToAdminForVerification = async (
+  docNames,
+  docs,
+  requestId,
+  userid
+) => {
+  // 1. VERIFY USER REQUEST
+  const request = await BrandRequest.findOne({
+    requestedBy: userid,
+    _id: requestId,
+  });
+
+  if (!request) {
+    throw new ApiError(400, "No brand request found.");
+  }
+
+  if (request.status === "processing") {
+    throw new ApiError(400, "Brand Request already in processing.");
+  }
+  //2.documents upload and save the urls in db
+  const validDocNames = ["gst", "pan", "trademark"];
+  if (validDocNames.every((val) => docNames.includes(val))) {
+    throw new ApiError(400, "Invalid Documents");
+  }
+  if (docs.length < 3) {
+    throw new ApiError(400, "Upload all GST,PAN,Trademark Certificate.");
+  }
+
+  const documents = await Promise.all(
+    docs.map(async (doc, i) => {
+      const uploaded = await uploadWithRetry(doc.path);
+      if (!uploaded) {
+        throw new ApiError(400, `Cannot upload ${doc.name} document.`);
+      }
+      fs.unlinkSync(doc.path);
+      return {
+        type: docNames[i],
+        url: uploaded.url,
+        public_id: uploaded.public_id,
+        verified: "pending",
+      };
+    })
+  );
+
+  const isUpdated = await BrandRequest.findByIdAndUpdate(request.id, {
+    documents,
+    status: "processing",
+  });
+  if (!isUpdated) {
+    throw new ApiError(400, "Failed to upload documents.");
+  }
+  return true;
+};
