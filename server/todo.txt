@@ -11,4 +11,9 @@ admin can create brands
 seller can register to create their brand, if request approved by admin -> brand created
 
 
-// todo first-> admin ->verify the documents -> change docs status to verified -> Creates the requested BRAND. ✅ done.
+// admin ->verify the documents -> change docs status to verified -> Creates the requested BRAND. ✅ done.
+
+pending routes -> reject Doc and reject request with message api's pending.
+
+todo -> products route.
+
