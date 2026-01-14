@@ -8,6 +8,8 @@ import fs from "fs";
 import BrandRequest from "../../Models/brandRequests.js";
 import mailSender from "../../Helpers/nodeMailer.js";
 import { brandApprovedMail } from "../../Helpers/html/seller/brandApproved.js";
+import { brandRequestionRejectionMail } from "../../Helpers/html/seller/brandRejected.js";
+import mongoose from "mongoose";
 
 export const createBrandService = async (
   { name, description, isActive, isVerified, categories },
@@ -196,21 +198,64 @@ export const approveSellerDocumentsAndCreateBrand = async (reqId) => {
   return isBrandCreated;
 };
 
-export const rejectSellerDocumentWithMessage = async (reqId, message) => {
+export const rejectSellerDocumentWithMessage = async (
+  reqId,
+  rejectedDocIds,
+  rejectionNote
+) => {
   const request = await BrandRequest.findOne({
     status: "processing",
     _id: reqId,
-  });
+  }).populate("requestedBy", "name email -_id");
   if (!request) {
     throw new ApiError(404, "No request found.");
   }
+  request.status = "processing";
+
+  const updated = await BrandRequest.updateOne(
+    { _id: request._id },
+    {
+      $set: {
+        "documents.$[doc].verified": "rejected",
+      },
+    },
+    {
+      arrayFilters: [{ "doc._id": { $in: rejectedDocIds } }],
+    }
+  );
+  if (!updated) {
+    throw new ApiError(400, "Cannot update documents.");
+  }
+  request.adminNotes = rejectionNote;
+  request.status = "pending";
+  await request.save();
 };
-export const rejectSellerRequestWithMessage = async (reqId, message) => {
+
+export const rejectSellerRequestWithMessage = async (
+  reqId,
+  rejectionMessage
+) => {
   const request = await BrandRequest.findOne({
     status: "processing",
     _id: reqId,
-  });
+  }).populate("requestedBy", "name email -_id");
   if (!request) {
     throw new ApiError(404, "No request found.");
   }
+  request.status = "rejected";
+  request.adminNotes = rejectionMessage;
+  const saved = await request.save();
+
+  if (!saved) throw new ApiError(404, "Cannot save request.");
+
+  mailSender({
+    from: process.env.COMPANY_NAME,
+    to: request.requestedBy.email,
+    subject: "Brand request rejected.",
+    html: brandRequestionRejectionMail({
+      BRAND_NAME: request.brandName,
+      SELLER_NAME: request.requestedBy.name,
+      REASON: saved.adminNotes,
+    }),
+  });
 };

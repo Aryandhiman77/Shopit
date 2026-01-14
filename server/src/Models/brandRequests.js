@@ -16,7 +16,7 @@ const documentSchema = new mongoose.Schema(
       default: "pending",
     },
   },
-  { _id: false, timestamps: true }
+  { _id: true, timestamps: true }
 );
 const BrandRequestSchema = new mongoose.Schema(
   {

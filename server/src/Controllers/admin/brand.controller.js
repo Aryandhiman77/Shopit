@@ -9,6 +9,8 @@ import {
   getSingleBrandService,
   updateBrandService,
   getAllSellersBrandRequests,
+  rejectSellerRequestWithMessage,
+  rejectSellerDocumentWithMessage,
 } from "../../Services/adminServices/brandServices.js";
 import fs from "fs";
 
@@ -80,13 +82,33 @@ export const getAllBrandRequests = AsyncWrapper(async (req, res) => {
     );
 });
 
-export const approveSellerDocsAndCreateBrand = AsyncWrapper(async (req, res) => {
-  const { reqId } = req.params;
+export const approveSellerDocsAndCreateBrand = AsyncWrapper(
+  async (req, res) => {
+    const { reqId } = req.params;
 
-  const brand = await approveSellerDocumentsAndCreateBrand(reqId);
+    const brand = await approveSellerDocumentsAndCreateBrand(reqId);
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(200, brand, "Brand verified and created successfully.")
+      );
+  }
+);
+export const rejectSellerRequest = AsyncWrapper(async (req, res) => {
+  const { reqId } = req.params;
+  const { message } = req.body;
+
+  await rejectSellerRequestWithMessage(reqId, message);
   return res
     .status(200)
-    .json(
-      new ApiResponse(200, brand, "Brand verified and created successfully.")
-    );
+    .json(new ApiResponse(200, null, "Brand request rejected successfully."));
+});
+export const rejectSellerDocsWithMessage = AsyncWrapper(async (req, res) => {
+  const { reqId } = req.params;
+  const { rejectedDocIds, rejectionNote } = req.body;
+
+  await rejectSellerDocumentWithMessage(reqId, rejectedDocIds, rejectionNote);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, null, "Documents rejected successfully."));
 });

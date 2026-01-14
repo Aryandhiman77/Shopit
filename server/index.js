@@ -3,7 +3,6 @@ import cors from "cors";
 import { connectDB } from "./src/Config/dbConfig.js";
 import authRoutes from "./src/Routes/auth/index.js";
 import errorHandler from "./src/Middlewares/errorHandler.js";
-import morgan from "morgan";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
 import path from "path";

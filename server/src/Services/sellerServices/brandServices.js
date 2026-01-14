@@ -82,8 +82,10 @@ export const sendDocsToAdminForVerification = async (
     throw new ApiError(400, "Brand Request already in processing.");
   }
   //2.documents upload and save the urls in db
-  const validDocNames = ["gst", "pan", "trademark"];
-  if (validDocNames.every((val) => docNames.includes(val))) {
+  const validDocNames = ["gst", "pan", "trademark"]; 
+  console.log("Doc names :  "+!validDocNames.every((val) => docNames.includes(val)));
+
+  if (!validDocNames.every((val) => docNames.includes(val))) {
     throw new ApiError(400, "Invalid Documents");
   }
   if (docs.length < 3) {

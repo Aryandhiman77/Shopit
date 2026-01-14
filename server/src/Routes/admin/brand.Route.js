@@ -13,6 +13,8 @@ import {
   getAllBrandRequests,
   getAllBrands,
   getSingleBrand,
+  rejectSellerDocsWithMessage,
+  rejectSellerRequest,
   updateBrand,
 } from "../../Controllers/admin/brand.controller.js";
 const brandRoutes = express.Router();
@@ -39,7 +41,8 @@ brandRoutes
   )
   .delete("/delete/:slug", deleteBrand)
   .get("/all-brand-requests", getAllBrandRequests)
-  .put("/approve-seller-docs/:reqId", approveSellerDocsAndCreateBrand);
-// .patch("/approve-seller-docs/:reqId", approveSellerDocsAndCreateBrand);
+  .put("/approve-seller-docs/:reqId", approveSellerDocsAndCreateBrand)
+  .patch("/reject-seller-docs/:reqId", rejectSellerDocsWithMessage)
+  .patch("/reject-seller-request/:reqId", rejectSellerRequest);
 
 export default brandRoutes;
