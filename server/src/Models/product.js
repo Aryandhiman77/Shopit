@@ -5,7 +5,7 @@ import slugify from "slugify";
 // Variant Schema (for size, color, etc.)
 const variantSchema = new mongoose.Schema(
   {
-    variantTitle: { type: String, required: true, trim: true },
+    title: { type: String, required: true, trim: true },
     slug: {
       type: String,
       unique: true,
@@ -13,19 +13,23 @@ const variantSchema = new mongoose.Schema(
       index: true,
     },
     sku: { type: String, required: true, unique: true },
-    attributes: mongoose.Schema.Types.Mixed,
+    attributes: {
+      type: Map,
+      of: String, // { color: "Red", size: "M" }
+    },
     price: { type: Number, required: true },
-    mrp: { type: Number },
+    mrp: { type: Number, required: true },
     stock: { type: Number, default: 0 },
     thumbnail: {
-      url: { type: String },
-      public_id: { type: String },
+      url: String,
+      public_id: String,
     },
-    images: {
+    isActive: { type: Boolean, default: true },
+    gallery: {
       type: [
         {
-          url: { type: String, required: true },
-          public_id: { type: String, required: true },
+          url: String,
+          public_id: String,
         },
       ],
       validate: {
@@ -43,15 +47,17 @@ const productSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
     brand: { type: String, required: true, trim: true },
-    sku: { type: String, required: true, unique: true },
+    sku: { type: String, unique: true },
     slug: {
       type: String,
       unique: true,
       lowercase: true,
       index: true,
     },
+
     shortDescription: { type: String, maxlength: 200 },
     description: { type: String },
+
     category: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
@@ -59,29 +65,16 @@ const productSchema = new mongoose.Schema(
       index: true,
     },
 
-    tags: [{ type: String }],
+    tags: [{ type: String, index: true }],
 
-    // For simple products (without variants)
+    //Base prices when no variants
     price: { type: Number, index: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
+
     thumbnail: {
       url: { type: String },
       public_id: { type: String },
-    },
-    images: {
-      type: [
-        {
-          url: { type: String, required: true },
-          public_id: { type: String, required: true },
-        },
-      ],
-      validate: {
-        validator: function (arr) {
-          return arr.length <= 10; // max 10 images
-        },
-        message: "Maximum 10 images allowed",
-      },
     },
 
     // Variants
@@ -93,12 +86,15 @@ const productSchema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: false },
     isTrending: { type: Boolean, default: false }, // set by admin
 
-    isActive: {
+    status: {
       type: String,
       enum: ["draft", "active", "inactive"],
       default: "active",
     },
-    attributes: mongoose.Schema.Types.Mixed,
+    attributes: {
+      type: Map,
+      of: String, // { material: "Steel", dishwasherSafe: "Yes" }
+    },
     seller: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
@@ -119,71 +115,46 @@ productSchema.index({
 });
 
 productSchema.pre("save", async function (next) {
-  if (
-    !this.isModified("name") &&
-    !this.isModified("variants") &&
-    !this.isModified("category")
-  ) {
+  if (!this.isModified("title") && !this.isModified("category")) {
     return next();
   }
 
   const category = await mongoose.models.Category.findById(this.category);
-  if (!category) {
-    return next(new Error("Category not found"));
-  }
+  if (!category) return next(new Error("Category not found"));
 
-  let categoryCode = category.name
-    .replace(/-/g, "") // remove existing hyphens
-    .replace(/\s+/g, "-") // spaces -> hyphen
-    .toUpperCase();
+  // PRODUCT SLUG
+  const baseSlug = slugify(this.title, { lower: true, strict: true });
+  let slug = baseSlug;
+  let count = 1;
 
-  // ---------- SLUG ----------
-  let baseSlug = slugify(`${category.slug}-${this.name}`, {
-    lower: true,
-    strict: true,
-  });
-  let uniqueSlug = baseSlug;
-  let counter = 1;
-
-  // Ensure product slug is unique
   while (
     await mongoose.models.Product.findOne({
-      slug: uniqueSlug,
+      slug,
       _id: { $ne: this._id },
     })
   ) {
-    uniqueSlug = `${baseSlug}-${counter++}`;
+    slug = `${baseSlug}-${count++}`;
   }
-  this.slug = uniqueSlug;
 
-  // ---------- SKU ----------
-  let baseSku = `${categoryCode}-${this.name
-    .replace(/-/g, "") // remove hyphens
-    .replace(/\s+/g, "-") // spaces -> hyphen
-    .toUpperCase()}`;
+  this.slug = slug;
 
-  this.sku = baseSku;
+  // PRODUCT SKU
+  const categoryCode = category.slug.toUpperCase().slice(0, 4);
+  this.sku = `${categoryCode}-${Date.now()}`;
 
-  // ---------- VARIANTS ----------
-  if (this.variants && this.isModified("variants")) {
-    this.variants = this.variants.map((variant, index) => {
-      let variantSlug = `${uniqueSlug}-${slugify(
-        variant.option || `variant-${index + 1}`,
-        { lower: true, strict: true }
-      )}`;
+  // VARIANTS
+  if (this.variants?.length) {
+    this.hasVariants = true;
 
-      let optionSku = (variant.option || `VARIANT${index + 1}`)
-        .replace(/-/g, "")
-        .replace(/\s+/g, "-")
-        .toUpperCase();
-
-      return {
-        ...variant,
-        slug: variantSlug,
-        sku: `${baseSku}-${optionSku}`,
-      };
-    });
+    this.variants = this.variants.map((v, i) => ({
+      ...v,
+      slug: `${slug}-${slugify(v.title, { lower: true })}`,
+      sku: `${this.sku}-V${i + 1}`,
+    }));
+  } else {
+    this.hasVariants = false;
   }
+
   next();
 });
 

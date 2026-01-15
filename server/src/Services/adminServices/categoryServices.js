@@ -52,15 +52,17 @@ export const createCategoryService = async (
     },
   };
 
-  if (level === 3) {
-    if (attributes?.length > 0) categoryData.attributes = attributes;
-  } else if (level < 3 && attributes?.length > 0) {
-    fs.unlinkSync(file.path);
-    throw new ApiError(
-      400,
-      "Attributes can only be added to level-3 categories only."
-    );
-  }
+  // if (level) {
+  //   if (attributes?.length > 0) categoryData.attributes = attributes;
+  // } else if (level < 3 && attributes?.length > 0) {
+  //   fs.unlinkSync(file.path);
+  //   throw new ApiError(
+  //     400,
+  //     "Attributes can only be added to level-3 categories only."
+  //   );
+  // }
+  if (attributes?.length > 0) categoryData.attributes = attributes;
+  
   const createdCategory = await Categories.create(categoryData);
   fs.unlinkSync(file.path);
   if (!createdCategory)

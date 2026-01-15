@@ -1,20 +1,15 @@
 import Joi from "joi";
-import Categories from "../../Models/category.js";
+import Categories from "../Models/category.js";
 
 const variantItemSchema = Joi.array()
   .items(
     Joi.object({
-      variantTitle: Joi.string()
-        .lowercase()
-        .min(5)
-        .max(80)
-        .required()
-        .messages({
-          "string.min": "Product title be at least 3 characters long.",
-          "string.max": "Product title be less than 80 characters.",
-          "any.required": "Product title is required.",
-          "string.empty": "Product title cannot be empty.",
-        }),
+      titile: Joi.string().lowercase().min(5).max(80).required().messages({
+        "string.min": "Product title be at least 3 characters long.",
+        "string.max": "Product title be less than 80 characters.",
+        "any.required": "Product title is required.",
+        "string.empty": "Product title cannot be empty.",
+      }),
       price: Joi.number().max(999999).required().messages({
         "number.max": "Price must be less than ₹999999.",
         "any.required": "Price is required.",
@@ -73,7 +68,7 @@ export const createProductSchema = Joi.object({
   category: Joi.string()
     .required()
     .external(async (value) => {
-      const category = await Categories.findOne({ slug: value });
+      const category = await Categories.findOne({ slug: value, level: 3 });
       if (!category) {
         throw new Joi.ValidationError("Category does not exists.", [
           {
@@ -115,12 +110,15 @@ export const createProductSchema = Joi.object({
   attributes: Joi.array().items(Joi.object()),
 })
   .external(async (value) => {
+    console.log(value);
     const category = await Categories.findOne({
-      _id: value.category.toString(),
+      slug: value.category,
+      level: 3,
     }).select("-_id attributes");
 
     const productAttributes = value.attributes || [];
-    for (const att of category.attributes) {
+    const categoryAttributes = category.attributes || [];
+    for (const att of categoryAttributes) {
       const productAtt = productAttributes.find(
         (pa) => pa?.name?.toLowerCase() === att.name.toLowerCase()
       );

@@ -1,6 +1,6 @@
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
-import BrandRequest from "../../Models/brandRequests.js";
+
 import {
   approveSellerDocumentsAndCreateBrand,
   createBrandService,

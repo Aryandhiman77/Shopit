@@ -22,56 +22,27 @@ const uploadProductImages = async (image, gallery) => {
   }
 };
 
-export const createProductService = async (
-  {
-    title,
-    shortDescription,
-    description,
-    category,
-    tags,
-    attributes,
-    variants,
-  },
-  files
-) => {
-  //1. file uploads
-  console.log(files);
-  if (files.fieldname !== "image") {
-    throw new ApiError(
-      400,
-      "Missing Product Details.",
-      "Product thumbnail image is required."
-    );
-  }
-  if (files.fieldname !== "gallery") {
-    throw new ApiError(
-      400,
-      "Missing Product Details.",
-      "Product gallery images is required."
-    );
-  }
-
-  const gallery = files.gallery.map((i) => i) || [];
-  await uploadProductImages(files.image, gallery);
-
-  if (variants.length > 0) {
-  }
+export const createProductService = async ({
+  title,
+  shortDescription,
+  description,
+  category,
+  tags,
+  base_price,
+  base_mrp
+}) => {
   const createdProduct = await Product.create({
     title,
     shortDescription,
     description,
     category,
     tags,
-    attributes,
-    variants,
-    thumbnail: {
-      url: thumbnailUploaded.url,
-      public_id: thumbnailUploaded.public_id,
-    },
-    images: galleryData,
+    status: "draft",
+    seller: req.user.id,
+    base_price,
+    base_mrp,
+    stock,
   });
-  if (!createdProduct) {
-    throw new ApiError(400, "Technical issue, cannot create product.");
-  }
+
   return { product: createdProduct };
 };

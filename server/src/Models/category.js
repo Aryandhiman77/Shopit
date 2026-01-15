@@ -15,6 +15,10 @@ const categorySchema = new mongoose.Schema(
       enum: [1, 2, 3],
       default: 1,
     },
+    isLeaf: {
+      type: Boolean,
+      default: false,
+    },
     image: {
       url: { type: String },
       public_id: { type: String },
@@ -23,16 +27,18 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    attributes: [{
-      name: { type: String,required:true },
-      inputType: {
-        type: String,
-        enum: ["string", "number", "boolean", "select"],
-        default: "string",
+    attributes: [
+      {
+        name: { type: String, required: true },
+        inputType: {
+          type: String,
+          enum: ["string", "number", "boolean", "select"],
+          default: "string",
+        },
+        options: [String], // for dropdown
+        required: { type: Boolean, default: false }, // is required or not
       },
-      options: [String], // for dropdown
-      required: { type: Boolean, default: false }, // is required or not
-    }],
+    ],
   },
   { timestamps: true }
 );

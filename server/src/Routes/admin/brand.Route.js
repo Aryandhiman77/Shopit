@@ -23,9 +23,6 @@ brandRoutes
   .post(
     "/create-brand",
     upload.single("image"),
-    (req, res) => {
-      res.send(req.body);
-    },
     jsonParser(["categories"]),
     validate(createBrandSchema),
     createBrand

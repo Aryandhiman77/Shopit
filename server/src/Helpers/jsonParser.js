@@ -5,6 +5,7 @@ export const jsonParser = (fields) => {
       if (req.body[field]) {
         try {
           req.body[field] = JSON.parse(req.body[field]);
+          console.log(req.body[field]);
         } catch (err) {
           return res.status(400).json({
             success: false,

@@ -15,6 +15,28 @@ seller can register to create their brand, if request approved by admin -> brand
 
 pending routes -> reject Doc and reject request with message api's pending. ✅
 
-todo -> products routes.
+
+---------------------------------------------------------------------------------------------
+                                Create product todo
+---------------------------------------------------------------------------------------------
+todo -> products routes. --> add data in chunks -> faster method to create and save product
+
+product status : draft -> until all the details are filled -> can be changed manually.
+    active, inactive --> manual.
+
+api's
+1. /create-product -> just create product. title,desc,category,base_price, mrp,category,stock,tags, status -> (optional) 
+2. /:productId/thumbnail -> add thubmail
+3. /:productId/gallery -> add gallery
 
 
+Product (sellable)
+ ├── base_price, base_mrp, base_stock
+ ├── thumbnail, gallery
+ └── variants[] (optional overrides)
+
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+
+problem while creating product 
+attributes can be added to any level category. ✅
