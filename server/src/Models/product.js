@@ -46,7 +46,7 @@ const variantSchema = new mongoose.Schema(
 const productSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
-    brand: { type: String, required: true, trim: true },
+    brand: { type: mongoose.Schema.Types.ObjectId, ref: "brand",required:true,index:true },
     sku: { type: String, unique: true },
     slug: {
       type: String,
@@ -55,7 +55,7 @@ const productSchema = new mongoose.Schema(
       index: true,
     },
 
-    shortDescription: { type: String, maxlength: 200 },
+    shortDescription: { type: String, maxlength: 300 },
     description: { type: String },
 
     category: {

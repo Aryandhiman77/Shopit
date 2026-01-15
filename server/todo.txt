@@ -25,7 +25,7 @@ product status : draft -> until all the details are filled -> can be changed man
     active, inactive --> manual.
 
 api's
-1. /create-product -> just create product. title,desc,category,base_price, mrp,category,stock,tags, status -> (optional) 
+1. /create-product -> create basic product. title,desc,category,base_price, mrp,category,stock,tags, status -> (optional) 
 2. /:productId/thumbnail -> add thubmail
 3. /:productId/gallery -> add gallery
 

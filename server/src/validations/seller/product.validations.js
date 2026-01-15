@@ -1,5 +1,6 @@
 import Joi from "joi";
 import Categories from "../../Models/category.js";
+import Brand from "../../Models/brand.js";
 
 const variantItemSchema = Joi.array()
   .items(
@@ -10,78 +11,92 @@ const variantItemSchema = Joi.array()
         .max(80)
         .required()
         .messages({
-          "string.min": "Product title be at least 3 characters long.",
-          "string.max": "Product title be less than 80 characters.",
-          "any.required": "Product title is required.",
-          "string.empty": "Product title cannot be empty.",
+          "string.min": "Variant title must be at least 5 characters long.",
+          "string.max": "Variant title must be less than 80 characters.",
+          "any.required": "Variant title is required.",
+          "string.empty": "Variant title cannot be empty.",
         }),
-      price: Joi.number().max(999999).required().messages({
-        "number.max": "Price must be less than ₹999999.",
-        "any.required": "Price is required.",
-        "number.base": "Price must be a number.",
-        "number.empty": "Price cannot be empty.",
+
+      price: Joi.number().min(0).max(999999).required().messages({
+        "number.base": "Variant price must be a number.",
+        "number.min": "Variant price cannot be negative.",
+        "number.max": "Variant price must be less than ₹999999.",
+        "any.required": "Variant price is required.",
       }),
-      mrp: Joi.number().max(999999).required().messages({
-        "number.max": "MRP must be less than ₹999999.",
-        "any.required": "MRP is required.",
-        "number.base": "MRP must be a number.",
-        "number.empty": "MRP cannot be empty.",
+
+      mrp: Joi.number().min(Joi.ref("price")).max(999999).required().messages({
+        "number.base": "Variant MRP must be a number.",
+        "number.min": "Variant MRP must be greater than or equal to price.",
+        "number.max": "Variant MRP must be less than ₹999999.",
+        "any.required": "Variant MRP is required.",
       }),
-      stock: Joi.number().max(999999).required().messages({
-        "number.max": "Stock quantity must be less than 999999 items.",
-        "any.required": "Stock quantity is required.",
-        "number.empty": "Stock quantity cannot be empty.",
+
+      stock: Joi.number().integer().min(0).max(999999).required().messages({
+        "number.base": "Variant stock must be a number.",
+        "number.integer": "Variant stock must be an integer.",
+        "number.min": "Variant stock cannot be negative.",
+        "number.max": "Variant stock must be less than 999999.",
+        "any.required": "Variant stock is required.",
       }),
-      attributes: Joi.array().items(Joi.object()),
+
+      attributes: Joi.object()
+        .pattern(Joi.string(), Joi.string())
+        .required()
+        .messages({
+          "object.base": "Variant attributes must be an object.",
+          "any.required": "Variant attributes are required.",
+        }),
     }).unknown(false)
   )
   .messages({
-    "array.base": "Variants must be an array of objects.",
-    "array.includes": "Each Variants must be a valid object.",
+    "array.base": "Variants must be an array.",
   });
 
-export const createProductSchema = Joi.object({
+/* ---------------- PRODUCT SCHEMA ---------------- */
+
+export const createProductBasicSchema = Joi.object({
   title: Joi.string().lowercase().min(5).max(80).required().messages({
-    "string.min": "Product title be at least 3 characters long.",
-    "string.max": "Product title be less than 80 characters.",
+    "string.min": "Product title must be at least 5 characters long.",
+    "string.max": "Product title must be less than 80 characters.",
     "any.required": "Product title is required.",
     "string.empty": "Product title cannot be empty.",
   }),
-  brand: Joi.string().lowercase().min(5).max(50).required().messages({
-    "string.min": "Product brand be at least 3 characters long.",
-    "string.max": "Product brand be less than 80 characters.",
-    "any.required": "Product brand is required.",
-    "string.empty": "Product brand cannot be empty.",
-  }),
-  shortDescription: Joi.string()
-    .lowercase()
-    .min(20)
-    .max(300)
+
+  brand: Joi.string()
     .required()
+    .external(async (value) => {
+      const brand = await Brand.findOne({ slug: value });
+      if (!brand) {
+        throw new Joi.ValidationError("Invalid category.", [
+          { message: "Selected Brand does not exist.", path: ["brand"] },
+        ]);
+      }
+      return brand._id;
+    })
     .messages({
-      "string.min": "Short-description must be at least 20 characters long.",
-      "string.max": "Short-description must be less than 200 characters.",
-      "any.required": "Short-description is required.",
-      "string.empty": "Short-description cannot be empty.",
+      "any.required": "Brand is required.",
+      "string.empty": "Brand is required.",
     }),
-  description: Joi.string().lowercase().min(50).max(1500).required().messages({
+
+  shortDescription: Joi.string().min(20).max(300).required().messages({
+    "string.min": "Short description must be at least 20 characters long.",
+    "string.max": "Short description must be less than 300 characters.",
+    "any.required": "Short description is required.",
+  }),
+
+  description: Joi.string().min(50).max(1500).required().messages({
     "string.min": "Description must be at least 50 characters long.",
     "string.max": "Description must be less than 1500 characters.",
     "any.required": "Description is required.",
-    "string.empty": "Description cannot be empty.",
   }),
+
   category: Joi.string()
     .required()
     .external(async (value) => {
       const category = await Categories.findOne({ slug: value });
       if (!category) {
-        throw new Joi.ValidationError("Category does not exists.", [
-          {
-            message: "Category does not exists.",
-            path: ["category"],
-            type: "any.valid",
-            context: { label: "category", value: value },
-          },
+        throw new Joi.ValidationError("Invalid category.", [
+          { message: "Selected category does not exist.", path: ["category"] },
         ]);
       }
       return category._id;
@@ -90,139 +105,76 @@ export const createProductSchema = Joi.object({
       "any.required": "Category is required.",
       "string.empty": "Category is required.",
     }),
-  tags: Joi.array().max(50).messages({
-    "string.max": "tags must be less than 50 characters.",
-    "string.empty": "tags cannot be empty.",
+
+  tags: Joi.array().items(Joi.string()).max(50).messages({
+    "array.max": "You can add up to 50 tags only.",
   }),
-  price: Joi.number().max(999999).required().messages({
-    "number.max": "Price must be less than ₹999999.",
-    "any.required": "Price is required.",
-    "number.base": "Price must be a number.",
-    "number.empty": "Price cannot be empty.",
+
+  base_price: Joi.number().min(0).max(999999).required().messages({
+    "number.base": "Base price must be a number.",
+    "number.min": "Base price cannot be negative.",
+    "number.max": "Base price must be less than ₹999999.",
+    "any.required": "Base price is required.",
   }),
-  mrp: Joi.number().max(999999).required().messages({
-    "number.max": "MRP must be less than ₹999999.",
-    "any.required": "MRP is required.",
-    "number.base": "MRP must be a number.",
-    "number.empty": "MRP cannot be empty.",
-  }),
-  stock: Joi.number().max(999999).required().messages({
-    "number.max": "Stock quantity must be less than 999999 items.",
+
+  base_mrp: Joi.number()
+    .min(Joi.ref("base_price"))
+    .max(999999)
+    .required()
+    .messages({
+      "number.base": "Base MRP must be a number.",
+      "number.min": "Base MRP must be greater than or equal to price.",
+      "number.max": "Base MRP must be less than ₹999999.",
+      "any.required": "Base MRP is required.",
+    }),
+  stock: Joi.number().min(0).max(999999).required().messages({
+    "number.base": "Stock quantity must be a number.",
+    "number.min": "Stock quantity must be greater than or equal to zero.",
+    "number.max": "Stock quantity must be less than 999999.",
     "any.required": "Stock quantity is required.",
-    "number.empty": "Stock quantity cannot be empty.",
   }),
-  variants: variantItemSchema,
-  attributes: Joi.array().items(Joi.object()),
 })
-  .external(async (value) => {
-    const category = await Categories.findOne({
-      _id: value.category.toString(),
-    }).select("-_id attributes");
-
-    const productAttributes = value.attributes || [];
-    for (const att of category.attributes) {
-      const productAtt = productAttributes.find(
-        (pa) => pa?.name?.toLowerCase() === att.name.toLowerCase()
-      );
-
-      if (
-        att.required === true ||
-        (att.required === false && productAtt?.name)
-      ) {
-        if (!productAtt) {
-          throw new Joi.ValidationError("Missing required attribute.", [
-            {
-              message: "Some Required attribute is missing.",
-              path: ["attributes"],
-              type: "any.required",
-              context: { label: "attributes", value },
-            },
-          ]);
-        }
-
-        if (!productAtt.value || typeof productAtt.value !== "string") {
-          throw new Joi.ValidationError(
-            "Attribute value is required and must be a string.",
-            [
-              {
-                message: `${productAtt.name} attribute's value is required.`,
-                path: ["attributes"],
-                type: "any.valid",
-                context: { label: "attributes", value },
-              },
-            ]
-          );
-        }
-      }
-
-      if (productAtt && att.inputType === "select") {
-        if (!att.options.includes(productAtt.value)) {
-          throw new Joi.ValidationError("Invalid attribute value.", [
-            {
-              message: `${att.name} attribute's value must be one of the allowed options.`,
-              path: ["attributes"],
-              type: "any.valid",
-              context: { label: "attributes", value },
-            },
-          ]);
-        }
-      }
-    }
-    if (value.variants?.length) {
-      for (const variant of value.variants) {
-        for (const att of category.attributes) {
-          const varAtt = variant.attributes?.find(
-            (va) => va?.name?.toLowerCase() === att.name.toLowerCase()
-          );
-
-          if (att.required || (att.required === false && varAtt?.name)) {
-            if (!varAtt) {
-              throw new Joi.ValidationError("Missing variant attribute.", [
-                {
-                  message: `Variant attribute ${att.name} is required.`,
-                  path: ["variants"],
-                  type: "any.required",
-                  context: { label: "variants", value },
-                },
-              ]);
-            }
-
-            if (!varAtt.value || typeof varAtt.value !== "string") {
-              throw new Joi.ValidationError(
-                "Invalid variant attribute value.",
-                [
-                  {
-                    message: `Variant attribute ${att.name} value is required and must be a string.`,
-                    path: ["variants"],
-                    type: "any.valid",
-                    context: { label: "variants", value },
-                  },
-                ]
-              );
-            }
-          }
-
-          if (varAtt && att.inputType === "select") {
-            if (!att.options.includes(varAtt.value)) {
-              throw new Joi.ValidationError(
-                "Invalid variant attribute option.",
-                [
-                  {
-                    message: `Variant's ${att.name} attribute value must be one of the allowed options.`,
-                    path: ["variants"],
-                    type: "any.valid",
-                    context: { label: "variants", value },
-                  },
-                ]
-              );
-            }
-          }
-        }
-      }
-    }
-    return value;
-  })
   .unknown(false)
-  .messages({
-    "object.unknown": "Extra fields are not allowed.",
-  });
+  .messages({ "object.unknown": "Extra fields are not allowed." });
+
+export const createProductAttributesSchema = Joi.object({
+  // productId: Joi.string().required().messages({
+  //   "any.required": "Product ID is required.",
+  //   "string.empty": "Product ID cannot be empty.",
+  // }),
+  attributes: Joi.object()
+    .pattern(Joi.string(), Joi.string())
+    .required()
+    .messages({
+      "object.base": "Attributes must be an object.",
+      "any.required": "Attributes are required.",
+    }),
+}).external(async (value) => {
+  const product = await Products.findById(value.productId).lean();
+  if (!product) return value;
+
+  const category = await Categories.findById(product.category).lean();
+  if (!category) return value;
+
+  for (const att of category.attributes || []) {
+    const attrValue = value.attributes?.[att.name];
+    if (att.required && (attrValue === undefined || attrValue === null)) {
+      throw new Joi.ValidationError("Missing product attribute", [
+        { message: `${att.name} is required`, path: ["attributes", att.name] },
+      ]);
+    }
+
+    if (att.inputType === "select" && attrValue != null) {
+      if (!att.options.includes(attrValue)) {
+        throw new Joi.ValidationError("Invalid product attribute option", [
+          {
+            message: `${att.name} must be one of ${att.options.join(", ")}`,
+            path: ["attributes", att.name],
+          },
+        ]);
+      }
+    }
+  }
+
+  return value;
+});
