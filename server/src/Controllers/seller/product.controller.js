@@ -3,6 +3,7 @@ import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import {
   addGalleryService,
+  addProductAttributes,
   addThumbnailService,
   createProductService,
   getProducts,
@@ -50,6 +51,10 @@ export const productGalleryController = AsyncWrapper(async (req, res, next) => {
 });
 
 export const productAttributesController = AsyncWrapper(async (req, res) => {
-  res.send(res.data);
-  // await addProductAttributes(product)
+  const updatedProduct = await addProductAttributes(req.data);
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, updatedProduct, "Attributes added successfully.")
+    );
 });

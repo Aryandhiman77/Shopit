@@ -32,7 +32,7 @@ productRoutes
     upload.array("gallery", 10),
     productGalleryController
   )
-  .post(
+  .patch(
     "/:productId/attributes",
     (req, res, next) => {
       req.body.productId = req.params.productId;

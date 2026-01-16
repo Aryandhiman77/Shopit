@@ -122,3 +122,15 @@ export const addGalleryService = async (productId, gallery) => {
   // delete images from gallery
   await unlinkFiles(gallery);
 };
+
+export const addProductAttributes = async ({ productId, attributes }) => {
+  const product = await Product.findByIdAndUpdate(
+    productId,
+    { $set: { attributes } },
+    { new: true, runValidators: true } // new : true returns updated document
+  );
+  if (!product) {
+    throw new ApiError(400, "Cannot add attributes.");
+  }
+  return product;
+};
