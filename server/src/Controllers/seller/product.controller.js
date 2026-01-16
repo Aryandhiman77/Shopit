@@ -43,7 +43,7 @@ export const productGalleryController = AsyncWrapper(async (req, res, next) => {
         .status(200)
         .json(new ApiResponse(200, null, "Gallery images added successfully."));
   } catch (error) {
-    unlinkFiles(req.files)
+    await unlinkFiles(req.files)
     next(error);
   }
 });
