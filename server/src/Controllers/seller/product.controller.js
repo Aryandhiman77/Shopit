@@ -2,6 +2,7 @@ import fs from "fs";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import {
+  addGalleryService,
   addThumbnailService,
   createProductService,
   getProducts,

@@ -46,7 +46,12 @@ const variantSchema = new mongoose.Schema(
 const productSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
-    brand: { type: mongoose.Schema.Types.ObjectId, ref: "brand",required:true,index:true },
+    brand: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "brand",
+      required: true,
+      index: true,
+    },
     sku: { type: String, unique: true },
     slug: {
       type: String,
@@ -71,10 +76,19 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, index: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
-
+    // base thumbnail and gallery optional
     thumbnail: {
       url: { type: String },
       public_id: { type: String },
+    },
+    gallery: {
+      type: [{ _id: false, url: String, public_id: String }],
+      validate: {
+        validator: function (arr) {
+          return arr.length <= 10; // max 10 images
+        },
+        message: "Maximum 10 images allowed",
+      },
     },
 
     // Variants

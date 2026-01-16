@@ -3,6 +3,7 @@ import { upload } from "../../Middlewares/multer.js";
 import {
   createProductController,
   getDraftProducts,
+  productGalleryController,
   productThumbnailController,
 } from "../../Controllers/seller/product.controller.js";
 import { jsonParser } from "../../Helpers/jsonParser.js";
@@ -21,6 +22,11 @@ productRoutes
     "/:productId/thumbnail",
     upload.single("thumbnail"),
     productThumbnailController
+  )
+  .patch(
+    "/:productId/gallery",
+    upload.array("gallery", 10),
+    productGalleryController
   );
 
 export default productRoutes;

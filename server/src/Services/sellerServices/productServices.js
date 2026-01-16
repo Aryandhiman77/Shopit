@@ -1,6 +1,9 @@
 import Product from "../../Models/product.js";
 import ApiError from "../../Helpers/ApiError.js";
-import { uploadWithRetry } from "../../Helpers/cloudinary.js";
+import {
+  deleteFromCloudinary,
+  uploadWithRetry,
+} from "../../Helpers/cloudinary.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
 
 const uploadProductImages = async (image, gallery) => {
@@ -84,20 +87,38 @@ export const addThumbnailService = async (productId, thumbnail) => {
   return true;
 };
 
-// export const addGalleryService = async (productId, gallery) => {
-//   const product = await Product.findById(productId);
-//   if (!product) {
-//     throw new ApiError(404, "Product not found.");
-//   }
-//   if (!gallery || gallery.length === 0){
-//     throw new ApiError(400, "Please add a gallery.");
-//   }
-//   const isAllUploaded = await Promise.allSettled(
-//     gallery.map((img) => uploadWithRetry(img.path))
-//   );
-//   const successfulUploads = isAllUploaded.filter((u)=>u.status ==="fulfilled").map(u=>u.value);
-//   console.log(successfulUploads.map((su)=>console.log(su)))
-//   // if (!isAllUploaded) {
-//   //   throw new ApiError(400, "Cannot upload complete gallery.");
-//   // }
-// };
+export const addGalleryService = async (productId, gallery) => {
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new ApiError(404, "Product not found.");
+  }
+  if (!gallery || gallery.length === 0) {
+    throw new ApiError(400, "Please add a gallery.");
+  }
+  if (product.gallery?.length + gallery.length > 10) {
+    throw new ApiError(
+      400,
+      "Product gallery cannot contain more than 10 images."
+    );
+  }
+  const isAllUploaded = await Promise.allSettled(
+    gallery.map((img) => uploadWithRetry(img.path))
+  );
+  const successfulUploads = isAllUploaded
+    .filter((u) => u.status === "fulfilled")
+    .map((u) => {
+      return {
+        public_id: u.value.public_id,
+        url: u.value.secure_url,
+      };
+    });
+  if (gallery.length > successfulUploads.length) {
+    throw new ApiError(400, "Cannot upload complete gallery.");
+  }
+
+  product.gallery = successfulUploads;
+  const saved = await product.save();
+  if (!saved) throw new ApiError(400, "Cannot upload complete gallery.");
+  // delete images from gallery
+  await unlinkFiles(gallery);
+};

@@ -32,7 +32,7 @@ function customFileFilter(req, file, cb) {
 
 const upload = multer({
   storage,
-  limits: { fileSize: MAX_FILE_SIZE },
+  limits: { fileSize: MAX_FILE_SIZE, files: 10 },
   fileFilter: customFileFilter,
 });
 export { upload };
