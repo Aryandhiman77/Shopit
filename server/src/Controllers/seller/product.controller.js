@@ -35,15 +35,21 @@ export const productThumbnailController = AsyncWrapper(
     }
   }
 );
+
 export const productGalleryController = AsyncWrapper(async (req, res, next) => {
   const { productId } = req.params;
   try {
-    await addGalleryService(productId,req.files);
+    await addGalleryService(productId, req.files);
     res
-        .status(200)
-        .json(new ApiResponse(200, null, "Gallery images added successfully."));
+      .status(200)
+      .json(new ApiResponse(200, null, "Gallery images added successfully."));
   } catch (error) {
-    await unlinkFiles(req.files)
+    await unlinkFiles(req.files);
     next(error);
   }
+});
+
+export const productAttributesController = AsyncWrapper(async (req, res) => {
+  res.send(res.data);
+  // await addProductAttributes(product)
 });

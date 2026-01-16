@@ -5,6 +5,7 @@ import {
   deleteFromCloudinary,
 } from "../../Helpers/cloudinary.js";
 import fs from "fs";
+import unlinkFiles from "../../Helpers/fileUnlinker.js";
 export const createCategoryService = async (
   { name, parent, level, attributes },
   file
@@ -62,7 +63,7 @@ export const createCategoryService = async (
   //   );
   // }
   if (attributes?.length > 0) categoryData.attributes = attributes;
-  
+
   const createdCategory = await Categories.create(categoryData);
   fs.unlinkSync(file.path);
   if (!createdCategory)
@@ -96,54 +97,26 @@ export const getCategoryService = async ({ level }) => {
   return categories;
 };
 
-export const updateCategoryService = async (
-  { slug, level = 1, name, isActive, attributes },
-  file
-) => {
-  const category = await Categories.findOne({ slug, level }).populate(
+export const updateCategoryService = async ({
+  catId,
+  name,
+  isActive,
+  attributes,
+}) => {
+  const category = await Categories.findById(catId).populate(
     "parentCategory",
     "name slug"
   );
 
   if (!category) {
-    if (file?.path) fs.unlinkSync(file.path);
     throw new ApiError(404, "Category not found.");
-  }
-
-  let uploaded;
-
-  // If file provided, upload new image
-  if (file) {
-    uploaded = await uploadWithRetry(file.path);
-    fs.unlinkSync(file.path);
-
-    if (!uploaded) {
-      throw new ApiError(400, "Technical issue, cannot upload image.");
-    }
-
-    // delete old image from Cloudinary if exists
-    if (category.image?.public_id) {
-      await deleteFromCloudinary(category.image.public_id);
-    }
-
-    category.image = {
-      url: uploaded.url,
-      public_id: uploaded.public_id,
-    };
   }
 
   if (name) category.name = name;
   if (isActive !== undefined) category.isActive = isActive;
 
-  if (level === 3) {
-    if (attributes?.length > 0) category.attributes = attributes;
-  } else if (level < 3) {
-    fs.unlinkSync(file.path);
-    throw new ApiError(
-      400,
-      "Attributes can only be added to level-3 categories only."
-    );
-  }
+  if (attributes?.length > 0) category.attributes = attributes;
+
   const saved = await category.save();
   if (!saved) {
     fs.unlinkSync(file.path);
@@ -166,6 +139,29 @@ export const updateCategoryService = async (
       attributes: category.attributes,
     },
   };
+};
+
+export const updateCategoryImage = async (catId, image) => {
+  const category = await Categories.findById(catId);
+  if (!category) throw new ApiError(400, "Cannot find category.");
+  // delete previous image
+  if (category.image.public_id) {
+    await deleteFromCloudinary(category.image.public_id);
+  }
+  // add new image
+  if (!image) {
+    throw new ApiError(400, "Category image is required.");
+  }
+  const uploaded = await uploadWithRetry(image.path);
+  if (!uploaded) throw new ApiError(400, "Cannot upload image.");
+
+  category.image.public_id = uploaded.public_id;
+  category.image.url = uploaded.secure_url;
+  const saved = await category.save();
+  if (!saved) {
+    throw new ApiError(400, "Cannot save image.");
+  }
+  unlinkFiles(image);
 };
 
 export const recursiveDeleteCategoryService = async (categoryId) => {

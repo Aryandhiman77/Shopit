@@ -1,6 +1,7 @@
 import Joi from "joi";
 import Categories from "../../Models/category.js";
 import Brand from "../../Models/brand.js";
+import Product from "../../Models/product.js";
 
 const variantItemSchema = Joi.array()
   .items(
@@ -138,10 +139,10 @@ export const createProductBasicSchema = Joi.object({
   .messages({ "object.unknown": "Extra fields are not allowed." });
 
 export const createProductAttributesSchema = Joi.object({
-  // productId: Joi.string().required().messages({
-  //   "any.required": "Product ID is required.",
-  //   "string.empty": "Product ID cannot be empty.",
-  // }),
+  productId: Joi.string().required().messages({
+    "any.required": "Product ID is required.",
+    "string.empty": "Product ID cannot be empty.",
+  }),
   attributes: Joi.object()
     .pattern(Joi.string(), Joi.string())
     .required()
@@ -150,20 +151,35 @@ export const createProductAttributesSchema = Joi.object({
       "any.required": "Attributes are required.",
     }),
 }).external(async (value) => {
-  const product = await Products.findById(value.productId).lean();
-  if (!product) return value;
+  const product = await Product.findById(value.productId).lean();
+  if (!product) {
+    throw new Joi.ValidationError("Invalid product", [
+      { message: "Product not found", path: ["productId"] },
+    ]);
+  }
 
-  const category = await Categories.findById(product.category).lean();
+  const category = await Categories.findById(product.category)
+    .select("attributes")
+    .lean();
+
   if (!category) return value;
 
+  const productAttributes = value.attributes;
+
   for (const att of category.attributes || []) {
-    const attrValue = value.attributes?.[att.name];
+    const attrValue = productAttributes[att.name];
+
+    // REQUIRED CHECK
     if (att.required && (attrValue === undefined || attrValue === null)) {
       throw new Joi.ValidationError("Missing product attribute", [
-        { message: `${att.name} is required`, path: ["attributes", att.name] },
+        {
+          message: `${att.name} is required`,
+          path: ["attributes", att.name],
+        },
       ]);
     }
 
+    // SELECT OPTION CHECK
     if (att.inputType === "select" && attrValue != null) {
       if (!att.options.includes(attrValue)) {
         throw new Joi.ValidationError("Invalid product attribute option", [

@@ -6,6 +6,7 @@ import {
   updateCategory,
   deleteCategory,
   getAllStructuredCategories,
+  updateCategoryImageController,
 } from "../../Controllers/admin/category.controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
@@ -26,12 +27,10 @@ categoryRoutes
   .get("/level/:level", getCategories)
   .get("/all", getAllStructuredCategories)
   .patch(
-    "/update/:slug",
-    upload.single("image"),
-    jsonParser(["attributes"]),
+    "/update/:catId",
     validate(updateCategorySchema),
     updateCategory
-  )
+  ).patch("/update/:catId/image",upload.single("image"),updateCategoryImageController)
   .delete("/delete/:slug/:level", deleteCategory);
 
 export default categoryRoutes;

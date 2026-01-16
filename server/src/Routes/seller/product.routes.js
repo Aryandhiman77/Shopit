@@ -3,12 +3,16 @@ import { upload } from "../../Middlewares/multer.js";
 import {
   createProductController,
   getDraftProducts,
+  productAttributesController,
   productGalleryController,
   productThumbnailController,
 } from "../../Controllers/seller/product.controller.js";
 import { jsonParser } from "../../Helpers/jsonParser.js";
 import validate from "../../Middlewares/validate.js";
-import { createProductBasicSchema } from "../../validations/seller/product.validations.js";
+import {
+  createProductAttributesSchema,
+  createProductBasicSchema,
+} from "../../validations/seller/product.validations.js";
 const productRoutes = express.Router();
 
 productRoutes
@@ -27,6 +31,15 @@ productRoutes
     "/:productId/gallery",
     upload.array("gallery", 10),
     productGalleryController
+  )
+  .post(
+    "/:productId/attributes",
+    (req, res, next) => {
+      req.body.productId = req.params.productId;
+      next();
+    },
+    validate(createProductAttributesSchema),
+    productAttributesController
   );
 
 export default productRoutes;

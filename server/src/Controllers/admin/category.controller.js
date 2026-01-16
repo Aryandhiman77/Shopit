@@ -5,6 +5,7 @@ import {
   getCategoryService,
   getStructuredCategories,
   recursiveDeleteCategoryService,
+  updateCategoryImage,
   updateCategoryService,
 } from "../../Services/adminServices/categoryServices.js";
 import Categories from "../../Models/category.js";
@@ -42,12 +43,9 @@ export const getAllStructuredCategories = AsyncWrapper(async (req, res) => {
     .json(new ApiResponse(200, categories, `Categories found.`));
 });
 
-export const updateCategory = AsyncWrapper(async (req, res, next) => {
-  const { slug } = req.params;
-  const { category } = await updateCategoryService(
-    { ...req.data, slug },
-    req.file
-  );
+export const updateCategory = AsyncWrapper(async (req, res) => {
+  const { catId } = req.params;
+  const { category } = await updateCategoryService({ ...req.data, catId });
 
   return res
     .status(200)
@@ -59,6 +57,17 @@ export const updateCategory = AsyncWrapper(async (req, res, next) => {
       )
     );
 });
+export const updateCategoryImageController = AsyncWrapper(
+  async (req, res, next) => {
+    const { catId } = req.params;
+    try {
+      const updatedCategory = await updateCategoryImage(catId, req.file);
+      return res
+        .status(200)
+        .json(new ApiResponse(200, updatedCategory, `category updated.`));
+    } catch (error) {}
+  }
+);
 
 export const deleteCategory = AsyncWrapper(async (req, res) => {
   const { slug, level } = req.params;
