@@ -87,40 +87,48 @@ export const addThumbnailService = async (productId, thumbnail) => {
   return true;
 };
 
-export const addGalleryService = async (productId, gallery) => {
+export const addGalleryImagesService = async (productId, gallery) => {
+  if (!gallery || gallery.length === 0) {
+    throw new ApiError(400, "Please add a gallery.");
+  }
+
   const product = await Product.findById(productId);
   if (!product) {
     throw new ApiError(404, "Product not found.");
   }
-  if (!gallery || gallery.length === 0) {
-    throw new ApiError(400, "Please add a gallery.");
-  }
-  if (product.gallery?.length + gallery.length > 10) {
-    throw new ApiError(
-      400,
-      "Product gallery cannot contain more than 10 images."
-    );
-  }
-  const isAllUploaded = await Promise.allSettled(
-    gallery.map((img) => uploadWithRetry(img.path))
-  );
-  const successfulUploads = isAllUploaded
-    .filter((u) => u.status === "fulfilled")
-    .map((u) => {
-      return {
-        public_id: u.value.public_id,
-        url: u.value.secure_url,
-      };
-    });
-  if (gallery.length > successfulUploads.length) {
-    throw new ApiError(400, "Cannot upload complete gallery.");
+
+  if (product.gallery.length + gallery.length > 10) {
+    throw new ApiError(400, "Maximum 10 gallery images allowed");
   }
 
-  product.gallery = successfulUploads;
-  const saved = await product.save();
-  if (!saved) throw new ApiError(400, "Cannot upload complete gallery.");
-  // delete images from gallery
-  await unlinkFiles(gallery);
+  let uploadedImages = [];
+
+  try {
+    // upload images
+    uploadedImages = await Promise.all(
+      gallery.map((img) => uploadWithRetry(img.path))
+    );
+
+    const formattedImages = uploadedImages.map((img) => ({
+      public_id: img.public_id,
+      url: img.secure_url,
+    }));
+
+    product.gallery.push(...formattedImages);
+    await product.save();
+
+    return product.gallery;
+  } catch (error) {
+    // rollback cloudinary uploads if DB fails
+    if (uploadedImages.length) {
+      await Promise.allSettled(
+        uploadedImages.map((img) => deleteFromCloudinary(img.public_id))
+      );
+    }
+    throw error;
+  } finally {
+    await unlinkFiles(gallery);
+  }
 };
 
 export const addProductAttributes = async ({ productId, attributes }) => {
@@ -133,4 +141,47 @@ export const addProductAttributes = async ({ productId, attributes }) => {
     throw new ApiError(400, "Cannot add attributes.");
   }
   return product;
+};
+
+export const deleteGalleryImages = async (productId, publicIds) => {
+  if (!Array.isArray(publicIds) || publicIds.length === 0) {
+    throw new ApiError(400, "No images provided for deletion.");
+  }
+
+  const product = await Product.findById(productId).select("gallery");
+  if (!product) {
+    throw new ApiError(404, "Product not found.");
+  }
+
+  // check images belong to product
+  const existingIds = product.gallery.map((img) => img.public_id);
+  const invalidIds = publicIds.filter((id) => !existingIds.includes(id));
+
+  if (invalidIds.length) {
+    throw new ApiError(400, "Some images do not belong to this product.");
+  }
+
+  // remove from DB first
+  const deleted = await Product.findByIdAndUpdate(productId, {
+    $pull: { gallery: { public_id: { $in: publicIds } } },
+  });
+  if (!deleted) {
+    throw new ApiError(400, "Cannot delete images.");
+  }
+
+  // delete from Cloudinary
+  const results = await Promise.allSettled(
+    publicIds.map((id) => deleteFromCloudinary(id))
+  );
+
+  const failed = results.filter((r) => r.status === "rejected");
+
+  if (failed.length) {
+    console.error("Cloudinary deletion failed:", failed);
+  }
+
+  return {
+    deleted: publicIds.length - failed.length,
+    failed: failed.length,
+  };
 };

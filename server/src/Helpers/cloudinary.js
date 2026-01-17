@@ -52,12 +52,16 @@ export async function uploadWithRetry(
 
 export async function deleteFromCloudinary(public_id) {
   try {
-    const deleted = await cloudinary.uploader.destroy(public_id);
-    if (deleted !== "ok" || deleted !== "not found")
+    const result = await cloudinary.uploader.destroy(public_id);
+
+    if (result.result !== "ok" && result.result !== "not found") {
       throw new ApiError(500, "Unable to delete file.");
+    }
+
+    return true;
   } catch (error) {
-    // throw new ApiError(500, "Unable to delete file.");
-    console.log(error);
+    console.error("Cloudinary delete error:", error);
+    throw new ApiError(500, "Unable to delete file.");
   }
 }
 export default uploadOnCloudinary;

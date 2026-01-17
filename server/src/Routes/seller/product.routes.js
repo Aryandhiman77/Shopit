@@ -2,6 +2,7 @@ import express from "express";
 import { upload } from "../../Middlewares/multer.js";
 import {
   createProductController,
+  deleteGalleryImagesController,
   getDraftProducts,
   productAttributesController,
   productGalleryController,
@@ -40,6 +41,7 @@ productRoutes
     },
     validate(createProductAttributesSchema),
     productAttributesController
-  );
+  )
+  .delete("/:productId/gallery", deleteGalleryImagesController);
 
 export default productRoutes;

@@ -2,10 +2,11 @@ import fs from "fs";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import {
-  addGalleryService,
+  addGalleryImagesService,
   addProductAttributes,
   addThumbnailService,
   createProductService,
+  deleteGalleryImages,
   getProducts,
 } from "../../Services/sellerServices/productServices.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
@@ -40,7 +41,7 @@ export const productThumbnailController = AsyncWrapper(
 export const productGalleryController = AsyncWrapper(async (req, res, next) => {
   const { productId } = req.params;
   try {
-    await addGalleryService(productId, req.files);
+    await addGalleryImagesService(productId, req.files);
     res
       .status(200)
       .json(new ApiResponse(200, null, "Gallery images added successfully."));
@@ -56,5 +57,18 @@ export const productAttributesController = AsyncWrapper(async (req, res) => {
     .status(200)
     .json(
       new ApiResponse(200, updatedProduct, "Attributes added successfully.")
+    );
+});
+
+export const deleteGalleryImagesController = AsyncWrapper(async (req, res) => {
+  const { productId } = req.params;
+  const { deleted, failed } = await deleteGalleryImages(
+    productId,
+    req.body.publicIds
+  );
+  res
+    .status(200)
+    .json(
+      new ApiResponse(200, { deleted, failed }, `${deleted} images deleted.`)
     );
 });
