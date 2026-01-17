@@ -194,3 +194,13 @@ export const createProductAttributesSchema = Joi.object({
 
   return value;
 });
+
+export const updateProductStatusSchema = Joi.object({
+  status: Joi.string()
+    .valid("draft", "active", "inactive")
+    .required()
+    .messages({
+      "any.only": "Product status can either be draft, active or inactive.",
+      "any.required": "Product status is required.",
+    }),
+});

@@ -7,12 +7,14 @@ import {
   productAttributesController,
   productGalleryController,
   productThumbnailController,
+  updateProductStatus,
 } from "../../Controllers/seller/product.controller.js";
-import { jsonParser } from "../../Helpers/jsonParser.js";
 import validate from "../../Middlewares/validate.js";
 import {
   createProductAttributesSchema,
   createProductBasicSchema,
+  updateProductStatusSchema,
+  
 } from "../../validations/seller/product.validations.js";
 const productRoutes = express.Router();
 
@@ -42,6 +44,8 @@ productRoutes
     validate(createProductAttributesSchema),
     productAttributesController
   )
-  .delete("/:productId/gallery", deleteGalleryImagesController);
+  .delete("/:productId/gallery", deleteGalleryImagesController).patch("/:productId/status",validate(updateProductStatusSchema),updateProductStatus);
+  
+
 
 export default productRoutes;

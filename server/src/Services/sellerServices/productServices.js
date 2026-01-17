@@ -185,3 +185,16 @@ export const deleteGalleryImages = async (productId, publicIds) => {
     failed: failed.length,
   };
 };
+
+export const updateProductStatusService = async (productId, status) => {
+  const product = await Product.findByIdAndUpdate(
+    productId,
+    { status },
+    { new: true }
+  );
+
+  if (!product) {
+    throw new ApiError(404, "Product not found");
+  }
+  return product;
+};

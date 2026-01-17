@@ -103,7 +103,8 @@ const productSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: ["draft", "active", "inactive"],
-      default: "active",
+      default: "draft",
+      index: true,
     },
     attributes: {
       type: Map,

@@ -8,6 +8,7 @@ import {
   createProductService,
   deleteGalleryImages,
   getProducts,
+  updateProductStatusService,
 } from "../../Services/sellerServices/productServices.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
 
@@ -72,3 +73,15 @@ export const deleteGalleryImagesController = AsyncWrapper(async (req, res) => {
       new ApiResponse(200, { deleted, failed }, `${deleted} images deleted.`)
     );
 });
+
+export const updateProductStatus = async (req, res) => {
+  const { productId } = req.params;
+  const { status } = req.body;
+
+  const product = await updateProductStatusService(productId,status);
+
+  res.status(200).json({
+    message: "Product status updated",
+    product,
+  });
+};
