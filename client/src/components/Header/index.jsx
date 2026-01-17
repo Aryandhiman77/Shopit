@@ -10,16 +10,16 @@ import IconButton from "@mui/material/IconButton";
 import NavigationBar from "./Navigation";
 import DrawerNavigation from "./Navigation/Drawer";
 import CartPanel from "./Navigation/CartPanel";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-
-
+import AuthContext from "../../context/AuthContext";
 
 const Header = () => {
-  const [cartPanelOpen,setCartPanelOpen]=useState(false);
+  const [cartPanelOpen, setCartPanelOpen] = useState(false);
+  const { login } = useContext(AuthContext);
   return (
     <>
-    <div className=" border-b-[1px] border-gray-200 bg-white">
+      <div className=" border-b-[1px] border-gray-200 bg-white">
         <div className="top-strip py-2 border-t-[1px] border-b-[1px] border-gray-200 text-gray-500">
           <div className="container max-w-screen-xl flex justify-between items-center mx-auto">
             <div className="col1 text-[14px] font-500">
@@ -50,31 +50,37 @@ const Header = () => {
           </div>
           <div className="col3-items w-[35%] px-10">
             <div className="flex items-center gap-x-5 w-100 justify-center">
-              {
-                true?
-                <Link className="flex gap-3 items-center hover:bg-[#f0efefdd] active:bg-[#e5e5e5] p-2 rounded-xl" to={"/myaccount"}>
-                  <FaUserCircle className="text-3xl"/>
-                  <div >
+              {login ? (
+                <Link
+                  className="flex gap-3 items-center hover:bg-[#f0efefdd] active:bg-[#e5e5e5] p-2 rounded-xl"
+                  to={"/myaccount"}
+                >
+                  <FaUserCircle className="text-3xl" />
+                  <div>
                     <p className="font-[500] text-[12px]">Aryan Dhiman</p>
-                    <p className="font-[400] text-[11px]"> aryandhiman015@gmail.com</p>
+                    <p className="font-[400] text-[11px]">
+                      {" "}
+                      aryandhiman015@gmail.com
+                    </p>
                   </div>
                 </Link>
-                :<div>
-                <Link
-                  to={"/login"}
-                  className="hover:text-primary transition-all"
-                >
-                  Login
-                </Link>
-                &nbsp;|&nbsp;
-                <Link
-                  to={"/register"}
-                  className="hover:text-primary transition-all"
-                >
-                  Register
-                </Link>
-              </div>
-              }
+              ) : (
+                <div>
+                  <Link
+                    to={"/login"}
+                    className="hover:text-primary transition-all"
+                  >
+                    Login
+                  </Link>
+                  &nbsp;|&nbsp;
+                  <Link
+                    to={"/register"}
+                    className="hover:text-primary transition-all"
+                  >
+                    Register
+                  </Link>
+                </div>
+              )}
               <div className="icons">
                 <ul className="flex gap-x-5">
                   <li>
@@ -99,7 +105,9 @@ const Header = () => {
                   </li>
                   <li>
                     <Tooltip title="Cart total: ₹ 3,999">
-                      <IconButton onClick={()=>setCartPanelOpen(!cartPanelOpen)}>
+                      <IconButton
+                        onClick={() => setCartPanelOpen(!cartPanelOpen)}
+                      >
                         <Badge
                           value={2}
                           icon={<IoCartOutline className=" text-2xl" />}
@@ -113,18 +121,20 @@ const Header = () => {
           </div>
         </div>
       </div>
-    <header className="bg-white sticky top-0 z-20">
-      
-      <div className="border-b-[1px] border-gray-200 ">
-        <NavigationBar  />
+      <header className="bg-white sticky top-0 z-20">
+        <div className="border-b-[1px] border-gray-200 ">
+          <NavigationBar />
+        </div>
+      </header>
+      <div className="cartPanel">
+        <DrawerNavigation
+          position={"right"}
+          isDrawerOpen={cartPanelOpen}
+          setDrawerOpen={setCartPanelOpen}
+        >
+          <CartPanel setDrawerOpen={setCartPanelOpen} />
+        </DrawerNavigation>
       </div>
-        
-    </header>
-    <div className="cartPanel">
-      <DrawerNavigation position={"right"} isDrawerOpen={cartPanelOpen} setDrawerOpen={setCartPanelOpen}>
-        <CartPanel setDrawerOpen={setCartPanelOpen}/>
-      </DrawerNavigation>
-    </div>
     </>
   );
 };

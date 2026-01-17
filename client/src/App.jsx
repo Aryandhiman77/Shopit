@@ -39,46 +39,14 @@ const App = () => {
                 path="/product/:slug"
                 element={<ProductDetails />}
               />
-              <Route
-                exact={true}
-                path="/login"
-                element={<Login />}
-              />
-              <Route
-                exact={true}
-                path="/register"
-                element={<Register />}
-              />
-              <Route
-                exact={true}
-                path="/verify"
-                element={<ForgotPassword />}
-              />
-              <Route
-                exact={true}
-                path="/reset"
-                element={<ResetPass />}
-              />
-              <Route
-                exact={true}
-                path="/myCart"
-                element={<CartPage />}
-              />
-              <Route
-                exact={true}
-                path="/checkout"
-                element={<Checkout />}
-              />
-              <Route
-                exact={true}
-                path="/myaccount"
-                element={<MyAccount />}
-              />
-              <Route
-                exact={true}
-                path="/track"
-                element={<TrackPackage />}
-              />
+              <Route exact={true} path="/login" element={<Login />} />
+              <Route exact={true} path="/register" element={<Register />} />
+              <Route exact={true} path="/verify" element={<ForgotPassword />} />
+              <Route exact={true} path="/reset" element={<ResetPass />} />
+              <Route exact={true} path="/myCart" element={<CartPage />} />
+              <Route exact={true} path="/checkout" element={<Checkout />} />
+              <Route exact={true} path="/myaccount" element={<MyAccount />} />
+              <Route exact={true} path="/track" element={<TrackPackage />} />
               <Route
                 exact={true}
                 path="/orderPlaced"

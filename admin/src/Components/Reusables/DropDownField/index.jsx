@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-const DropDownField = ({title, items, setValue }) => {
+const DropDownField = ({ title, items, setValue }) => {
   const [age, setAge] = React.useState("");
 
   const handleChange = (event) => {
@@ -13,7 +13,6 @@ const DropDownField = ({title, items, setValue }) => {
   };
 
   return (
-
     <FormControl className="w-full" size="small">
       <InputLabel id="demo-select-small-label">{title}</InputLabel>
       <Select
@@ -24,7 +23,9 @@ const DropDownField = ({title, items, setValue }) => {
         onChange={handleChange}
       >
         {items?.map((item, i) => (
-          <MenuItem key={i} value={item}>{item}</MenuItem>
+          <MenuItem key={i} value={item}>
+            {item}
+          </MenuItem>
         ))}
       </Select>
     </FormControl>

@@ -1,0 +1,36 @@
+import React from "react";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
+import ProtectedRoutes from "./components/ProtectedRoutes";
+import Dashboard from "./Pages/Dashboard";
+import PublicRoutes from "./components/PublicRoutes";
+import AuthProvider from "./Context/Auth/AuthProvider";
+import DataProvider from "./Context/Data/DataProvider";
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AuthProvider>
+        <DataProvider>
+          <Routes>
+            {/* default route */}
+            <Route path="/" element={<Navigate to="/seller/login" replace />} />
+
+            {/* public routes */}
+            <Route element={<PublicRoutes />}>
+              <Route path={"/seller/register"} element={<Register />} />
+              <Route path={"/seller/login"} element={<Login />} />
+            </Route>
+
+            {/* protected routes */}
+            <Route element={<ProtectedRoutes />}>
+              <Route exact={true} path="/dashboard" element={<Dashboard />} />
+            </Route>
+          </Routes>
+        </DataProvider>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+};
+
+export default App;

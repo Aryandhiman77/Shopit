@@ -6,11 +6,11 @@ import { RiCustomerService2Line } from "react-icons/ri";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import { Link } from "react-router-dom";
-import  carte_bleue from "../../assets/carte_bleue.png"
-import  visa from "../../assets/visa.png"
-import  americanExpress from "../../assets/american_express.png"
-import  masterCard from "../../assets/master_card.png"
-import  paypal from "../../assets/paypal.png"
+import carte_bleue from "../../assets/carte_bleue.png";
+import visa from "../../assets/visa.png";
+import americanExpress from "../../assets/american_express.png";
+import masterCard from "../../assets/master_card.png";
+import paypal from "../../assets/paypal.png";
 
 const FooterSection = () => {
   return (
@@ -157,8 +157,22 @@ const FooterSection = () => {
                   </Link>
                 </li>
                 <li className="list-none text-[14px] w-full mb-2">
-                  <Link className="link-footer" to={"/"} data-discover="true">
-                    Login
+                  <Link
+                    className="link-footer"
+                    to={"http://localhost:5173/seller/login"}
+                    data-discover="true"
+                    target="_blank"
+                  >
+                    Login as seller
+                  </Link>{" "}
+                  |&nbsp;
+                  <Link
+                    className="link-footer"
+                    to={"http://localhost:5173/seller/login"}
+                    data-discover="true"
+                    target="_blank"
+                  >
+                    Register as seller
                   </Link>
                 </li>
               </ul>

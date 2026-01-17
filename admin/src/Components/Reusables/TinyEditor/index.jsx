@@ -4,7 +4,7 @@ import { Editor } from "@tinymce/tinymce-react";
 import "tinymce/tinymce";
 import "tinymce/icons/default";
 import "tinymce/themes/silver/theme";
-import "tinymce/models/dom"; 
+import "tinymce/models/dom";
 
 // Optional: plugins you want
 import "tinymce/plugins/code";
@@ -18,13 +18,13 @@ import "tinymce/plugins/wordcount";
 // Optional: skin (UI CSS)
 import "tinymce/skins/ui/oxide/skin.css";
 
-const TinyEditor=({ value, setValue })=> {
+const TinyEditor = ({ value, setValue }) => {
   return (
     <Editor
       value={value}
       onEditorChange={(content) => setValue(content)}
       init={{
-        license_key:"gpl",
+        license_key: "gpl",
         height: 400,
         menubar: true,
         plugins: "code link lists table image preview wordcount",
@@ -35,5 +35,5 @@ const TinyEditor=({ value, setValue })=> {
       }}
     />
   );
-}
+};
 export default TinyEditor;

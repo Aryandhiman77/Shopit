@@ -1,16 +1,15 @@
 import { useContext, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../../Context/Auth/AuthContext";
-
+import { AuthContext, useAuth } from "../../../Context/Auth/AuthContext";
 
 const ProtectedRoute = () => {
-  const { login } = useAuth();
-  console.log(login)
+  const { authToken } = useContext(AuthContext);
+  console.log(authToken);
 
-  if (!login) {
+  if (!authToken) {
     return <Navigate to="/login" replace />;
   }
-  return <Outlet />
+  return <Outlet />;
 };
 
 export default ProtectedRoute;
