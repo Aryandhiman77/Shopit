@@ -1,20 +1,21 @@
 import { useState } from "react";
 import logo from "../../assets/logo.svg";
+import LoginSchema from "./validation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import FormError from "../../components/Reusables/FormError";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
 export default function Login() {
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
+  const [passHidden, setPassHidden] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(LoginSchema) });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Seller login data:", form);
-    // call seller login API here
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
   return (
@@ -30,21 +31,22 @@ export default function Login() {
         </p>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="mt-6 space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Email address
             </label>
             <input
+              {...register("email")}
               type="email"
               name="email"
               required
-              value={form.email}
-              onChange={handleChange}
               placeholder="seller@example.com"
               className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
+            {/* <p className="text-red-500 h-2 text-sm">{}</p> */}
+            <FormError error={errors.email?.message} />
           </div>
 
           {/* Password */}
@@ -52,15 +54,28 @@ export default function Login() {
             <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              required
-              value={form.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="relative">
+              <input
+                {...register("password")}
+                type={`${passHidden ? "password" : "text"}`}
+                name="password"
+                required
+                placeholder="••••••••"
+                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none "
+              />
+              <button
+                type="button"
+                className="absolute top-[15%] right-1 rounded-full text-black  p-2 hover:bg-[#e5e5e5] active:bg-gray-300 transition-all ease-in-out duration-100 cursor-pointer"
+                onClick={() => setPassHidden(!passHidden)}
+              >
+                {passHidden ? (
+                  <IoMdEye size={20} className="text-2xl opacity-65" />
+                ) : (
+                  <IoMdEyeOff size={20} className="text-2xl opacity-65" />
+                )}
+              </button>
+            </div>
+            <FormError error={errors.password?.message} />
           </div>
 
           {/* Forgot password */}

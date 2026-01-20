@@ -1,28 +1,22 @@
 import { useState } from "react";
 import logo from "../../assets/logo.svg";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import FormError from "../../components/Reusables/FormError";
+import RegisterSchema from "./validation";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+
 export default function Register() {
-  const [form, setForm] = useState({
-    storeName: "",
-    email: "",
-    phone: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const [passHidden, setPassHidden] = useState(true);
+  const [confirmPassHidden, setConfirmPassHidden] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({ resolver: yupResolver(RegisterSchema) });
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (form.password !== form.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    console.log("Seller register data:", form);
-    // call seller register API here
+  const onSubmit = (data) => {
+    console.log(data);
   };
 
   return (
@@ -38,21 +32,21 @@ export default function Register() {
         </p>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          {/* Store Name */}
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-4">
+          {/* Seller Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
-              Store Name
+              Seller Name
             </label>
             <input
+              {...register("name")}
               type="text"
-              name="storeName"
+              name="name"
               required
-              value={form.storeName}
-              onChange={handleChange}
-              placeholder="My Online Store"
+              placeholder="David jain"
               className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
+            <FormError error={errors.name?.message} />
           </div>
 
           {/* Email */}
@@ -61,14 +55,14 @@ export default function Register() {
               Email Address*
             </label>
             <input
+              {...register("email")}
               type="email"
               name="email"
               required
-              value={form.email}
-              onChange={handleChange}
               placeholder="seller@example.com"
               className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
+            <FormError error={errors.email?.message} />
           </div>
 
           {/* Phone */}
@@ -77,13 +71,13 @@ export default function Register() {
               Phone Number
             </label>
             <input
+              {...register("phoneNumber")}
               type="tel"
-              name="phone"
-              value={form.phone}
-              onChange={handleChange}
+              name="phoneNumber"
               placeholder="9876543210"
               className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
             />
+            <FormError error={errors.phoneNumber?.message} />
           </div>
 
           {/* Password */}
@@ -91,15 +85,28 @@ export default function Register() {
             <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              required
-              value={form.password}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
+            <div className="relative">
+              <input
+                {...register("password")}
+                type={`${passHidden ? "password" : "text"}`}
+                name="password"
+                required
+                placeholder="••••••••"
+                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none "
+              />
+              <button
+                type="button"
+                className="absolute top-[15%] right-1 rounded-full text-black  p-2 hover:bg-[#e5e5e5] active:bg-gray-300 transition-all ease-in-out duration-100 cursor-pointer"
+                onClick={() => setPassHidden(!passHidden)}
+              >
+                {passHidden ? (
+                  <IoMdEye size={20} className="text-2xl opacity-65" />
+                ) : (
+                  <IoMdEyeOff size={20} className="text-2xl opacity-65" />
+                )}
+              </button>
+            </div>
+            <FormError error={errors.password?.message} />
           </div>
 
           {/* Confirm Password */}
@@ -107,21 +114,53 @@ export default function Register() {
             <label className="block text-sm font-medium text-gray-700">
               Confirm Password
             </label>
-            <input
-              type="password"
-              name="confirmPassword"
-              required
-              value={form.confirmPassword}
-              onChange={handleChange}
-              placeholder="••••••••"
-              className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            />
+            <div className="relative">
+              <input
+                {...register("confirmPassword")}
+                type={`${confirmPassHidden ? "password" : "text"}`}
+                name="confirmPassword"
+                required
+                placeholder="••••••••"
+                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              />
+
+              <button
+                type="button"
+                className="absolute top-[15%] right-1 rounded-full text-black  p-2 hover:bg-[#e5e5e5] active:bg-gray-300 transition-all ease-in-out duration-100 cursor-pointer"
+                onClick={() => setConfirmPassHidden(!confirmPassHidden)}
+              >
+                {confirmPassHidden ? (
+                  <IoMdEye size={20} className="text-2xl opacity-65" />
+                ) : (
+                  <IoMdEyeOff size={20} className="text-2xl opacity-65" />
+                )}
+              </button>
+            </div>
+
+            <FormError error={errors.confirmPassword?.message} />
+          </div>
+          <div className="flex items-center gap-2">
+            <div>
+              <input
+                {...register("agreeTerms")}
+                id="termsAndConditions"
+                type="checkbox"
+              />{" "}
+              <label
+                htmlFor="termsAndConditions"
+                className="text-sm text-gray-500 select-none"
+              >
+                {" "}
+                Terms and conditions
+              </label>
+              <FormError error={errors.agreeTerms?.message} />
+            </div>
           </div>
 
           {/* Submit */}
           <button
             type="submit"
-            className="w-full rounded-lg bg-blue-600 py-2.5 text-white font-semibold hover:bg-blue-700 transition"
+            className="w-full rounded-lg bg-blue-600 py-2.5 text-white font-semibold hover:bg-blue-700 transition mt-4"
           >
             Register
           </button>
