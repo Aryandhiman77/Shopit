@@ -13,7 +13,14 @@ import routes from "./src/Routes/index.js";
 const app = express();
 
 // MIDDLEWARES
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  }),
+);
 // app.use(morgan());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -21,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   helmet({
     crossOriginResourcePolicy: false,
-  })
+  }),
 );
 
 const __filename = fileURLToPath(import.meta.url);

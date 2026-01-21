@@ -41,7 +41,7 @@ export const registerAsAdmin = AsyncWrapper(async (req, res) => {
 
 export const loginController = AsyncWrapper(async (req, res) => {
   const { email, user, authToken, refreshToken } = await loginUserService(
-    req.data
+    req.data,
   );
   if (email) {
     return res
@@ -49,9 +49,9 @@ export const loginController = AsyncWrapper(async (req, res) => {
       .json(
         new ApiResponse(
           200,
-          null,
-          `6-digit verification code sent to ${email}.`
-        )
+          { otpRequired: true,isAuthenticated:false },
+          `6-digit verification code sent to ${email}.`,
+        ),
       );
   }
   res.cookie("refreshToken", refreshToken, {
@@ -70,6 +70,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
     email: user.email,
     phoneNumber: user.phoneNumber,
     loggedInUserCount: user.loggedInUserCount,
+    isAuthenticated:true,
   };
 
   return res
@@ -85,8 +86,8 @@ export const registrationController = AsyncWrapper(async (req, res) => {
       new ApiResponse(
         200,
         null,
-        `Registration successful. 6-digit verification code sent to ${email}.`
-      )
+        `Registration successful. 6-digit verification code sent to ${email}.`,
+      ),
     );
 });
 
@@ -119,6 +120,7 @@ export const verifyOTP = AsyncWrapper(async (req, res) => {
     email: user.email,
     phoneNumber: user.phoneNumber,
     loggedInUserCount: user.loggedInUserCount,
+    isAuthenticated:true,
   };
   return res
     .status(200)
@@ -138,7 +140,7 @@ export const forgotPassController = AsyncWrapper(async (req, res) => {
   return res
     .status(200)
     .json(
-      new ApiResponse(200, null, `6-digit verification OTP sent to ${email}.`)
+      new ApiResponse(200, null, `6-digit verification OTP sent to ${email}.`),
     );
 });
 
@@ -189,7 +191,7 @@ export const renewUserTokens = AsyncWrapper(async (req, res) => {
 
   const updated = await User.updateOne(
     { refreshToken: oldToken },
-    { $set: { "refreshToken.$": new_token } }
+    { $set: { "refreshToken.$": new_token } },
   );
   if (!updated) {
     throw new ApiError(400, "Login again.", "Already logged out.");
