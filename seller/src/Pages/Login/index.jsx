@@ -5,6 +5,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import FormError from "../../components/Reusables/FormError";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import toast from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
 
 export default function Login() {
   const [passHidden, setPassHidden] = useState(true);
@@ -14,8 +16,14 @@ export default function Login() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(LoginSchema) });
 
+  const { handleLogin, loading, error } = useAuth();
+
   const onSubmit = (data) => {
-    console.log(data);
+    handleLogin({
+      email: data.email,
+      password: data.password,
+      role: "seller",
+    });
   };
 
   return (
@@ -31,7 +39,10 @@ export default function Login() {
         </p>
 
         {/* Form */}
-        <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="mt-6 space-y-5"
+        >
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700">

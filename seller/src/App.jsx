@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
@@ -7,11 +6,14 @@ import Dashboard from "./Pages/Dashboard";
 import PublicRoutes from "./components/PublicRoutes";
 import AuthProvider from "./Context/Auth/AuthProvider";
 import DataProvider from "./Context/Data/DataProvider";
+import Notify from "./components/Reusables/Notify";
+import OTPVerification from "./Pages/OTPVerification";
 const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
         <DataProvider>
+          <Notify />
           <Routes>
             {/* default route */}
             <Route path="/" element={<Navigate to="/seller/login" replace />} />
@@ -20,6 +22,7 @@ const App = () => {
             <Route element={<PublicRoutes />}>
               <Route path={"/seller/register"} element={<Register />} />
               <Route path={"/seller/login"} element={<Login />} />
+              
             </Route>
 
             {/* protected routes */}

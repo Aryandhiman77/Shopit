@@ -1,10 +1,10 @@
 import React, { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import useAuth from "../Context/Auth/useAuth";
+import useAuth from "../hooks/useAuth";
 
 const PublicRoutes = () => {
-  const { authToken } = useAuth();
-  if (!authToken) {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) {
     return <Outlet />;
   }
   return <Navigate to={"/dashboard"} />;
