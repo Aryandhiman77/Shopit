@@ -4,7 +4,7 @@ import { PiCommandBold } from "react-icons/pi";
 
 const Search = ({ endIcon, placeholder }) => {
   return (
-    <div className="flex flex-row items-center custom-border rounded-lg p-2 bg-white shadow-sm hover:scale-105 transition-all duration-200">
+    <div className="flex flex-row items-center custom-border rounded-lg p-2 bg-white shadow-sm hover:scale-105 transition-all duration-200 dark:bg-gray-700 dark:text-gray-200 dark:border-gray-400!">
       <IoSearchOutline />
       <input
         type="text"

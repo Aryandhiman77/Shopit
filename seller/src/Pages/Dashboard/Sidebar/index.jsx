@@ -137,12 +137,12 @@ const SideBar = () => {
   };
 
   return (
-    <div className="bg-white w-full sticky top-0">
+    <div className="bg-white w-full sticky top-0 dark:bg-gray-900! dark:text-white! ">
       {/* Logo */}
       <div className="logo">
         <PanelLogo />
       </div>
-      <Divider />
+      <Divider className="dark:bg-gray-500" />
 
       <div className="sidebar-content">
         <ul className="flex flex-col gap-1">
@@ -154,9 +154,9 @@ const SideBar = () => {
                 <li>
                   <MButton
                     title={item.title}
-                    className={`${
+                    className={`dark:bg-gray-900! dark:text-white! ${
                       active
-                        ? "!text-primary !border-l-[5px] !rounded-none"
+                        ? "text-primary! border-l-[5px]! rounded-none!"
                         : ""
                     }`}
                     startIcon={item.icon}
@@ -186,8 +186,8 @@ const SideBar = () => {
                       {item.dropdown.map((sub, i) => (
                         <Link to={sub.path} key={i}>
                           <MButton
-                            className={`!text-[13px] !font-[500] ${
-                              pathname === sub.path ? "!text-primary" : ""
+                            className={`dark:bg-gray-900! dark:text-gray-400 text-[13px]! font-medium! ${
+                              pathname === sub.path ? "text-primary!" : ""
                             }`}
                             title={sub.title}
                             startIcon={sub.icon}
@@ -197,7 +197,7 @@ const SideBar = () => {
                     </CollapablePanel>
                   )}
                 </li>
-                <Divider />
+                <Divider className="dark:bg-gray-500" />
               </div>
             );
           })}

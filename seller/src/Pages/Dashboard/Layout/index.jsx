@@ -9,10 +9,10 @@ const Layout = () => {
   const [sideBarOpened, setSideBarOpened] = useState(true);
   const { responseProgress } = useData();
   return (
-    <>
+    <div className="dark:bg-slate-900">
       <div className="flex flex-row z-60 ">
         <div
-          className={`shadow-md border-r border-gray-200 transition-all duration-300 min-h-screen  ${
+          className={`shadow-md border-r border-gray-200 transition-all duration-300 min-h-screen   ${
             sideBarOpened ? "w-[18%]" : "w-[0%]  overflow-hidden"
           }`}
         >
@@ -29,15 +29,15 @@ const Layout = () => {
           <LinearProgress
             variant="determinate"
             color="warning"
-            className="bg-white!"
+            className="bg-white! dark:bg-gray-700!"
             value={responseProgress}
           />
-          <div className="z-40 relative w-full bg-[#f1f1f1] darkmode p-4">
+          <div className="z-40 relative w-full bg-[#f1f1f1] dark:bg-gray-800 dark:text-gray-200 p-4">
             <Outlet />
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

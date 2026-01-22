@@ -52,9 +52,9 @@ const Dashboard = () => {
           endIcon={<IoStatsChart className="text-6xl text-blue-700" />}
         />
       </div>
-      <Box className={"bg-white"}>
+      <Box className={"bg-white dark:bg-gray-700 dark:border-black!"}>
         <div className="flex justify-between items-center">
-          <p className="heading-1">Product List</p>
+          <p className="heading-1 dark:text-white!">Product List</p>
           <div className="flex flex-row items-center gap-3">
             <button className="custom-btn bg-green-600! text-white! flex items-center gap-1 text-sm">
               <PiExportDuotone className="text-lg" />
@@ -66,7 +66,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="my-3">
-          <Divider />
+          <Divider className="dark:bg-gray-400" />
         </div>
         <ProductList />
       </Box>

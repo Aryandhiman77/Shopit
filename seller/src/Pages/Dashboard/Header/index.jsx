@@ -7,7 +7,7 @@ import {
   MdDocumentScanner,
 } from "react-icons/md";
 import { PiCommandBold } from "react-icons/pi";
-import avatar from "../../../assets/defaultProfile.avif";
+import avatar from "../../../assets/defaultProfile.png";
 import CustomMenu from "../CustomMenu";
 import MButton from "../../../components/Reusables/Elements/MButton";
 import Search from "../../../components/Reusables/Elements/Search";
@@ -17,7 +17,7 @@ import Loader from "../../../components/Reusables/Elements/Loader/Spinner";
 const Header = ({ sidebarOpened, setSidebarOpened }) => {
   const { handleLogout, loading, responseProgress } = useAuth();
   return (
-    <div className="w-full flex flex-row justify-between items-center p-2 z-50 relative">
+    <div className="w-full flex flex-row justify-between items-center p-2 z-50 relative dark:bg-gray-900 ">
       <div className="part-1 flex gap-5">
         <button
           className="custom-btn custom-border text-xl text-gray-600"
@@ -98,14 +98,14 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
         </button>
         <div>
           <CustomMenu
-            title={<img src={avatar} alt="" height={40} width={40} />}
-            btnClasses={"shadow-md bg-black !rounded-full"}
+            title={<img src={avatar} alt="" height={30} width={30} />}
+            btnClasses={"shadow-md bg-black  rounded-full!"}
           >
             <div className="flex flex-row gap-4 p-4">
               <img src={avatar} alt="" height={45} width={45} />
               <div>
-                <p className="font-[600] text-black text-sm">Aryan dhiman</p>
-                <p className="font-[400] text-black text-[13px]">
+                <p className="font-semibold text-black text-sm">Aryan dhiman</p>
+                <p className="font-normal text-black text-[13px]">
                   aryandhiman015@gmail.com
                 </p>
               </div>
@@ -128,7 +128,7 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
             <Divider />
             <MenuItem
               onClick={handleLogout}
-              className="flex flex-row gap-3 custom-btn shadow-none!"
+              className="flex flex-row gap-3 custom-btn shadow-none! hover:dark:text-black!"
             >
               <IoLogOutOutline size={20} />
               {loading ? <Loader className={"bg-black"} /> : "Logout"}

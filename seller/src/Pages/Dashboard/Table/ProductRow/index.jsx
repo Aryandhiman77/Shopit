@@ -11,12 +11,12 @@ const ProductRow = ({ product }) => {
   const [itemsHidden, setItemsHidden] = useState(true);
   return (
     <>
-      <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 overflow-hidden">
+      <tr className="bg-white border-b border-gray-200 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-900 overflow-hidden">
         <td className="px-4 py-4 w-10">
           <button
             onClick={() => setItemsHidden(!itemsHidden)}
             className={`custom-btn rounded-full! custom-border p-1! ${
-              itemsHidden ? "bg-white!" : "bg-gray-800!"
+              itemsHidden ? "bg-white! dark:bg-black!" : "bg-gray-800!"
             }`}
           >
             {itemsHidden ? (
@@ -42,7 +42,7 @@ const ProductRow = ({ product }) => {
             />
             <div className="p-2">
               <p className="text-[12px] font-semibold">{product?.name}</p>
-              <p className="text-[12px] font-medium text-black">
+              <p className="text-[12px] font-medium text-black dark:text-gray-500">
                 {product?.brand}
               </p>
             </div>
@@ -102,7 +102,7 @@ const ProductRow = ({ product }) => {
 
       {!itemsHidden && (
         <>
-          <tr className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400 w-full">
+          <tr className="text-xs text-gray-700 uppercase bg-gray-200 dark:text-gray-400 w-full dark:bg-gray-900">
             <th scope="col" className="px-16 py-3">
               <span className="sr-only">Image</span>
             </th>
@@ -125,7 +125,7 @@ const ProductRow = ({ product }) => {
           {product.variants?.map((item, i) => (
             <tr
               key={i}
-              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-900 "
             >
               <td className="p-4">
                 <img

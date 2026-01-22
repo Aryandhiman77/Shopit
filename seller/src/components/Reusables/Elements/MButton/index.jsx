@@ -16,7 +16,7 @@ const MButton = ({
     <div>
       <Button
         type={type}
-        className={`w-full! text-gray-600! flex gap-2 justify-start! capitalize! px-8! items-center ${className}`}
+        className={`w-full! text-gray-500! flex gap-2 justify-start! capitalize! px-8! items-center ${className}`}
         style={{ background: bg, color: textColor }}
         onClick={onClick}
         disabled={loading || false}

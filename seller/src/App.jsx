@@ -9,6 +9,7 @@ import DataProvider from "./Context/Data/DataProvider";
 import Notify from "./components/Reusables/Notify";
 import OTPVerification from "./Pages/OTPVerification";
 import Layout from "./Pages/Dashboard/Layout/index";
+import Products from "./Pages/Products";
 const App = () => {
   return (
     <BrowserRouter>
@@ -29,6 +30,7 @@ const App = () => {
             <Route element={<ProtectedRoutes />}>
               <Route element={<Layout />}>
                 <Route exact={true} path="/dashboard" element={<Dashboard />} />
+                <Route exact={true} path="/products" element={<Products />} />
               </Route>
             </Route>
           </Routes>
