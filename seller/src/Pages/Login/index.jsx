@@ -7,6 +7,7 @@ import FormError from "../../components/Reusables/FormError";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
+import MButton from "../../components/Reusables/Elements/MButton";
 
 export default function Login() {
   const [passHidden, setPassHidden] = useState(true);
@@ -37,12 +38,13 @@ export default function Login() {
         <p className="text-sm text-center text-gray-500 mt-1">
           Manage your products & orders
         </p>
-
+        {error && (
+          <div className="bg-red-600 text-white mt-2 p-1 text-[12px] rounded-sm text-center">
+            {error}
+          </div>
+        )}
         {/* Form */}
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="mt-6 space-y-5"
-        >
+        <form onSubmit={handleSubmit(onSubmit)} className="mt-2 space-y-5">
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -56,7 +58,6 @@ export default function Login() {
               placeholder="seller@example.com"
               className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {/* <p className="text-red-500 h-2 text-sm">{}</p> */}
             <FormError error={errors.email?.message} />
           </div>
 
@@ -100,12 +101,18 @@ export default function Login() {
           </div>
 
           {/* Submit */}
-          <button
+          {/* <button
             type="submit"
-            className="w-full rounded-lg bg-blue-600 py-2 text-white font-semibold hover:bg-blue-700 transition"
+           
           >
             Login
-          </button>
+          </button> */}
+          <MButton
+            type={"submit"}
+            loading={loading}
+            className="w-full rounded-lg bg-blue-600! py-2 text-white! font-semibold hover:bg-blue-700! flex items-center!"
+            title="Login"
+          />
         </form>
 
         {/* Register */}

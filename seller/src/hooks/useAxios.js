@@ -6,6 +6,7 @@ const useAxios = () => {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [responseProgress, setResponseProgress] = useState(0);
 
   const axiosInstance = axios.create({
     baseURL: "http://localhost:8000/api",
@@ -32,10 +33,10 @@ const useAxios = () => {
   const fetchData = useCallback(
     async ({ url, method, payload = {}, params = {} }) => {
       setLoading(true);
-
+      setResponseProgress(40);
       controllerRef.current?.abort();
       controllerRef.current = new AbortController();
-
+      setResponseProgress(50);
       try {
         const result = await axiosInstance({
           url,
@@ -44,14 +45,18 @@ const useAxios = () => {
           params,
           signal: controllerRef.current.signal,
         });
+        setResponseProgress(100);
         setResponse(result.data);
         return { response: result.data };
       } catch (error) {
+        console.log(error);
         if (error.name === "CanceledError") {
           console.log("Request cancelled");
           return;
         }
         let errorMessage =
+          (error?.response?.data?.errors.length > 0 &&
+            error?.response?.data?.errors) ||
           error?.response?.data?.message ||
           error?.message ||
           "Something went wrong";
@@ -59,11 +64,12 @@ const useAxios = () => {
         toast.error(errorMessage);
       } finally {
         setLoading(false);
+        setResponseProgress(0);
       }
     },
     [],
   );
-  return { response, error, loading, fetchData };
+  return { response, error, loading, fetchData, responseProgress };
 };
 
 export default useAxios;

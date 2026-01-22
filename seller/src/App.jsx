@@ -8,6 +8,7 @@ import AuthProvider from "./Context/Auth/AuthProvider";
 import DataProvider from "./Context/Data/DataProvider";
 import Notify from "./components/Reusables/Notify";
 import OTPVerification from "./Pages/OTPVerification";
+import Layout from "./Pages/Dashboard/Layout/index";
 const App = () => {
   return (
     <BrowserRouter>
@@ -22,12 +23,13 @@ const App = () => {
             <Route element={<PublicRoutes />}>
               <Route path={"/seller/register"} element={<Register />} />
               <Route path={"/seller/login"} element={<Login />} />
-              
             </Route>
 
             {/* protected routes */}
             <Route element={<ProtectedRoutes />}>
-              <Route exact={true} path="/dashboard" element={<Dashboard />} />
+              <Route element={<Layout />}>
+                <Route exact={true} path="/dashboard" element={<Dashboard />} />
+              </Route>
             </Route>
           </Routes>
         </DataProvider>
