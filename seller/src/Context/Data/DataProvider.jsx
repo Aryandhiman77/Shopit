@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import DataContext from "./DataContext";
 import useAxios from "../../hooks/useAxios";
+import toast from "react-hot-toast";
 
 const DataProvider = ({ children }) => {
   const [products, setProducts] = useState([
@@ -37,9 +38,25 @@ const DataProvider = ({ children }) => {
       ],
     },
   ]);
-  const { response, loading, fetchData, error, responseProgress } = useAxios();
+  const { response, loading, fetchData, error, progress, setProgress } =
+    useAxios();
+
+  const fetchSellerProducts = async () => {
+    const result = await fetchData({
+      url: "/seller/products",
+      method: "GET",
+    });
+    const response = result?.response;
+    if (response?.success) {
+      // toast.success(response.data);
+      setProducts(response.data);
+    }
+  };
+
   return (
-    <DataContext.Provider value={{ products, loading, responseProgress }}>
+    <DataContext.Provider
+      value={{ products, loading, progress, fetchSellerProducts }}
+    >
       {children}
     </DataContext.Provider>
   );

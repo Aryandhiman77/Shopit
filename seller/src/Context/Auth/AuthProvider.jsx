@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import AuthContext from "./AuthContext";
 import useAxios from "../../hooks/useAxios";
 import toast from "react-hot-toast";
@@ -9,22 +9,25 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [tempCred, setTempCred] = useState(null);
   const navigate = useNavigate();
-  const { error, loading, fetchData } = useAxios();
+  const { formErrors, loading, fetchData } = useAxios();
 
   const handleLogin = async (details) => {
-    setTempCred(details.email);
+    setTempCred(details?.email);
     try {
-      const result = await fetchData({
+      const response = await fetchData({
         url: "/auth/login",
         method: "POST",
         payload: details,
       });
-      const response = result?.response;
       if (response?.success) {
         toast.success(response?.message);
       }
       if (response?.data?.otpRequired) {
-        navigate("/seller/otp-verification");
+        navigate("/seller/otp-verification", {
+          state: { email: details.email, password: details.password },
+          replace: true,
+        });
+        return;
       }
       if (response?.data?.isAuthenticated) {
         setUser(response.data);
@@ -36,19 +39,21 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  const handleOtpVerification = async ({ otp }) => {
+  const handleOtpVerification = async ({ email, otp }) => {
     try {
-      const result = await fetchData({
+      const response = await fetchData({
         url: "/auth/verify-otp",
         method: "POST",
-        payload: { email: tempCred, otp },
+        payload: { email: email, otp },
       });
-      const response = result?.response;
-      if (response.success && response?.data?.isAuthenticated) {
-        toast.success(response?.message);
+      if (response?.success && response?.data?.isAuthenticated) {
         setUser(response.data);
-        setAuthenticated(true);
-        localStorage.setItem("user", JSON.stringify(response.data));
+        toast.success(response?.message);
+        if (!JSON.parse(localStorage.getItem("user"))) {
+          setAuthenticated(true);
+          localStorage.setItem("user", JSON.stringify(response.data));
+          toast.success("Login successful.");
+        }
       }
     } catch (error) {
       console.log(error);
@@ -56,12 +61,11 @@ const AuthProvider = ({ children }) => {
   };
 
   const handleLogout = async () => {
-    const result = await fetchData({
+    const response = await fetchData({
       url: "/auth/logout",
       method: "PATCH",
     });
-    const response = await result?.response;
-    if (response.success) {
+    if (response?.success) {
       localStorage.removeItem("user");
       setUser(null);
       setAuthenticated(false);
@@ -75,7 +79,6 @@ const AuthProvider = ({ children }) => {
     if (user) {
       setUser(user);
       setAuthenticated(true);
-      console.log("authenticateed");
     }
   }, []);
   return (
@@ -84,7 +87,7 @@ const AuthProvider = ({ children }) => {
         isAuthenticated,
         handleLogin,
         loading,
-        error,
+        formErrors,
         handleOtpVerification,
         user,
         handleLogout,

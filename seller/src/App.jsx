@@ -24,6 +24,10 @@ const App = () => {
             <Route element={<PublicRoutes />}>
               <Route path={"/seller/register"} element={<Register />} />
               <Route path={"/seller/login"} element={<Login />} />
+              <Route
+                path={"/seller/otp-verification"}
+                element={<OTPVerification />}
+              />
             </Route>
 
             {/* protected routes */}
@@ -31,6 +35,7 @@ const App = () => {
               <Route element={<Layout />}>
                 <Route exact={true} path="/dashboard" element={<Dashboard />} />
                 <Route exact={true} path="/products" element={<Products />} />
+                <Route path="*" element={<Navigate to="/page-not-found" />} />
               </Route>
             </Route>
           </Routes>

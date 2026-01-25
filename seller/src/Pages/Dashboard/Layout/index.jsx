@@ -7,7 +7,7 @@ import useData from "../../../hooks/useData";
 
 const Layout = () => {
   const [sideBarOpened, setSideBarOpened] = useState(true);
-  const { responseProgress } = useData();
+  const { progress } = useData();
   return (
     <div className="dark:bg-slate-900">
       <div className="flex flex-row z-60 ">
@@ -25,12 +25,6 @@ const Layout = () => {
           <Header
             sidebarOpened={sideBarOpened}
             setSidebarOpened={setSideBarOpened}
-          />
-          <LinearProgress
-            variant="determinate"
-            color="warning"
-            className="bg-white! dark:bg-gray-700!"
-            value={responseProgress}
           />
           <div className="z-40 relative w-full bg-[#f1f1f1] dark:bg-gray-800 dark:text-gray-200 p-4">
             <Outlet />

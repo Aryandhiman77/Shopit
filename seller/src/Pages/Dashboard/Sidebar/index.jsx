@@ -117,6 +117,7 @@ const menuConfig = [
 ];
 
 const SideBar = () => {
+  const getSideRouteIndex = 0;
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const [openDropdown, setOpenDropdown] = useState(null);

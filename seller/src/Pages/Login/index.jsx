@@ -8,6 +8,7 @@ import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import MButton from "../../components/Reusables/Elements/MButton";
+import CustomButton from "../../components/Reusables/Elements/CustomBtn";
 
 export default function Login() {
   const [passHidden, setPassHidden] = useState(true);
@@ -17,7 +18,7 @@ export default function Login() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(LoginSchema) });
 
-  const { handleLogin, loading, error } = useAuth();
+  const { handleLogin, loading, formErrors } = useAuth();
 
   const onSubmit = (data) => {
     handleLogin({
@@ -38,11 +39,12 @@ export default function Login() {
         <p className="text-sm text-center text-gray-500 mt-1">
           Manage your products & orders
         </p>
-        {error && (
-          <div className="bg-red-600 text-white mt-2 p-1 text-[12px] rounded-sm text-center">
-            {error}
-          </div>
-        )}
+        {formErrors?.length > 0 &&
+          formErrors?.map((err, i) => (
+            <div className="bg-red-600 text-white mt-2 p-1 text-[12px] rounded-sm text-center">
+              {i + 1}. {err}
+            </div>
+          ))}
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="mt-2 space-y-5">
           {/* Email */}
@@ -107,14 +109,22 @@ export default function Login() {
           >
             Login
           </button> */}
-          <MButton
+          {/* <MButton
             type={"submit"}
             loading={loading}
             className="w-full rounded-lg bg-blue-600! py-2 text-white! font-semibold hover:bg-blue-700! flex items-center!"
             title="Login"
+          /> */}
+          <CustomButton
+            title={"Login"}
+            loading={loading}
+            disabled={loading}
+            type={"submit"}
+            bg={"#1260cc"}
+            borderRadius={"10px"}
+            className={"w-full"}
           />
         </form>
-
         {/* Register */}
         <p className="text-center text-sm text-gray-600 mt-6">
           Don’t have a seller account?{" "}

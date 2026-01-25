@@ -32,6 +32,7 @@ const OTPInput = ({ maxLength = 4, onChangeOTP = () => {} }) => {
       {otp.map((digit, i) => (
         <input
           key={i}
+          required
           value={digit}
           className={`w-1/6 h-15 border px-2 focus:outline-none border-[#c6c6c6] rounded-sm text-center focus:border-primary`}
           type="tel"
