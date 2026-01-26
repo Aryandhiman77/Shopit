@@ -41,7 +41,7 @@ authRoutes
     tokenVerification,
     resetPassController
   )
-  .post("/logout", logoutController)
+  .patch("/logout", logoutController)
   .patch("/refresh-access", renewUserTokens);
 
 export default authRoutes;

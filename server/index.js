@@ -9,6 +9,8 @@ import path from "path";
 import { fileURLToPath } from "node:url";
 import { APP_URL } from "./src/Config/appConfig.js";
 import routes from "./src/Routes/index.js";
+import rateLimit, { ipKeyGenerator } from "express-rate-limit";
+import ApiError from "./src/Helpers/ApiError.js";
 
 const app = express();
 
@@ -17,7 +19,7 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     allowedHeaders: ["Content-Type"],
   }),
 );
@@ -27,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   helmet({
-    crossOriginResourcePolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
   }),
 );
 
@@ -36,7 +38,23 @@ const __dirname = path.dirname(__filename);
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(cookieParser());
 
-app.use("/api/", routes);
+const limiter = rateLimit({
+  windowMs: 10 * 1000, // 10s
+  limit: 5,
+  handler: (req, res, next, options) => {
+    throw new ApiError(429, "Too many clicks, please wait..");
+  },
+});
+
+app.use(limiter);
+app.use(
+  "/api/",
+  (req, res, next) => {
+    console.log("/" + req.method+ " from "+ req.socket.remoteAddress);
+    next();
+  },
+  routes,
+);
 
 app.use(errorHandler);
 connectDB().then(() => {

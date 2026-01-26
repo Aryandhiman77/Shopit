@@ -38,7 +38,7 @@ export const createProductService = async (
     stock,
     brand,
   },
-  creater_user_id
+  creater_user_id,
 ) => {
   const product = await Product.create({
     title,
@@ -62,6 +62,9 @@ export const createProductService = async (
 
 export const getProducts = async ({ filter }, sellerId) => {
   return await Product.find({ status: filter, seller: sellerId });
+};
+export const getAllProducts = async (sellerId) => {
+  return await Product.find({ seller: sellerId });
 };
 
 export const addThumbnailService = async (productId, thumbnail) => {
@@ -106,7 +109,7 @@ export const addGalleryImagesService = async (productId, gallery) => {
   try {
     // upload images
     uploadedImages = await Promise.all(
-      gallery.map((img) => uploadWithRetry(img.path))
+      gallery.map((img) => uploadWithRetry(img.path)),
     );
 
     const formattedImages = uploadedImages.map((img) => ({
@@ -122,7 +125,7 @@ export const addGalleryImagesService = async (productId, gallery) => {
     // rollback cloudinary uploads if DB fails
     if (uploadedImages.length) {
       await Promise.allSettled(
-        uploadedImages.map((img) => deleteFromCloudinary(img.public_id))
+        uploadedImages.map((img) => deleteFromCloudinary(img.public_id)),
       );
     }
     throw error;
@@ -135,7 +138,7 @@ export const addProductAttributes = async ({ productId, attributes }) => {
   const product = await Product.findByIdAndUpdate(
     productId,
     { $set: { attributes } },
-    { new: true, runValidators: true } // new : true returns updated document
+    { new: true, runValidators: true }, // new : true returns updated document
   );
   if (!product) {
     throw new ApiError(400, "Cannot add attributes.");
@@ -171,7 +174,7 @@ export const deleteGalleryImages = async (productId, publicIds) => {
 
   // delete from Cloudinary
   const results = await Promise.allSettled(
-    publicIds.map((id) => deleteFromCloudinary(id))
+    publicIds.map((id) => deleteFromCloudinary(id)),
   );
 
   const failed = results.filter((r) => r.status === "rejected");
@@ -190,7 +193,7 @@ export const updateProductStatusService = async (productId, status) => {
   const product = await Product.findByIdAndUpdate(
     productId,
     { status },
-    { new: true }
+    { new: true },
   );
 
   if (!product) {

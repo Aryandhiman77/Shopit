@@ -7,6 +7,7 @@ import {
   addThumbnailService,
   createProductService,
   deleteGalleryImages,
+  getAllProducts,
   getProducts,
   updateProductStatusService,
 } from "../../Services/sellerServices/productServices.js";
@@ -20,6 +21,10 @@ export const createProductController = AsyncWrapper(async (req, res) => {
 });
 export const getDraftProducts = AsyncWrapper(async (req, res) => {
   const products = await getProducts({ filter: "draft" }, req.user.id);
+  res.status(200).json(new ApiResponse(200, products, "Products found."));
+});
+export const getSellerProducts = AsyncWrapper(async (req, res) => {
+  const products = await getAllProducts(req.user.id);
   res.status(200).json(new ApiResponse(200, products, "Products found."));
 });
 
@@ -36,7 +41,7 @@ export const productThumbnailController = AsyncWrapper(
       await unlinkFiles(req.file?.path);
       next(error);
     }
-  }
+  },
 );
 
 export const productGalleryController = AsyncWrapper(async (req, res, next) => {
@@ -57,7 +62,7 @@ export const productAttributesController = AsyncWrapper(async (req, res) => {
   res
     .status(200)
     .json(
-      new ApiResponse(200, updatedProduct, "Attributes added successfully.")
+      new ApiResponse(200, updatedProduct, "Attributes added successfully."),
     );
 });
 
@@ -65,12 +70,12 @@ export const deleteGalleryImagesController = AsyncWrapper(async (req, res) => {
   const { productId } = req.params;
   const { deleted, failed } = await deleteGalleryImages(
     productId,
-    req.body.publicIds
+    req.body.publicIds,
   );
   res
     .status(200)
     .json(
-      new ApiResponse(200, { deleted, failed }, `${deleted} images deleted.`)
+      new ApiResponse(200, { deleted, failed }, `${deleted} images deleted.`),
     );
 });
 
@@ -78,7 +83,7 @@ export const updateProductStatus = async (req, res) => {
   const { productId } = req.params;
   const { status } = req.body;
 
-  const product = await updateProductStatusService(productId,status);
+  const product = await updateProductStatusService(productId, status);
 
   res.status(200).json({
     message: "Product status updated",

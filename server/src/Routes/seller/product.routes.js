@@ -8,13 +8,13 @@ import {
   productGalleryController,
   productThumbnailController,
   updateProductStatus,
+  getSellerProducts
 } from "../../Controllers/seller/product.controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
   createProductAttributesSchema,
   createProductBasicSchema,
   updateProductStatusSchema,
-  
 } from "../../validations/seller/product.validations.js";
 const productRoutes = express.Router();
 
@@ -22,18 +22,19 @@ productRoutes
   .post(
     "/create-product",
     validate(createProductBasicSchema),
-    createProductController
+    createProductController,
   )
   .get("/drafts", getDraftProducts)
+  .get("/", getSellerProducts)
   .patch(
     "/:productId/thumbnail",
     upload.single("thumbnail"),
-    productThumbnailController
+    productThumbnailController,
   )
   .patch(
     "/:productId/gallery",
     upload.array("gallery", 10),
-    productGalleryController
+    productGalleryController,
   )
   .patch(
     "/:productId/attributes",
@@ -42,10 +43,13 @@ productRoutes
       next();
     },
     validate(createProductAttributesSchema),
-    productAttributesController
+    productAttributesController,
   )
-  .delete("/:productId/gallery", deleteGalleryImagesController).patch("/:productId/status",validate(updateProductStatusSchema),updateProductStatus);
-  
-
+  .delete("/:productId/gallery", deleteGalleryImagesController)
+  .patch(
+    "/:productId/status",
+    validate(updateProductStatusSchema),
+    updateProductStatus,
+  );
 
 export default productRoutes;

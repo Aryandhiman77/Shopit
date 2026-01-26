@@ -27,10 +27,10 @@ export const loginUserService = async ({
   if (user.isSuspended()) {
     throw new ApiError(
       403,
-      `Account Suspended until ${user.suspensionExpires.toLocaleString()}`
+      `Account Suspended until ${user.suspensionExpires.toLocaleString()}`,
     );
   }
-  if (user.role !== role) throw new ApiError(403, "Access denied.");
+  if (user.role !== role) throw new ApiError(403, "Access denied.", []);
 
   // 3. Too many attempts
   if (user.loginAttempts >= 10) {
@@ -39,8 +39,8 @@ export const loginUserService = async ({
     throw new ApiError(
       403,
       `Max login attempts exceeded. Account Suspended until ${formatDate(
-        user.suspensionExpires
-      )} ${formatTime(user.suspensionExpires)}`
+        user.suspensionExpires,
+      )} ${formatTime(user.suspensionExpires)}`,
     );
   }
 
@@ -163,7 +163,9 @@ export const logoutUserService = async ({ refreshToken }) => {
   const user = await User.findOne({ refreshToken });
   if (!user) throw new ApiError(403, "Already logged out.");
   user.refreshToken = user.refreshToken.filter((t) => t !== refreshToken);
-  user.loggedInUserCount--;
+  if (user.loggedInUserCount > 0) {
+    user.loggedInUserCount--;
+  }
   await user.save();
 };
 

@@ -40,6 +40,7 @@ export const registerAsAdmin = AsyncWrapper(async (req, res) => {
 });
 
 export const loginController = AsyncWrapper(async (req, res) => {
+  console.log("request login");
   const { email, user, authToken, refreshToken } = await loginUserService(
     req.data,
   );
@@ -49,7 +50,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
       .json(
         new ApiResponse(
           200,
-          { otpRequired: true,isAuthenticated:false },
+          { otpRequired: true, isAuthenticated: false },
           `6-digit verification code sent to ${email}.`,
         ),
       );
@@ -70,7 +71,7 @@ export const loginController = AsyncWrapper(async (req, res) => {
     email: user.email,
     phoneNumber: user.phoneNumber,
     loggedInUserCount: user.loggedInUserCount,
-    isAuthenticated:true,
+    isAuthenticated: true,
   };
 
   return res
@@ -120,7 +121,7 @@ export const verifyOTP = AsyncWrapper(async (req, res) => {
     email: user.email,
     phoneNumber: user.phoneNumber,
     loggedInUserCount: user.loggedInUserCount,
-    isAuthenticated:true,
+    isAuthenticated: true,
   };
   return res
     .status(200)
@@ -209,5 +210,11 @@ export const renewUserTokens = AsyncWrapper(async (req, res) => {
   });
   return res
     .status(200)
-    .json(new ApiResponse(200, true, "Authorization refreshed."));
+    .json(
+      new ApiResponse(
+        200,
+        { isAuthenticated: true },
+        "Authorization refreshed.",
+      ),
+    );
 });

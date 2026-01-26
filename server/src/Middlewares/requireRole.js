@@ -1,5 +1,4 @@
 import ApiError from "../Helpers/ApiError.js";
-import User from "../Models/user.js";
 export default function requireRole(role) {
   return async (req, res, next) => {
     if (req.user.role !== role) {
