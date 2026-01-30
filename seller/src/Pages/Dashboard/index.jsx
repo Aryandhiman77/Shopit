@@ -4,6 +4,7 @@ import useAuth from "../../hooks/useAuth";
 import { useEffect } from "react";
 import Box from "../../components/Reusables/Elements/Box";
 import ProductList from "./ProductList";
+import DropDownField from "../../components/Reusables/DropDownField";
 import {
   PiChartPieSliceDuotone,
   PiExportDuotone,
@@ -18,9 +19,17 @@ import { BsGraphDownArrow, BsGraphUpArrow, BsPlus } from "react-icons/bs";
 import Card from "./Card";
 import Search from "../../components/Reusables/Elements/Search";
 import { Divider } from "@mui/material";
+import Linechart from "../../components/Reusables/Recharts/Linechart";
+import useChartData from "../../hooks/useChartData";
+import { CalendarClock, Menu } from "lucide-react";
+import CustomMenu from "../../components/Reusables/CustomMenu";
+import MButton from "../../components/Reusables/Elements/MButton";
+import TopProductList from "../Dashboard/TopProductList";
+import "./style.css";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { lineChartData } = useChartData();
   return (
     // <Layout>
     <div className="w-full space-y-4">
@@ -51,6 +60,58 @@ const Dashboard = () => {
           startIcon={<PiUsersThreeDuotone className="text-5xl text-blue-500" />}
           endIcon={<IoStatsChart className="text-6xl text-blue-700" />}
         />
+      </div>
+      <div className="flex gap-5 max-h-127.5">
+        <Box className={"bg-white dark:bg-gray-900"}>
+          <div className="flex justify-between items-center">
+            <p className="heading-1 dark:text-white! pb-3">Sales Report</p>
+            <div className="flex items-center gap-2">
+              <div className="flex flex-row gap-2">
+                <div className="rounded-full p-2 bg-primary"></div>
+                <div className="text-[12px] font-normal">Sales</div>
+              </div>
+              <CustomMenu
+                title={<Menu size={18} />}
+                btnClasses={"border-none!"}
+                tooltip={"Select Duration"}
+              >
+                <div className="dark:bg-gray-900">
+                  <MButton
+                    title="Past 7 days"
+                    className={"dark:bg-gray-900! hover:dark:bg-black!"}
+                  />
+                  <MButton
+                    title="Past 1 month"
+                    className={"dark:bg-gray-900! hover:dark:bg-black!"}
+                  />
+                  <MButton
+                    title="Past 6 montns"
+                    className={"dark:bg-gray-900! hover:dark:bg-black!"}
+                  />
+                  <MButton
+                    title="custom"
+                    className={"dark:bg-gray-900! hover:dark:bg-black!"}
+                    startIcon={<CalendarClock size={16} />}
+                  />
+                </div>
+              </CustomMenu>
+            </div>
+          </div>
+          <Linechart data={lineChartData} />
+        </Box>
+        <Box
+          className={
+            "w-full bg-white dark:bg-gray-900 overflow-y-auto custom-scrollbar"
+          }
+        >
+          <div className="flex justify-between items-center pb-3">
+            <p className="heading-1 dark:text-white!">Top-Selling Product</p>
+            <button className="custom-border custom-btn text-[12px]">
+              See All Products
+            </button>
+          </div>
+          <TopProductList />
+        </Box>
       </div>
       <Box className={"bg-white dark:bg-gray-700 dark:border-black!"}>
         <div className="flex justify-between items-center">

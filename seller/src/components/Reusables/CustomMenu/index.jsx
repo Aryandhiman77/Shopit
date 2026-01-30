@@ -17,7 +17,7 @@ const CustomMenu = ({ tooltip, title, btnClasses, children }) => {
     setAnchorEl(null);
   };
   return (
-    <React.Fragment>
+    <>
       <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
         <Tooltip title={tooltip}>
           <button
@@ -70,7 +70,7 @@ const CustomMenu = ({ tooltip, title, btnClasses, children }) => {
       >
         {children}
       </Menu>
-    </React.Fragment>
+    </>
   );
 };
 export default CustomMenu;

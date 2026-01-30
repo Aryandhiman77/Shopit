@@ -10,35 +10,45 @@ import Notify from "./components/Reusables/Notify";
 import OTPVerification from "./Pages/OTPVerification";
 import Layout from "./Pages/Dashboard/Layout/index";
 import Products from "./Pages/Products";
+import ChartDataProvider from "./Context/Charts/ChartsDataProvider";
 const App = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
         <DataProvider>
-          <Notify />
-          <Routes>
-            {/* default route */}
-            <Route path="/" element={<Navigate to="/seller/login" replace />} />
-
-            {/* public routes */}
-            <Route element={<PublicRoutes />}>
-              <Route path={"/seller/register"} element={<Register />} />
-              <Route path={"/seller/login"} element={<Login />} />
+          <ChartDataProvider>
+            <Notify />
+            <Routes>
+              {/* default route */}
               <Route
-                path={"/seller/otp-verification"}
-                element={<OTPVerification />}
+                path="/"
+                element={<Navigate to="/seller/login" replace />}
               />
-            </Route>
 
-            {/* protected routes */}
-            <Route element={<ProtectedRoutes />}>
-              <Route element={<Layout />}>
-                <Route exact={true} path="/dashboard" element={<Dashboard />} />
-                <Route exact={true} path="/products" element={<Products />} />
-                <Route path="*" element={<Navigate to="/page-not-found" />} />
+              {/* public routes */}
+              <Route element={<PublicRoutes />}>
+                <Route path={"/seller/register"} element={<Register />} />
+                <Route path={"/seller/login"} element={<Login />} />
+                <Route
+                  path={"/seller/otp-verification"}
+                  element={<OTPVerification />}
+                />
               </Route>
-            </Route>
-          </Routes>
+
+              {/* protected routes */}
+              <Route element={<ProtectedRoutes />}>
+                <Route element={<Layout />}>
+                  <Route
+                    exact={true}
+                    path="/dashboard"
+                    element={<Dashboard />}
+                  />
+                  <Route exact={true} path="/products" element={<Products />} />
+                  <Route path="*" element={<Navigate to="/page-not-found" />} />
+                </Route>
+              </Route>
+            </Routes>
+          </ChartDataProvider>
         </DataProvider>
       </AuthProvider>
     </BrowserRouter>

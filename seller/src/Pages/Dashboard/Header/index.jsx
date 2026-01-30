@@ -8,7 +8,7 @@ import {
 } from "react-icons/md";
 import { PiCommandBold } from "react-icons/pi";
 import avatar from "../../../assets/defaultProfile.png";
-import CustomMenu from "../CustomMenu";
+import CustomMenu from "../../../components/Reusables/CustomMenu";
 import MButton from "../../../components/Reusables/Elements/MButton";
 import Search from "../../../components/Reusables/Elements/Search";
 import useAuth from "../../../hooks/useAuth";
