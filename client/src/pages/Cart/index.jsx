@@ -2,7 +2,7 @@ import Divider from "@mui/material/Divider";
 import React, { useContext } from "react";
 import CartItem from "../../components/Reusables/Items/CartPanelItem";
 import { IoCloseOutline } from "react-icons/io5";
-import DataContext from "../../context/DataContext";
+import DataContext from "../../context/data/DataContext";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { BsCartCheck, BsCartCheckFill } from "react-icons/bs";
@@ -44,7 +44,9 @@ const CartPage = () => {
           </div>
           <div className="flex justify-between p-2">
             <span className="font-[600]">Estimate price</span>
-            <span className="text-primary font-[600] line-through">₹ 22,999 </span>
+            <span className="text-primary font-[600] line-through">
+              ₹ 22,999{" "}
+            </span>
           </div>
           <div className="flex justify-between p-4">
             <span className="font-[600]">Discount </span>
@@ -57,13 +59,13 @@ const CartPage = () => {
           </div>
           <Divider />
           <div className="btns flex flex-row justify-between p-4 gap-2">
-          <Link to={"/myCart"} >
-            <Button className="!text-white !bg-primary !py-3 w-100 hover:!bg-black flex items-center">
-                <BsCartCheckFill className="text-2xl mx-2 font-bold"/>
+            <Link to={"/myCart"}>
+              <Button className="!text-white !bg-primary !py-3 w-100 hover:!bg-black flex items-center">
+                <BsCartCheckFill className="text-2xl mx-2 font-bold" />
                 Checkout
-            </Button>
-          </Link>
-        </div>
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </div>

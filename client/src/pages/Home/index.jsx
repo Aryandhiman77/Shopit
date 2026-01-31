@@ -10,7 +10,7 @@ import BannerItem from "../../components/Reusables/Items/BannerItem";
 import RichBannerItem from "../../components/Reusables/Items/RichBanerItem";
 import StaticBannerItem from "../../components/Reusables/Items/StaticBannerItem";
 import StaticBannerSection from "./StaticBannerSection";
-import DataContext from "../../context/DataContext";
+import DataContext from "../../context/data/DataContext";
 
 const Home = () => {
   const {
@@ -19,60 +19,60 @@ const Home = () => {
     adsMiniBannersData,
     miniSliderBannerData,
     productsData,
-    level1Categories
+    level1Categories,
   } = useContext(DataContext);
-  console.log(level1Categories)
+  console.log(level1Categories);
 
   const popularCategories = [
     {
       name: "Fashion",
       image:
         "https://static.vecteezy.com/system/resources/previews/003/621/306/non_2x/beautiful-fashion-woman-in-sunglasses-stylish-girl-from-multicolored-paints-splash-of-watercolor-colored-drawing-realistic-illustration-of-paints-vector.jpg",
-        slug:"fashion"
+      slug: "fashion",
     },
     {
       name: "Electronics",
       image: "https://www.matric.com/hubfs/classes%20of%20electronics.jpg",
-      slug:"electronics",
+      slug: "electronics",
     },
     {
       name: "home-furniture", // lowercase, & is replaced with -
       image:
         "https://png.pngtree.com/png-clipart/20240811/original/pngtree-a-lamp-on-table-with-chair-png-image_15751370.png",
-        slug:"Home-&-Furniture",
+      slug: "Home-&-Furniture",
     },
     {
       name: "Sports",
       image:
         "https://img.freepik.com/free-vector/soccer-volleyball-baseball-rugby-equipment_1441-4026.jpg",
-        slug:"sports" 
+      slug: "sports",
     },
     {
       name: "Grocery",
       image:
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwUNj-DZTMUW0XoNJZBFp3fQNr8hcO3sB-Qg&s",
-        slug:"grocery",
+      slug: "grocery",
     },
     {
       name: "Jwellery",
       image:
         "https://gravity-apps.com/cmspro/wp-content/uploads4953//2023/09/handcrafted-jewellery.jpg",
-        slug:"jwellery"
+      slug: "jwellery",
     },
     {
       name: "menwear",
       image: fashion,
-      slug:"menwear"
+      slug: "menwear",
     },
     {
       name: "smartphone",
       image: iphone,
-      slug:"smartphone"
+      slug: "smartphone",
     },
     {
       name: "smartphone",
       image: iphone,
-      slug:"smartphone"
+      slug: "smartphone",
     },
   ];
   const staticBannerSectionData = [
@@ -171,11 +171,7 @@ const Home = () => {
               spaceBetween={10}
               items={productsData}
               breakpoints={true}
-              renderItem={(item) => (
-                <ProductItem
-                  item={item}
-                />
-              )}
+              renderItem={(item) => <ProductItem item={item} />}
             />
           </div>
         </div>
@@ -194,14 +190,14 @@ const Home = () => {
 
           <div className="w-full lg:w-[25%] flex flex-col gap-4 sm:flex-row lg:flex-col">
             <StaticBannerItem
-            key={"banneritem-1"}
+              key={"banneritem-1"}
               bg="white"
               item={staticBannerSectionData[0]}
               horizontalTextAlign="left"
               visible={true}
             />
             <StaticBannerItem
-             key={"banneritem-2"}
+              key={"banneritem-2"}
               bg="white"
               item={staticBannerSectionData[0]}
               horizontalTextAlign="left"
@@ -239,11 +235,7 @@ const Home = () => {
               spaceBetween={10}
               items={productsData}
               breakpoints={true}
-              renderItem={(item) => (
-               <ProductItem
-                  item={item}
-                />
-              )}
+              renderItem={(item) => <ProductItem item={item} />}
             />
           </div>
         </div>
@@ -258,7 +250,7 @@ const Home = () => {
               </p>
             </div>
             {/* level 1 categories only*/}
-            <ScrollTab items={level1Categories} /> 
+            <ScrollTab items={level1Categories} />
           </div>
           <div className="product-list mt-2">
             <ItemSlider
@@ -267,11 +259,7 @@ const Home = () => {
               spaceBetween={10}
               items={productsData}
               breakpoints={true}
-              renderItem={(item) => (
-                <ProductItem
-                  item={item}
-                />
-              )}
+              renderItem={(item) => <ProductItem item={item} />}
             />
           </div>
         </div>

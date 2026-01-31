@@ -5,17 +5,17 @@ import { useContext, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Collapse } from "react-collapse";
 import AddressItem from "../../../../components/Reusables/Items/AddressItem";
-import DataContext from "../../../../context/DataContext";
+import DataContext from "../../../../context/data/DataContext";
 import { Link } from "react-router-dom";
 
 const Address = () => {
   const [isFormVisible, setFormVisible] = useState(false);
   const { addresses } = useContext(DataContext);
-  const [selectedIndex,setSelectedIndex] = useState(0);
-  const handleAddressSelection = (i)=>{
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const handleAddressSelection = (i) => {
     setSelectedIndex(i);
-    console.log(i)
-  }
+    console.log(i);
+  };
   return (
     <div>
       <div className="header p-5">
@@ -174,8 +174,16 @@ const Address = () => {
               Add shipping address
             </div>
             {addresses?.map((item, i) => (
-              <div key={i} onClick={()=>handleAddressSelection(i)} className={`!w-full cursor-pointer ${selectedIndex===i?"bg-[#fffaed]":""}`}>
-                <AddressItem address={item} key={i} selected={selectedIndex===i} />
+              <div
+                key={i}
+                onClick={() => handleAddressSelection(i)}
+                className={`!w-full cursor-pointer ${selectedIndex === i ? "bg-[#fffaed]" : ""}`}
+              >
+                <AddressItem
+                  address={item}
+                  key={i}
+                  selected={selectedIndex === i}
+                />
               </div>
             ))}
           </div>

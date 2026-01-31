@@ -8,7 +8,9 @@ import { useEffect, useState } from "react";
 
 const StyledBreadcrumb = styled(Chip)(({ theme }) => ({
   backgroundColor: theme.palette.grey[100],
-  height: theme.spacing(3),padding:2,margin:2,
+  height: theme.spacing(3),
+  padding: 2,
+  margin: 2,
   color: (theme.vars || theme).palette.text.primary,
   fontWeight: theme.typography.fontWeightRegular,
   "&:hover, &:focus": {
@@ -29,36 +31,50 @@ const StyledBreadcrumb = styled(Chip)(({ theme }) => ({
   }),
 }));
 
-const BreadCrumb = () => {
+const BreadCrumb = ({ staticValues = null }) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const pathnames = pathname.split("/").filter((x) => x);
-  const pathIndex = pathnames.length - 1; //
-  const navigateToPreviousLink = (index)=>{
-    if(index!==0){
-        return navigate(`/${pathname[index -1]}`);
+  const pathIndex = pathnames.length - 1;
+  const staticValuesLength = staticValues?.split("/").length;
+  const navigateToPreviousLink = (index) => {
+    if (index !== 0) {
+      console.log(pathname[index - 1]);
+      return navigate(`${pathname[index - 1]}`);
     }
-    navigate('/');
-  }
+    navigate("/");
+  };
 
   return (
     <div className="p-2 bg-[#e5e5e5] w-full">
-    <nav aria-label="breadcrumb">
-        <StyledBreadcrumb  label={"Home"}>Home</StyledBreadcrumb>
+      <nav aria-label="breadcrumb">
+        <StyledBreadcrumb
+          className="capitalize"
+          label={`Home${staticValues ? ` / ${staticValues} / ` : ""}`}
+        >
+          Home
+        </StyledBreadcrumb>
         {pathnames?.map((value, index) => {
+          if (value.includes(staticValues)) {
+            return null;
+          }
           const to = `/${pathnames.slice(0, index + 1).join("/")}`;
           return (
-              <StyledBreadcrumb
+            <StyledBreadcrumb
               key={to}
-                onDelete={pathIndex === index ? () => navigateToPreviousLink(index) : undefined}
-                label={value}
-                style={{textTransform:"capitalize"}}
-              >
-                <Link key={to} to={to}/>
-              </StyledBreadcrumb>
+              onDelete={
+                pathIndex === index
+                  ? () => navigateToPreviousLink(index)
+                  : undefined
+              }
+              label={value}
+              style={{ textTransform: "capitalize" }}
+            >
+              <Link key={to} to={to} />
+            </StyledBreadcrumb>
           );
         })}
-    </nav>
+      </nav>
     </div>
   );
 };

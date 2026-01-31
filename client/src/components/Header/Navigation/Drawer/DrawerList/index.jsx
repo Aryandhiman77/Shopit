@@ -4,10 +4,10 @@ import { FaRegSquarePlus, FaRegSquareMinus } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import DrawerItems from "../DrawerItems";
 import { useContext } from "react";
-import DataContext from "../../../../../context/DataContext";
+import DataContext from "../../../../../context/data/DataContext";
 import Box from "@mui/material/Box";
 
-const DrawerList = ({setDrawerOpen}) => {
+const DrawerList = ({ setDrawerOpen }) => {
   const { categories } = useContext(DataContext);
   return (
     <Box sx={{ width: 250 }} role="presentation">

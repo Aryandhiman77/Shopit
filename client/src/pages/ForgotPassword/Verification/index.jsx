@@ -12,10 +12,17 @@ const ForgotPassword = () => {
   const [otpSectionHidden, setOtpSectionHidden] = useState(true);
 
   const navigate = useNavigate();
-  
-  const handleOtpVerification = ()=>{
+
+  const handleOtpVerification = () => {
     setOtpSectionHidden(false);
-  }
+  };
+
+  const resetPassword = () => {
+    navigate("/reset-password", {
+      state: { fromVerification: true },
+      replace: true,
+    });
+  };
 
   return (
     <div>
@@ -23,7 +30,7 @@ const ForgotPassword = () => {
         <div className="container">
           <div className="card bg-white shadow-md rounded-md p-4 w-[500px] m-auto">
             <h2 className="font-[500] text-black text-[20px] flex items-center flex-col text-center">
-              <SiAdguard className="text-[60px] text-blue-400 m-4"/>
+              <SiAdguard className="text-[60px] text-blue-400 m-4" />
               Verify your Identity
             </h2>
             <div className="m-4 flex flex-col gap-4">
@@ -47,13 +54,15 @@ const ForgotPassword = () => {
                   GET OTP
                 </button>
               </div>
-              <div className={otpSectionHidden?"hidden":"flex flex-col gap-4"}>
+              <div
+                className={otpSectionHidden ? "hidden" : "flex flex-col gap-4"}
+              >
                 <div className="w-full">
                   <p className="font-[500] py-2">Enter OTP</p>
                   <OTPInput maxLength={6} onChangeOTP={setOTP} />
                 </div>
                 <Button
-                  onClick={() => navigate("/reset")}
+                  onClick={resetPassword}
                   type="submit"
                   className="btn !text-white !bg-primary hover:!bg-black !p-3"
                 >

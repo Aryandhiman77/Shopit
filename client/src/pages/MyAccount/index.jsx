@@ -8,15 +8,30 @@ import CollapsablePanel from "../../components/Reusables/CollapsablePanel";
 import Wishlist from "./Tabs/Wishlist";
 import MyOrders from "./Tabs/MyOrders";
 import Address from "./Tabs/Address";
+import useAuth from "../../hooks/useAuth";
 const MyAccount = () => {
-  const sideBartabs = ["My Profile", "Address", "Wishlist", "My Orders", "Logout"];
+  const { user, handleLogout } = useAuth();
+
+  const sideBartabs = [
+    "My Profile",
+    "Address",
+    "Wishlist",
+    "My Orders",
+    "Logout",
+  ];
   const [tabActive, setTabActive] = useState(0);
   const tabs = [
-  <Profile key="profile" />,
-  <Address key="address" />,
-  <Wishlist key="wishlist" />,
-  <MyOrders key="orders" />
-];
+    <Profile key="profile" />,
+    <Address key="address" />,
+    <Wishlist key="wishlist" />,
+    <MyOrders key="orders" />,
+  ];
+
+  useEffect(() => {
+    if (tabActive === 4) {
+      handleLogout();
+    }
+  }, [tabActive]);
 
   return (
     <div className="flex flex-row gap-5 max-w-screen-xl mx-auto mt-10  ">
@@ -32,8 +47,8 @@ const MyAccount = () => {
             to={"/myaccount"}
           >
             <div>
-              <p className="font-[500] text-[12px]">Aryan Dhiman</p>
-              <p className="font-[400] text-[11px]">aryandhiman015@gmail.com</p>
+              <p className="font-[500] text-[12px] capitalize">{user?.name}</p>
+              <p className="font-[400] text-[11px]">{user?.email}</p>
             </div>
           </Link>
         </div>
@@ -46,7 +61,7 @@ const MyAccount = () => {
         />
       </div>
       <div className="information w-[50%] bg-white h-fit rounded-sm shadow-lg">
-        <CollapsablePanel isOpened={tabActive>-1}>
+        <CollapsablePanel isOpened={tabActive > -1}>
           {tabs[tabActive]}
         </CollapsablePanel>
       </div>

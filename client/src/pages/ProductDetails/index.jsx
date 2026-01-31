@@ -10,7 +10,7 @@ import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
 import { MdShoppingCart } from "react-icons/md";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
-import DataContext from "../../context/DataContext";
+import DataContext from "../../context/data/DataContext";
 import QuantityBox from "../../components/Reusables/QuantityBox";
 import AdditionalProductInformation from "./AdditionalProductInfo";
 import SizeVariantList from "../../components/Reusables/SizeVariantList";
@@ -34,11 +34,11 @@ const ProductDetails = () => {
   const handleImageZoomPropChange = (i) => {
     setActiveThumbnail(imagesData[i]);
   };
-   
+
   return (
     <div>
       <div className="flex justify-between w-full bg-[#e5e5e5]">
-        <BreadCrumb />
+        <BreadCrumb staticValues={"product"}/>
         <label
           htmlFor="compare"
           className="flex items-center gap-3 pr-5 text-sm"

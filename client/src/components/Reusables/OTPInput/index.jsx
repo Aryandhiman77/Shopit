@@ -26,7 +26,7 @@ const OTPInput = ({ maxLength = 4, onChangeOTP = () => {} }) => {
   };
 
   return (
-    <div className="flex justify-between gap-5">
+    <div className="flex justify-between gap-2">
       {otp.map((digit, i) => (
         <input
           key={i}

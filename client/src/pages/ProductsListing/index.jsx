@@ -1,4 +1,4 @@
-import { useContext,useState } from "react";
+import { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import BreadCrumb from "../../components/Reusables/BreadCrumb";
 import { IoGridSharp } from "react-icons/io5";
@@ -7,11 +7,10 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
-import DataContext from "../../context/DataContext";
+import DataContext from "../../context/data/DataContext";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Pagination from "@mui/material/Pagination";
-import "./style.css"
-
+import "./style.css";
 
 const ProductsListing = () => {
   const { category } = useParams();
@@ -27,7 +26,7 @@ const ProductsListing = () => {
   };
   return (
     <div className="max-w-full">
-      <BreadCrumb />
+      <BreadCrumb staticValues={"category"} />
       <div className="wrapper flex flex-row gap-5 w-[100%] mt-5  p-5">
         <div className="w-1/5">
           <Sidebar />

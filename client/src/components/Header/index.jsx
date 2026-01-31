@@ -12,11 +12,11 @@ import DrawerNavigation from "./Navigation/Drawer";
 import CartPanel from "./Navigation/CartPanel";
 import { useContext, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
-import AuthContext from "../../context/AuthContext";
+import AuthContext from "../../context/auth/AuthContext";
 
 const Header = () => {
   const [cartPanelOpen, setCartPanelOpen] = useState(false);
-  const { login } = useContext(AuthContext);
+  const { isAuthenticated, user } = useContext(AuthContext);
   return (
     <>
       <div className=" border-b-[1px] border-gray-200 bg-white">
@@ -50,18 +50,17 @@ const Header = () => {
           </div>
           <div className="col3-items w-[35%] px-10">
             <div className="flex items-center gap-x-5 w-100 justify-center">
-              {login ? (
+              {isAuthenticated ? (
                 <Link
                   className="flex gap-3 items-center hover:bg-[#f0efefdd] active:bg-[#e5e5e5] p-2 rounded-xl"
                   to={"/myaccount"}
                 >
                   <FaUserCircle className="text-3xl" />
                   <div>
-                    <p className="font-[500] text-[12px]">Aryan Dhiman</p>
-                    <p className="font-[400] text-[11px]">
-                      {" "}
-                      aryandhiman015@gmail.com
+                    <p className="font-[500] text-[12px] capitalize">
+                      {user.name}
                     </p>
+                    <p className="font-[400] text-[11px]"> {user?.email}</p>
                   </div>
                 </Link>
               ) : (

@@ -10,7 +10,7 @@ import {
 } from "react-icons/io5";
 import GetRating from "./rating";
 import Button from "@mui/material/Button";
-import {memo, useState } from "react";
+import { memo, useState } from "react";
 import Price from "./Price";
 import ProductModal from "../../Modal";
 import Gallery from "../../../../pages/ProductDetails/Gallery";
@@ -106,78 +106,76 @@ const ProductItem = ({ item, horizontal = false }) => {
           />
         </div>
         <img src={activeThum} className="w-100 h-100" alt="" />
-          <div className="flex flex-col gap-2 m-2 z-20">
-            <div className="brand font-[600] text-3xl text-gray-700">
-              iPhone 15 pro max
+        <div className="flex flex-col gap-2 m-2 z-20">
+          <div className="brand font-[600] text-3xl text-gray-700">
+            iPhone 15 pro max
+          </div>
+          <div className="flex gap-1 items-center">
+            <div className="brand  text-lg ">
+              <span className="text-gray-500 font-[400]">Brand: </span>
+              <span className="font-[500]">Apple.inc </span>
             </div>
-            <div className="flex gap-1 items-center">
-              <div className="brand  text-lg ">
-                <span className="text-gray-500 font-[400]">Brand: </span>
-                <span className="font-[500]">Apple.inc </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <Price mrp={5000} sellingPrice={3000} textSize={"text-[20px]"} />
+            <div className="flex flex-col justify-center items-center pr-10">
+              <Rating
+                value={4.6}
+                precision={0.1}
+                readOnly
+                className="!text-blue-800"
+              />
+              <span className="text-gray-500 font-[400]">
+                {Number(189900).toLocaleString()} reviews
+              </span>
+            </div>
+          </div>
+          <Divider />
+          <div className="mini-description text-gray-500 font-[400] my-4 line-clamp-3">
+            Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus
+            perspiciatis distinctio exercitationem nisi. Autem natus error
+            exercitationem architecto vitae sunt cumque qui at reprehenderit.
+            Tenetur debitis aut perferendis provident esse dolorum saepe hic
+            iusto,
+          </div>
+          <Divider />
+          <div className="keyValueDetails flex flex-col gap-3">
+            <p className="stock">
+              <span className=" font-[500] text-md">Available in Stock: </span>
+              <span className="text-green-600 font-[600]">147 Items </span>
+            </p>
+            <div className="size flex flex-col gap-2">
+              <div>
+                <span className=" font-[500] text-md">Size: </span>
+                <span className="text-gray-700 font-[600]"> Small </span>
+              </div>
+              <SizeVariantList
+                // getActive={getActiveIndex}
+                items={["Small", "Medium", "Large", "XL", "XXL"]}
+              />
+            </div>
+            <div className="color-variants flex   gap-2 flex-col">
+              <span className=" font-[500] text-md">Color: </span>
+              <div className="flex gap-2">
+                <div className="box h-10 w-10 bg-amber-500 rounded-full "></div>
+                <div className="box h-10 w-10 bg-red-500 rounded-full"></div>
+                <div className="box h-10 w-10 bg-pink-500 rounded-full"></div>
               </div>
             </div>
-            <div className="flex justify-between items-center">
-              <Price mrp={5000} sellingPrice={3000} textSize={"text-[20px]"} />
-              <div className="flex flex-col justify-center items-center pr-10">
-                <Rating
-                  value={4.6}
-                  precision={0.1}
-                  readOnly
-                  className="!text-blue-800"
-                />
-                <span className="text-gray-500 font-[400]">
-                  {Number(189900).toLocaleString()} reviews
-                </span>
-              </div>
+            <p className="shipping-info">
+              <span className=" font-[500] text-sm text-gray-600">
+                Free Shipping (Est. Delivery time 2-3 Days)
+              </span>
+            </p>
+            <div className="addtoCart flex gap-4">
+              <QuantityBox />
+              <Button className="!bg-primary !text-white w-1/4 flex items-center gap-2">
+                <MdShoppingCart className="text-xl" />
+                <p> Add To Cart</p>
+              </Button>
             </div>
-            <Divider />
-            <div className="mini-description text-gray-500 font-[400] my-4 line-clamp-3">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Minus
-              perspiciatis distinctio exercitationem nisi. Autem natus error
-              exercitationem architecto vitae sunt cumque qui at reprehenderit.
-              Tenetur debitis aut perferendis provident esse dolorum saepe hic
-              iusto,
-            </div>
-            <Divider />
-            <div className="keyValueDetails flex flex-col gap-3">
-              <p className="stock">
-                <span className=" font-[500] text-md">
-                  Available in Stock:{" "}
-                </span>
-                <span className="text-green-600 font-[600]">147 Items </span>
-              </p>
-              <div className="size flex flex-col gap-2">
-                <div>
-                  <span className=" font-[500] text-md">Size: </span>
-                  <span className="text-gray-700 font-[600]"> Small </span>
-                </div>
-                <SizeVariantList
-                  // getActive={getActiveIndex}
-                  items={["Small", "Medium", "Large", "XL", "XXL"]}
-                />
-              </div>
-              <div className="color-variants flex   gap-2 flex-col">
-                <span className=" font-[500] text-md">Color: </span>
-                <div className="flex gap-2">
-                  <div className="box h-10 w-10 bg-amber-500 rounded-full "></div>
-                  <div className="box h-10 w-10 bg-red-500 rounded-full"></div>
-                  <div className="box h-10 w-10 bg-pink-500 rounded-full"></div>
-                </div>
-              </div>
-              <p className="shipping-info">
-                <span className=" font-[500] text-sm text-gray-600">
-                  Free Shipping (Est. Delivery time 2-3 Days)
-                </span>
-              </p>
-              <div className="addtoCart flex gap-4">
-                <QuantityBox />
-                <Button className="!bg-primary !text-white w-1/4 flex items-center gap-2">
-                  <MdShoppingCart className="text-xl" />
-                  <p> Add To Cart</p>
-                </Button>
-              </div>
-            </div>
-          </div> 
+          </div>
+        </div>
       </ProductModal>
     </div>
   );
@@ -185,4 +183,3 @@ const ProductItem = ({ item, horizontal = false }) => {
 
 export default memo(ProductItem);
 // memo to save from rerendering when related items navigate to product item page then related items don't rerender
-
