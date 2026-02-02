@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import BreadCrumb from "../../components/Reusables/BreadCrumb";
 import { IoGridSharp } from "react-icons/io5";
@@ -7,16 +7,22 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
-import DataContext from "../../context/data/DataContext";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Pagination from "@mui/material/Pagination";
+import useData from "../../hooks/useData";
+import noProductsImage from "../../assets/noProductFound.png";
 import "./style.css";
+import ProductSkeleton from "../../components/Reusables/Items/ProductItem/ProductSkeleton";
+import ProductSkeletonPage from "./ProductSkeletonPage";
 
 const ProductsListing = () => {
   const { category } = useParams();
-  const { productsData } = useContext(DataContext);
+  const { products, getCategoryProducts, loading } = useData();
+
   const [viewStyle, setViewStyle] = useState("grid");
   const [anchorEl, setAnchorEl] = useState(null);
+  const [productsLimit, setProductsLimit] = useState(10);
+  // const [animate,setAnimate] = useState(false)
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +30,13 @@ const ProductsListing = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    if (!category) {
+      return;
+    }
+    getCategoryProducts(category, { limit: productsLimit });
+  }, [category]);
   return (
     <div className="max-w-full">
       <BreadCrumb staticValues={"category"} />
@@ -51,7 +64,7 @@ const ProductsListing = () => {
                 >
                   <IoGridSharp className="text-xl" />
                 </Button>
-                <p>There are 27 products.</p>
+                <p>There are {products.length} products.</p>
               </div>
               <div className="flex items-center gap-2 ">
                 <p>Sort by</p>
@@ -96,23 +109,53 @@ const ProductsListing = () => {
               </div>
             </div>
           </div>
-          <div className="products w-full ">
-            <div
-              className={`product-list mt-2 ${
-                viewStyle === "grid"
-                  ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
-                  : ""
-              }`}
-            >
-              {productsData?.map((item, i) => (
-                <div key={i} className="z-20 relative p-2">
-                  <ProductItem item={item} horizontal={viewStyle === "list"} />
+          <div className="products w-full">
+            {loading.products ? (
+              <ProductSkeletonPage
+                viewStyle={viewStyle}
+                horizontal={viewStyle === "list"}
+                count={viewStyle === "grid" ? 20 : 30}
+              />
+            ) : !loading?.products && products.length === 0 ? (
+              <div className="flex justify-center items-center">
+                <div className="p-35">
+                  <img
+                    src={noProductsImage}
+                    className="h-50"
+                    alt="No products available in this category"
+                  />
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              !loading?.products &&
+              products?.length > 0 && (
+                <div
+                  className={`product-list mt-2 ${
+                    viewStyle === "grid"
+                      ? "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4"
+                      : ""
+                  }`}
+                >
+                  {products.map((item) => (
+                    <div key={item.slug} className="z-20 relative p-2 fade-in">
+                      <ProductItem
+                        item={item}
+                        horizontal={viewStyle === "list"}
+                      />
+                    </div>
+                  ))}
+                </div>
+              )
+            )}
           </div>
           <div className="pagination flex justify-center mt-5">
-            <Pagination count={10} variant="outlined" shape="rounded" />
+            {productsLimit > 0 && products?.length > 0 && (
+              <Pagination
+                count={productsLimit / products?.length}
+                variant="outlined"
+                shape="rounded"
+              />
+            )}
           </div>
         </div>
       </div>

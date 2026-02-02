@@ -1,5 +1,5 @@
 import Header from "./components/Header";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigation } from "react-router-dom";
 import Home from "./pages/Home";
 import DataProvider from "./context/data/DataProvider";
 import AuthProvider from "./context/auth/AuthProvider";
@@ -23,6 +23,7 @@ import VerificationGuard from "./pages/ForgotPassword/Verification/VerificationG
 import ResetPasswordGuard from "./pages/ForgotPassword/ResetPass/resetGuard";
 import ProtectedRoutes from "./components/protectedRoutes";
 import PublicRoutes from "./components/publicComponents";
+import Loading from "./context/loading";
 
 const App = () => {
   return (

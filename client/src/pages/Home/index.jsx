@@ -14,15 +14,12 @@ import DataContext from "../../context/data/DataContext";
 
 const Home = () => {
   const {
-    categories,
     adsBannerData,
     adsMiniBannersData,
     miniSliderBannerData,
     productsData,
-    level1Categories,
   } = useContext(DataContext);
-  console.log(level1Categories);
-
+  const level1Categories = [];
   const popularCategories = [
     {
       name: "Fashion",

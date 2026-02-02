@@ -7,8 +7,7 @@ import { useContext } from "react";
 import DataContext from "../../../../../context/data/DataContext";
 import Box from "@mui/material/Box";
 
-const DrawerList = ({ setDrawerOpen }) => {
-  const { categories } = useContext(DataContext);
+const DrawerList = ({ setDrawerOpen, categories=[] }) => {
   return (
     <Box sx={{ width: 250 }} role="presentation">
       <div className="flex justify-between items-center px-2 py-2">

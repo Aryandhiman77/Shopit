@@ -17,17 +17,39 @@ const Login = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
   } = useForm({ resolver: yupResolver(LoginSchema) });
 
   const { handleLogin, loading, formErrors } = useAuth();
-  const { state } = useLocation();
+  const detectLoginKey = (value) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
+
+    if (emailRegex.test(value)) return "email";
+    if (phoneRegex.test(value)) return "phoneNumber";
+    return null;
+  };
   const onSubmit = (data) => {
-    handleLogin({
-      email: data.email,
+    const key = detectLoginKey(data.login);
+    if (!key) {
+      setError("login", {
+        message: "Enter a valid email, phone number.",
+      });
+      return;
+    }
+    const payload = {
+      [key]: data.login,
       password: data.password,
       role: "customer",
-    });
+    };
+    LoginSchema.validate(payload)
+      .then(() => {
+        handleLogin(payload);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
   const handleForgotPassword = () => {
     navigate("/verify", { state: { fromLogin: true }, replace: true });
@@ -43,19 +65,22 @@ const Login = () => {
           <p className="text-[12px] py-1 text-center">
             Get access to your account.
           </p>
-          {formErrors?.length > 0 &&
-            formErrors.map((err, i) => (
-              <div className="bg-red-600 text-white mt-2 p-1 text-[12px] rounded-sm text-center">
-                {i + 1}. {err}
-              </div>
-            ))}
+          {formErrors?.length > 0 && (
+            <div className="bg-red-600 text-white mt-2 p-1 text-[12px] rounded-sm text-center">
+              {formErrors.map((formErr, i) => (
+                <div key={"formerror"+i}>
+                  {i + 1}. {formErr}
+                </div>
+              ))}
+            </div>
+          )}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="m-4 flex flex-col gap-4"
           >
             <div>
               <TextField
-                {...register("email")}
+                {...register("login")}
                 className="w-full"
                 id="outlined-basic"
                 label="Phone Number / Email"
@@ -63,7 +88,7 @@ const Login = () => {
                 required={true}
                 type={"text"}
               />
-              <FormError error={errors.email?.message} />
+              <FormError error={errors.login?.message} />
             </div>
             <div>
               <div className="password relative flex justify-end items-center">

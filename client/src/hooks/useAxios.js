@@ -105,7 +105,7 @@ const useAxios = () => {
     return () => controllerRef.current.abort();
   }, []);
 
-  return { fetchData, response, formErrors, loading };
+  return { fetchData, response, formErrors, loading, error };
 };
 
 export default useAxios;

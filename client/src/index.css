@@ -26,3 +26,38 @@ body {
 .list-view{
   @apply min-w-full max-w-[100vw] shadow-lg flex justify-around flex-row items-center border-[1px] border-[#e5e5e5] transition-all duration-200 ease-in-out rounded-lg relative overflow-hidden -z-10 w-full h-[14rem] gap-5;
 }
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(209, 213, 219, 0.35) 25%,
+    rgba(209, 213, 219, 0.6) 37%,
+    rgba(209, 213, 219, 0.35) 63%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s ease-in-out infinite;
+}
+/* fade-in.css */
+.fade-in {
+  animation: fadeInUp .5s ease-out both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

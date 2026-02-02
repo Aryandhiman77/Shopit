@@ -1,72 +1,15 @@
 import { createContext, useState } from "react";
 import DataContext from "./DataContext";
+import useAxios from "../../hooks/useAxios";
+import toast from "react-hot-toast";
 const DataProvider = ({ children }) => {
-  const [categories, setCategories] = useState([
-    {
-      name: "Fashion",
-      subcategories: [
-        {
-          name: "Menwear",
-          items: ["Shirts", "T-Shirts", "Jeans", "Shoes", "Formals"],
-        },
-        {
-          name: "Womenwear",
-          items: ["Dresses", "Tops", "Skirts", "Heels"],
-        },
-        {
-          name: "Accessories",
-          items: ["Bags", "Belts", "Watches"],
-        },
-      ],
-    },
-    {
-      name: "Electronics",
-      subcategories: [
-        {
-          name: "Mobiles",
-          items: ["iPhone", "Samsung Galaxy", "OnePlus"],
-        },
-        {
-          name: "Laptops",
-          items: ["MacBook", "Dell XPS", "HP Spectre"],
-        },
-        {
-          name: "Headphones",
-          items: ["AirPods", "Sony WH-1000XM5", "Bose QC45"],
-        },
-      ],
-    },
-    {
-      name: "Home & Kitchen",
-      subcategories: [
-        {
-          name: "Furniture",
-          items: ["Sofas", "Beds", "Dining Tables"],
-        },
-        {
-          name: "Appliances",
-          items: ["Refrigerators", "Microwaves", "Mixers"],
-        },
-        {
-          name: "Decor",
-          items: ["Lamps", "Wall Art", "Clocks"],
-        },
-      ],
-    },
-    {
-      name: "Sports",
-      subcategories: [
-        {
-          name: "Outdoor",
-          items: ["Tents", "Sleeping Bags", "Hiking Boots"],
-        },
-        {
-          name: "Fitness",
-          items: ["Yoga Mats", "Dumbbells", "Resistance Bands"],
-        },
-      ],
-    },
-  ]);
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [errors, setErrors] = useState({ categories: null, products: null });
+  const [loading, setLoading] = useState({
+    products: false,
+    allCategories: false,
+  });
   const [adsBannerData, setAdsBannerData] = useState([
     {
       img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
@@ -149,233 +92,86 @@ const DataProvider = ({ children }) => {
       },
     },
   ]);
-  const [productsData,setProductsData]=useState([
+  const getOrderedCategories = async () => {
+    const { fetchData, error, response } = useAxios();
+    setLoading({ ...loading, allCategories: true });
+    const result = await fetchData({
+      url: `/categories`,
+      method: "GET",
+    });
+    if (result?.success) {
+      console.log(result.data);
+      setCategories(result.data);
+      setLoading({ ...loading, allCategories: false });
+      return true;
+    }
+    if (result?.error) {
+      setErrors({ ...errors, categories: result.error });
+      console.log(result.error);
+      setLoading({ ...loading, allCategories: false });
+    }
+  };
 
-    {
-      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
+  const getCategoryProducts = async (category, { limit }) => {
+    // const { fetchData, loading, error } = useAxios();
+    setLoading({ ...loading, products: true});
+    const result = await fetchData({
+      url: `/products/${category}`,
+      method: "GET",
+    });
+    if (result?.success) {
+      setProducts(result.data);
+      setLoading({ ...loading, products: false });
+      return true;
+    }
+    if (error) {
+      setLoading({ ...loading, products: false });
+    }
+  };
 
-    },
-    {
-      image:"https://www.imagineonline.store/cdn/shop/files/iPhone_15_Blue_PDP_Image_Position-1__en-IN.jpg?v=1755576990",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",
-      gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
+  const getFeaturedProducts = async () => {};
 
-    },
-    {
-      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
-
-    },
-    {
-      image:"https://www.imagineonline.store/cdn/shop/files/iPhone_15_Blue_PDP_Image_Position-1__en-IN.jpg?v=1755576990",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
-
-    },
-    {
-      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
-
-    },
-    {
-      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
-
-    },
-    {
-      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
-
-    },
-    {
-      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
-
-    },
-    {
-      image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVCZKw9sPNcO82b-gP8j-gXb8uOSr9EJ4hQg&s",
-      productName:"iPhone 15 Pro Max",
-      description:"lorem iphskdfkasl fjklasjf ksjafkl saflk; jsdajljf lskd jflksdj lf;j alj flja",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:4.6,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
-
-    },
-    {
-      image:"https://www.jiomart.com/images/product/original/493839356/apple-iphone-15-pro-max-256-gb-white-titanium-digital-o493839356-p604578632-0-202309141823.jpeg?im=Resize=(420,420)",
-      productName:"iPhone 15 Pro Max",
-      description:"The iPhone 15 Pro Max features a strong, lightweight aerospace-grade titanium design, an advanced 6.7-inch Super Retina XDR display with ProMotion and Always-On capabilities, and the powerful A17 Pro chip for immersive gaming and all-day battery life. Its Pro camera system includes a 48MP Main camera, a 5x Telephoto camera, and an Ultra Wide camera for versatile, high-resolution photos. Key features also include a customizable Action Button, a USB-C port with USB 3 speeds, and safety features like Crash Detection and Emergency SOS via satellite.",
-      mrpPrice:5000,
-      sellingPrice:4000,
-      rating:1.2,
-      reviewsLength:770,
-      discountPercentage:"20%",
-      slug:"iphone-15-pro-max",gallery:[
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-    "https://iplanet.one/cdn/shop/files/iPhone_16_Pro_Desert_Titanium_PDP_Image_Position_1__en-IN_38a0c11d-1864-457e-a2e2-7333c0480a7b.jpg?v=1727249764",
-  ]
-    
-
-    },
-    
-  ])
-    const cartItems = [
+  const cartItems = [
     { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
     { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
     { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
     { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
   ];
-  const [level1Categories,setLevel1Categories] = useState(["Fashion","Electronics","Sports","Home & kitchen","Jwellery"])
+  const [level1Categories, setLevel1Categories] = useState([
+    "Fashion",
+    "Electronics",
+    "Sports",
+    "Home & kitchen",
+    "Jwellery",
+  ]);
+
   const addresses = [
-              {
-                fullName: "Aryan dhiman",
-                type: "home",
-                fullAddress: "Vpo sarsehri, ambala cantt, haryana - 133001",
-              },
-              {
-                fullName: "Aryan dhiman",
-                type: "home",
-                fullAddress: "Vpo sarsehri, ambala cantt, haryana - 133001",
-              },
-            ]
+    {
+      fullName: "Aryan dhiman",
+      type: "home",
+      fullAddress: "Vpo sarsehri, ambala cantt, haryana - 133001",
+    },
+    {
+      fullName: "Aryan dhiman",
+      type: "home",
+      fullAddress: "Vpo sarsehri, ambala cantt, haryana - 133001",
+    },
+  ];
   return (
     <DataContext.Provider
-      value={{ categories, adsBannerData, adsMiniBannersData,miniSliderBannerData,productsData,level1Categories,cartItems,addresses }}
+      value={{
+        categories,
+        adsBannerData,
+        adsMiniBannersData,
+        miniSliderBannerData,
+        products,
+        level1Categories,
+        cartItems,
+        addresses,
+        getCategoryProducts,
+        loading,
+        getOrderedCategories,
+      }}
     >
       {children}
     </DataContext.Provider>

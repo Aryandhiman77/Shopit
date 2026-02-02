@@ -10,13 +10,14 @@ import IconButton from "@mui/material/IconButton";
 import NavigationBar from "./Navigation";
 import DrawerNavigation from "./Navigation/Drawer";
 import CartPanel from "./Navigation/CartPanel";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaUserCircle } from "react-icons/fa";
 import AuthContext from "../../context/auth/AuthContext";
 
 const Header = () => {
   const [cartPanelOpen, setCartPanelOpen] = useState(false);
   const { isAuthenticated, user } = useContext(AuthContext);
+ 
   return (
     <>
       <div className=" border-b-[1px] border-gray-200 bg-white">
@@ -120,7 +121,7 @@ const Header = () => {
           </div>
         </div>
       </div>
-      <header className="bg-white sticky top-0 z-20">
+      <header className="bg-white sticky top-0 z-30">
         <div className="border-b-[1px] border-gray-200 ">
           <NavigationBar />
         </div>

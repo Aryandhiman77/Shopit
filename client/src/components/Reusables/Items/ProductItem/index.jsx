@@ -18,7 +18,9 @@ import Divider from "@mui/material/Divider";
 import SizeVariantList from "../../SizeVariantList";
 import QuantityBox from "../../QuantityBox";
 import { MdShoppingCart } from "react-icons/md";
-const ProductItem = ({ item, horizontal = false }) => {
+import SkeletonImage, { SkeletonText } from "../../Elements/Loader/skeleton";
+import ProductSkeleton from "./ProductSkeleton";
+const ProductItem = ({ item, horizontal = false, loading }) => {
   const smText = horizontal ? "text-lg" : "text-sm";
   const lgText = horizontal ? "text-2xl" : "text-lg";
   const [isModalOpen, setModalOpen] = useState(false);
@@ -36,14 +38,16 @@ const ProductItem = ({ item, horizontal = false }) => {
   const [activeThum, setActiveThumb] = useState(imagesData[0]);
   return (
     <div className={`product-item ${horizontal ? "list-view" : "grid-view"}`}>
-      <div className="overflow-hidden block rounded-t-lg ">
-        <Link to={`/product/${item?.slug}`}>
+      <div className="overflow-hidden block rounded-t-lg">
+        <Link
+          to={`/product/${item?.slug}`}
+          className={`block aspect-square bg-white ${horizontal ? "py-10" : "p-2"} `}
+        >
           <img
-            className="h-full w-[20rem] hover:scale-110 transition-all ease-in-out duration-500 object-contain bg-white"
-            width={400}
-            height={600}
-            src={item?.image}
-            alt="product image"
+            className={`h-full w-[25vw] hover:scale-110 transition-all ease-in-out duration-500 object-contain bg-white aspect-square text-center text-[10px]`}
+            src={item?.thumbnail?.url}
+            alt={item?.title}
+            loading="lazy"
           />
         </Link>
       </div>
@@ -54,24 +58,26 @@ const ProductItem = ({ item, horizontal = false }) => {
       >
         <Link to={`/product/${item?.slug}`}>
           <p
-            className={`text-gray-700 ${
+            className={`text-gray-500 capitalize ${
               horizontal ? "text-[16px]" : "text-[13px]"
-            } font-[400]`}
+            } font-[600]`}
           >
-            Apple
+            {item?.brand?.name}
           </p>
           <p
-            className={`text-black font-[400] ${
-              horizontal ? "text-[15px]" : "text-[13px]"
+            className={`text-black font-[400] capitalize ${
+              horizontal ? "text-[15px]" : "text-[12px]"
             } line-clamp-2`}
           >
-            {item?.productName}
+            {item?.title}
           </p>
           <div className="flex items-center gap-x-1 w-full pr-2 rounded-lg">
-            {GetRating(item?.rating)}
-            <p className={`${smText} text-gray-400`}>({item?.reviewsLength})</p>
+            {GetRating(item?.rating || 4.4)}
+            <p className={`${smText} text-gray-400`}>
+              ({item?.reviewsLength || 0})
+            </p>
           </div>
-          <Price mrp={5000} sellingPrice={3000} textSize={smText} />
+          <Price mrp={item?.mrp} sellingPrice={item?.price} textSize={smText} />
         </Link>
         <Button
           className={`!mt-2 ${
@@ -85,7 +91,11 @@ const ProductItem = ({ item, horizontal = false }) => {
 
       {/* child buttons */}
       <div className="discount-icons absolute top-2 -left-4 !text-[12px] transition-all duration-300 ease-in-out ">
-        <Badge value={item?.discountPercentage} size={1} color="bg-primary" />
+        <Badge
+          value={parseInt(((item?.mrp - item?.price) / item?.mrp) * 100) + "%"}
+          size={1}
+          color="bg-primary"
+        />
       </div>
       <div className="right-icons absolute -top-40 right-3 !text-[12px] space-y-2 transition-all duration-300 ease-in-out opacity-[0.9] flex flex-col ">
         <button className="cursor-pointer group" onClick={handleOpenModal}>
