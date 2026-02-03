@@ -13,7 +13,7 @@ import "./style.css";
 import DrawerList from "./Drawer/DrawerList";
 import useData from "../../../hooks/useData";
 import { SkeletonText } from "../../Reusables/Elements/Loader/skeleton";
-import useAxios from "../../../hooks/useAxios";
+import useAxios from "../../../utility/RequestAPI";
 
 const NavigationBar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -81,7 +81,11 @@ const NavigationBar = () => {
         setDrawerOpen={setDrawerOpen}
         anchor={"left"}
       >
-        <DrawerList setDrawerOpen={setDrawerOpen} />
+        <DrawerList
+          setDrawerOpen={setDrawerOpen}
+          categories={categories}
+          loading={loading?.allCategories}
+        />
       </DrawerNavigation>
     </div>
   );

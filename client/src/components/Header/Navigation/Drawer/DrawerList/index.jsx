@@ -6,8 +6,9 @@ import DrawerItems from "../DrawerItems";
 import { useContext } from "react";
 import DataContext from "../../../../../context/data/DataContext";
 import Box from "@mui/material/Box";
+import { SkeletonText } from "../../../../Reusables/Elements/Loader/skeleton";
 
-const DrawerList = ({ setDrawerOpen, categories=[] }) => {
+const DrawerList = ({ setDrawerOpen, categories = [], loading = false }) => {
   return (
     <Box sx={{ width: 250 }} role="presentation">
       <div className="flex justify-between items-center px-2 py-2">
@@ -20,7 +21,18 @@ const DrawerList = ({ setDrawerOpen, categories=[] }) => {
       <Divider />
       <div className="drawer_items">
         <ul className=" flex flex-col gap-y-3 font-[600] h-full">
-          <DrawerItems items={categories} />
+          {loading ? (
+            <div className="space-y-4 mt-4 mx-4">
+              <SkeletonText width="30" className="h-6!" />
+              <SkeletonText width="30" className="h-6!" />
+              <SkeletonText width="30" className="h-6!" />
+              <SkeletonText width="30" className="h-6!" />
+              <SkeletonText width="30" className="h-6!" />
+              <SkeletonText width="30" className="h-6!" />
+            </div>
+          ) : (
+            <DrawerItems items={categories} />
+          )}
         </ul>
       </div>
     </Box>

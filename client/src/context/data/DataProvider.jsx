@@ -1,10 +1,11 @@
 import { createContext, useState } from "react";
 import DataContext from "./DataContext";
-import useAxios from "../../hooks/useAxios";
-import toast from "react-hot-toast";
+import { fetchData } from "../../utility/RequestAPI";
 const DataProvider = ({ children }) => {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]); // for listing
+  const [productDetails, setDetails] = useState({}); // for showing the product detail page..
+  const [categories, setCategories] = useState([]); // all categories
+  const [level1Categories, setLevel1Categories] = useState([]);
   const [errors, setErrors] = useState({ categories: null, products: null });
   const [loading, setLoading] = useState({
     products: false,
@@ -79,21 +80,8 @@ const DataProvider = ({ children }) => {
         textColor: "white",
       },
     },
-    {
-      img: "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
-      info: {
-        subtitle: "Best in Quality",
-        title: "Stylish tops",
-        priceLine: "Starting from",
-        price: "₹499",
-        btnlink:
-          "https://serviceapi.spicezgold.com/download/1742439896581_1737036773579_sample-1.jpg",
-        textColor: "black",
-      },
-    },
   ]);
   const getOrderedCategories = async () => {
-    const { fetchData, error, response } = useAxios();
     setLoading({ ...loading, allCategories: true });
     const result = await fetchData({
       url: `/categories`,
@@ -113,8 +101,7 @@ const DataProvider = ({ children }) => {
   };
 
   const getCategoryProducts = async (category, { limit }) => {
-    // const { fetchData, loading, error } = useAxios();
-    setLoading({ ...loading, products: true});
+    setLoading({ ...loading, products: true });
     const result = await fetchData({
       url: `/products/${category}`,
       method: "GET",
@@ -124,9 +111,9 @@ const DataProvider = ({ children }) => {
       setLoading({ ...loading, products: false });
       return true;
     }
-    if (error) {
-      setLoading({ ...loading, products: false });
-    }
+    // if (error) {
+    //   setLoading({ ...loading, products: false });
+    // }
   };
 
   const getFeaturedProducts = async () => {};
@@ -137,13 +124,6 @@ const DataProvider = ({ children }) => {
     { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
     { brand: "Apple", name: "iPhone 15 Pro", price: "₹ 15,000" },
   ];
-  const [level1Categories, setLevel1Categories] = useState([
-    "Fashion",
-    "Electronics",
-    "Sports",
-    "Home & kitchen",
-    "Jwellery",
-  ]);
 
   const addresses = [
     {

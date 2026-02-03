@@ -39,7 +39,6 @@ const OTPVerification = () => {
     await handleLogin({
       email: creds.email,
       password: creds.password,
-      role: "seller",
     });
   };
   useEffect(() => {
