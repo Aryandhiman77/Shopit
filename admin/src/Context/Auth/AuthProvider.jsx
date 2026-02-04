@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { AuthContext } from "./AuthContext";
 
 export const AuthProvider = ({ children }) => {
-  const [authToken, setAuthToken] = useState(true);
+  const [authToken, setAuthToken] = useState(false);
 
   const login = () => {
     setAuthToken(true);

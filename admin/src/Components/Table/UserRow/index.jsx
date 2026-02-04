@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import ToggleSwitch from "../../Reusables/Elements/ToggleSwitch";
+import CustomToggle from "../../Reusables/Elements/ToggleSwitch";
 
 const UserRow = ({ user }) => {
   return (
@@ -19,7 +19,7 @@ const UserRow = ({ user }) => {
         <td className="px-6 py-4 whitespace-nowrap">{user?.email}</td>
         <td className="px-6 py-4 whitespace-nowrap">{user?.phoneNumber}</td>
          <td className="px-6 py-4 whitespace-nowrap">
-          <ToggleSwitch />
+          <CustomToggle />
         </td>
         <td className="px-6 py-4 whitespace-nowrap">{user?.createdAt}</td>
         <td className="px-6 py-4 whitespace-nowrap">{user?.modifiedAt}</td>
