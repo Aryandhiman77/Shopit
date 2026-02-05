@@ -10,5 +10,6 @@ const categoryValidationSchema = yup.object({
   description: yup
     .string()
     .max(300, "Category description must be less than 300 characters."),
+  attributes: yup.array(yup.object({})).optional(),
 });
 export default categoryValidationSchema;

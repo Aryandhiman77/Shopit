@@ -2,6 +2,9 @@
 import { createContext, useContext, useState } from "react";
 
 import { DataContext } from "./DataContext";
+import { fetchData } from "../../utilities/RequestAPI";
+import ConvertToFormData from "../../utilities/ConvertToFormData";
+import toast from "react-hot-toast";
 
 // ✅ Provider Component
 export const DataProvider = ({ children }) => {
@@ -73,8 +76,85 @@ export const DataProvider = ({ children }) => {
     { name: "AUGUST", Total_Users: 3490, Total_Sales: 4300, amt: 2100 },
   ]);
 
+  const [level1Categories, setLevel1Categories] = useState([]);
+  const [level2Categories, setLevel2Categories] = useState([]);
+  const [level3Categories, setLevel3Categories] = useState([]);
+  const [addedCategory, setAddedCategory] = useState({});
+  const [formErrors, setFormErrors] = useState(null);
+  const [errors, setErrors] = useState({ categories: null, products: null });
+  const [loading, setLoading] = useState({});
+  const startLoading = (key) =>
+    setLoading((prev) => ({
+      ...prev,
+      [key]: (prev[key] || 0) + 1,
+    }));
+
+  const stopLoading = (key) =>
+    setLoading((prev) => ({
+      ...prev,
+      [key]: Math.max((prev[key] || 1) - 1, 0),
+    }));
+
+  const isLoading = (key) => {
+    return (loading[key] || 0) > 0;
+  };
+  const getCategoriesByLevel = async (level) => {
+    if (!level || level > 3) return;
+    setLoading(`level-${level}-categories`);
+    const response = await fetchData({
+      url: `/common/categories/${level}`,
+      method: "GET",
+    });
+    if (response?.success) {
+      if (level === 1) {
+        setLevel1Categories(response.data);
+      } else if (level === 2) {
+        setLevel2Categories(response.data);
+      } else {
+        setLevel3Categories(response.data);
+      }
+      stopLoading("add-category");
+      return true;
+    }
+    stopLoading(`level-${level}-categories`);
+  };
+
+  const addCategory = async (details) => {
+    startLoading("add-category");
+    const formdata = ConvertToFormData(details);
+    const response = await fetchData({
+      url: `/admin/categories/create`,
+      method: "POST",
+      payload: formdata,
+      isFormData: true,
+    });
+    if (response?.success) {
+      setAddedCategory(response?.data);
+      toast.success("Category added.");
+      stopLoading("add-category");
+      return true;
+    }
+    if (response?.error) {
+      stopLoading("add-category");
+      setErrors({ ...errors, categoriesByLevel: result.error });
+    }
+    stopLoading("add-category");
+  };
+
   return (
-    <DataContext.Provider value={{ orders, products, lineChartData }}>
+    <DataContext.Provider
+      value={{
+        orders,
+        products,
+        lineChartData,
+        addCategory,
+        isLoading,
+        level1Categories,
+        level2Categories,
+        level3Categories,
+        getCategoriesByLevel,
+      }}
+    >
       {children}
     </DataContext.Provider>
   );

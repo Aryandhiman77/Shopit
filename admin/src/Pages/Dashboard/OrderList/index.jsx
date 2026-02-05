@@ -1,6 +1,6 @@
 import React from "react";
 import OrderRow from "../../../Components/Table/OrdersRow";
-import { useData } from "../../../Context/Data/DataContext";
+import useData from "../../../Components/hooks/useData";
 import Table from "../../../Components/Table";
 
 const OrderList = () => {

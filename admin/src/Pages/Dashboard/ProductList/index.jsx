@@ -1,6 +1,7 @@
 import ProductRow from "../../../Components/Table/ProductRow";
 import Table from "../../../Components/Table";
-import { useData } from "../../../Context/Data/DataContext";
+import useData from "../../../Components/hooks/useData";
+
 const ProductList = () => {
   const productTableHeadings = [
     "",

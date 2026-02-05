@@ -11,8 +11,11 @@ import avatar from "../../assets/avatar.webp";
 import CustomMenu from "../Reusables/CustomMenu";
 import MButton from "../Reusables/Elements/MButton";
 import Search from "../Reusables/Search";
+import useAuth from "../hooks/useAuth";
+import Spinner from "../Reusables/Elements/Loader/Spinner";
 
 const Header = ({ sidebarOpened, setSidebarOpened }) => {
+  const { handleLogout, loading } = useAuth();
   return (
     <div className="w-full flex flex-row justify-between items-center p-2 z-50 relative">
       <div className="part-1 flex gap-5">
@@ -123,10 +126,19 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
               />
             </div>
             <Divider />
-            <MenuItem className="flex flex-row gap-3 custom-btn !shadow-none">
-              <IoLogOutOutline />
-              Logout
-            </MenuItem>
+            {loading ? (
+              <div className="p-2 px-10">
+                <Spinner size={20} />
+              </div>
+            ) : (
+              <MenuItem
+                onClick={handleLogout}
+                className="flex flex-row gap-3 custom-btn !shadow-none"
+              >
+                <IoLogOutOutline />
+                Logout
+              </MenuItem>
+            )}
           </CustomMenu>
         </div>
       </div>

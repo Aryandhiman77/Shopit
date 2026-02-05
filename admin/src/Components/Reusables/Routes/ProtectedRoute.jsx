@@ -1,12 +1,11 @@
 import { useContext, useEffect } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { AuthContext, useAuth } from "../../../Context/Auth/AuthContext";
+import useAuth from "../../../Components/hooks/useAuth";
 
 const ProtectedRoute = () => {
-  const { authToken } = useContext(AuthContext);
-  console.log(authToken);
+  const { isAuthenticated } = useAuth();
 
-  if (!authToken) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
   return <Outlet />;

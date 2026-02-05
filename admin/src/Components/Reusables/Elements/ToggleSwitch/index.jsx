@@ -6,11 +6,11 @@ import {
 } from "react-icons/io";
 import { PiCheckCircle, PiCrossDuotone } from "react-icons/pi";
 
-const CustomToggle = ({ defaultChecked, setValue }) => {
+const CustomToggle = ({ defaultChecked, setValue=()=>{}, setIsActive=()=>{} }) => {
   const [isOn, setIsOn] = useState(defaultChecked ? true : false);
   useEffect(() => {
     setValue("isActive", isOn);
-    console.log("rerender");
+    setIsActive(isOn);
   }, [isOn]);
   return (
     <div

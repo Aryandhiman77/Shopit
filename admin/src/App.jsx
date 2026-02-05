@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Dashboard from "./Pages/Dashboard";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { ThemeProvider } from "./Context/Theme/themeProvider";
 import Layout from "./Components/Reusables/Layout";
 import { DataProvider } from "./Context/Data/DataProvider";
 import Login from "./Pages/Auth/Login";
 import Signup from "./Pages/Auth/Signup";
-import { AuthProvider } from "./Context/Auth/authProvider";
 import ProtectedRoute from "./Components/Reusables/Routes/ProtectedRoute";
 import PublicRoute from "./Components/Reusables/Routes/PublicRoute";
 import Products from "./Pages/Products/AllProducts";
@@ -18,15 +25,24 @@ import AddSubCategory from "./Pages/Categories/AddSubCategory";
 import AddLeafCategory from "./Pages/Categories/AddLeafCategory";
 import Users from "./Pages/Users";
 import Orders from "./Pages/AllOrders";
+import AuthProvider from "./Context/Auth/AuthProvider";
+import OTPVerification from "./Pages/OTPVerification";
+import { Toaster } from "react-hot-toast";
 const App = () => {
+
+
+
   return (
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
           <DataProvider>
+            <Toaster />
             <Routes>
               <Route element={<PublicRoute />}>
                 <Route path="/login" element={<Login />} />
+                <Route path="/verify" element={<Login />} />
+                <Route path="/otp-verification" element={<OTPVerification />} />
                 <Route path="/signup" element={<Signup />} />
               </Route>
 

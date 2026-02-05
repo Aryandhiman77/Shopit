@@ -1,0 +1,10 @@
+import * as yup from "yup";
+const LoginSchema = yup.object({
+  login: yup.string(),
+  password: yup
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
+
+export default LoginSchema;

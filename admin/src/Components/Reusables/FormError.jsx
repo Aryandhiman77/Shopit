@@ -1,7 +1,7 @@
 import React from "react";
 
-const FormError = ({ error }) => {
-  return <p className="text-red-500 text-[12px]">{error}</p>;
+const FormError = ({ error, className }) => {
+  return <p className={`text-red-500 text-[12px] ${className}`}>{error}</p>;
 };
 
 export default FormError;

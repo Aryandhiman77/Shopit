@@ -99,53 +99,53 @@ const AddProduct = () => {
           <Box className={"!bg-white"}>
             <h1 className="heading-1 py-4">Inventory Tracking</h1>
             <div className="pb-4 flex flex-col gap-2">
-              <div class="flex ">
-                <div class="flex items-center h-5">
+              <div className="flex ">
+                <div className="flex items-center h-5">
                   <input
                     id="inventory-1"
                     aria-describedby="helper-radio-text"
                     name="inventory"
                     type="radio"
                     value=""
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                 </div>
-                <div class="ms-2 text-sm">
+                <div className="ms-2 text-sm">
                   <label
-                    for="inventory-1"
-                    class="font-medium text-gray-900 dark:text-gray-300"
+                    htmlFor="inventory-1"
+                    className="font-medium text-gray-900 dark:text-gray-300"
                   >
                     Track inventory for this product.
                   </label>
                   <p
                     id="helper-radio-text"
-                    class="text-xs font-normal text-gray-500 dark:text-gray-300"
+                    className="text-xs font-normal text-gray-500 dark:text-gray-300"
                   >
                     Stock will be limited.
                   </p>
                 </div>
               </div>
-              <div class="flex">
-                <div class="flex items-center h-5">
+              <div className="flex">
+                <div className="flex items-center h-5">
                   <input
                     id="inventory-2"
                     name="inventory"
                     aria-describedby="helper-radio-text"
                     type="radio"
                     value=""
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                 </div>
-                <div class="ms-2 text-sm">
+                <div className="ms-2 text-sm">
                   <label
-                    for="inventory-2"
-                    class="font-medium text-gray-900 dark:text-gray-300"
+                    htmlFor="inventory-2"
+                    className="font-medium text-gray-900 dark:text-gray-300"
                   >
                     Do not track inventory for this product.
                   </label>
                   <p
                     id="helper-radio-text"
-                    class="text-xs font-normal text-gray-500 dark:text-gray-300"
+                    className="text-xs font-normal text-gray-500 dark:text-gray-300"
                   >
                     Stock will be unlimited.
                   </p>
@@ -290,53 +290,53 @@ const AddProduct = () => {
             <div>
               <h1 className="heading-1 py-4">Inventory Tracking</h1>
               <div className="pb-4 flex flex-col gap-2">
-                <div class="flex ">
-                  <div class="flex items-center h-5">
+                <div className="flex ">
+                  <div className="flex items-center h-5">
                     <input
                       id="inventory-3"
                       aria-describedby="helper-radio-text"
                       name="variant-inventory"
                       type="radio"
                       value=""
-                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
                   </div>
-                  <div class="ms-2 text-sm">
+                  <div className="ms-2 text-sm">
                     <label
-                      for="inventory-3"
-                      class="font-medium text-gray-900 dark:text-gray-300"
+                      htmlFor="inventory-3"
+                      className="font-medium text-gray-900 dark:text-gray-300"
                     >
                       Track inventory for this product.
                     </label>
                     <p
                       id="helper-radio-text"
-                      class="text-xs font-normal text-gray-500 dark:text-gray-300"
+                      className="text-xs font-normal text-gray-500 dark:text-gray-300"
                     >
                       Stock will be limited.
                     </p>
                   </div>
                 </div>
-                <div class="flex">
-                  <div class="flex items-center h-5">
+                <div className="flex">
+                  <div className="flex items-center h-5">
                     <input
                       id="inventory-4"
                       name="variant-inventory"
                       aria-describedby="helper-radio-text"
                       type="radio"
                       value=""
-                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                     />
                   </div>
-                  <div class="ms-2 text-sm">
+                  <div className="ms-2 text-sm">
                     <label
-                      for="inventory-4"
-                      class="font-medium text-gray-900 dark:text-gray-300"
+                      htmlFor="inventory-4"
+                      className="font-medium text-gray-900 dark:text-gray-300"
                     >
                       Do not track inventory for this product.
                     </label>
                     <p
                       id="helper-radio-text"
-                      class="text-xs font-normal text-gray-500 dark:text-gray-300"
+                      className="text-xs font-normal text-gray-500 dark:text-gray-300"
                     >
                       Stock will be unlimited.
                     </p>
