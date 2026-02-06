@@ -9,3 +9,15 @@ export default function requireRole(role) {
     next();
   };
 }
+
+export function requestEitherAdminSeller() {
+  console.log("requiring both");
+  return async (req, res, next) => {
+    if (!req.user.role.includes("seller") && !req.user.role.includes("admin")) {
+      return res
+        .status(403)
+        .json(new ApiError(403, "Access denied.", "Access denied."));
+    }
+    next();
+  };
+}

@@ -11,6 +11,7 @@ import { APP_URL } from "./src/Config/appConfig.js";
 import routes from "./src/Routes/index.js";
 import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import ApiError from "./src/Helpers/ApiError.js";
+import morgan from "morgan";
 
 const app = express();
 
@@ -23,7 +24,7 @@ app.use(
     allowedHeaders: ["Content-Type"],
   }),
 );
-// app.use(morgan());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,22 +40,16 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(cookieParser());
 
 const limiter = rateLimit({
-  windowMs: 10 * 1000, // 10s
-  limit: 5,
+  windowMs: 60 * 1000, // 1s
+  limit: 10,
   handler: (req, res, next, options) => {
     throw new ApiError(429, "Too many clicks, please wait..");
   },
 });
 
 app.use(limiter);
-app.use(
-  "/api/",
-  (req, res, next) => {
-    console.log("/" + req.method+ " from "+ req.socket.remoteAddress);
-    next();
-  },
-  routes,
-);
+app.use(morgan("dev"));
+app.use("/api/", routes);
 
 app.use(errorHandler);
 connectDB().then(() => {

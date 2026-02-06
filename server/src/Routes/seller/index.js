@@ -8,6 +8,6 @@ const sellerRoutes = express.Router();
 sellerRoutes
   .use(tokenVerification)
   .use("/products", requireRole("seller"), productRoutes)
-  .use("/brand", requireRole("seller"), brandRoutes);
+  .use("/brand", requireRole("seller"), brandRoutes)
 
 export default sellerRoutes;

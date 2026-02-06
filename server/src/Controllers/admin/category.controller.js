@@ -2,8 +2,6 @@ import ApiResponse from "../../Helpers/ApiResponse.js";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import {
   createCategoryService,
-  getCategoryService,
-  getStructuredCategories,
   recursiveDeleteCategoryService,
   updateCategoryImage,
   updateCategoryService,
@@ -20,27 +18,16 @@ export const createCategory = AsyncWrapper(async (req, res, next) => {
         new ApiResponse(
           200,
           category,
-          `Level-${category.level} category created successfully.`
-        )
+          `Level-${category.level} category created successfully.`,
+        ),
       );
   } catch (error) {
     let err = error;
-    fs.unlink(req.file.path, (errors) => (err += errors));
+    if (req.file) {
+      fs.unlink(req.file?.path, (errors) => (err += errors));
+    }
     next(err);
   }
-});
-
-export const getCategories = AsyncWrapper(async (req, res) => {
-  const categories = await getCategoryService(req.params);
-  return res
-    .status(200)
-    .json(new ApiResponse(200, categories, `Categories found.`));
-});
-export const getAllStructuredCategories = AsyncWrapper(async (req, res) => {
-  const categories = await getStructuredCategories();
-  return res
-    .status(200)
-    .json(new ApiResponse(200, categories, `Categories found.`));
 });
 
 export const updateCategory = AsyncWrapper(async (req, res) => {
@@ -53,8 +40,8 @@ export const updateCategory = AsyncWrapper(async (req, res) => {
       new ApiResponse(
         200,
         category,
-        `Level-${category.level} category updated.`
-      )
+        `Level-${category.level} category updated.`,
+      ),
     );
 });
 export const updateCategoryImageController = AsyncWrapper(
@@ -66,16 +53,13 @@ export const updateCategoryImageController = AsyncWrapper(
         .status(200)
         .json(new ApiResponse(200, updatedCategory, `category updated.`));
     } catch (error) {}
-  }
+  },
 );
 
 export const deleteCategory = AsyncWrapper(async (req, res) => {
-  const { slug, level } = req.params;
-  const categoryId = await Categories.find({ slug, level }).select("_id");
+  const { categoryId } = req.params;
   await recursiveDeleteCategoryService(categoryId);
   return res
     .status(200)
     .json(new ApiResponse(200, null, `category deleted along with childrens.`));
 });
-
-

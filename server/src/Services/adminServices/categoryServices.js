@@ -7,8 +7,8 @@ import {
 import fs from "fs";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
 export const createCategoryService = async (
-  { name, parent, level, attributes },
-  file
+  { name, parent, level, attributes, description },
+  file,
 ) => {
   if (level >= 2 && !parent) {
     throw new ApiError(400, "Parent category is required.");
@@ -18,33 +18,34 @@ export const createCategoryService = async (
   }
   const isExistingCategory = await Categories.findOne({ name });
   if (isExistingCategory) {
-    fs.unlinkSync(file.path);
+    fs.unlinkSync(file?.path);
     throw new ApiError(400, "Category already exists with this name.");
   }
   let parentCategory = null;
   if (level >= 2) {
     parentCategory = await Categories.findOne({ slug: parent }).select(
-      "_id level name slug"
+      "_id level name slug childCategories",
     );
 
     if (!parentCategory) {
-      fs.unlinkSync(file.path);
+      fs.unlinkSync(file?.path);
       throw new ApiError(404, "Parent category not found.");
     }
 
     if (level === 3 && parentCategory.level < 2) {
-      fs.unlinkSync(file.path);
+      fs.unlinkSync(file?.path);
       throw new ApiError(400, "Parent must be a level-2 subcategory.");
     }
   }
 
-  const uploaded = await uploadWithRetry(file.path);
+  const uploaded = await uploadWithRetry(file?.path);
   if (!uploaded) {
-    fs.unlinkSync(file.path);
+    fs.unlinkSync(file?.path);
     throw new ApiError(400, "Technical issue, cannot upload image.");
   }
   const categoryData = {
     name,
+    description,
     parentCategory: parentCategory ? parentCategory._id : null,
     level,
     image: {
@@ -53,24 +54,21 @@ export const createCategoryService = async (
     },
   };
 
-  // if (level) {
-  //   if (attributes?.length > 0) categoryData.attributes = attributes;
-  // } else if (level < 3 && attributes?.length > 0) {
-  //   fs.unlinkSync(file.path);
-  //   throw new ApiError(
-  //     400,
-  //     "Attributes can only be added to level-3 categories only."
-  //   );
-  // }
   if (attributes?.length > 0) categoryData.attributes = attributes;
 
   const createdCategory = await Categories.create(categoryData);
-  fs.unlinkSync(file.path);
+  fs.unlinkSync(file?.path);
   if (!createdCategory)
     throw new ApiError(400, "Technical issue, cannot create category.");
+  if (level >= 2 && parentCategory) {
+    parentCategory.childCategories.push(createdCategory?._id);
+    await parentCategory.save();
+  }
 
   const savedCategory = {
+    _id: createdCategory._id,
     name: createdCategory.name,
+    description: categoryData.description,
     parentCategory: {
       name: parentCategory?.name,
       slug: parentCategory?.slug,
@@ -84,28 +82,17 @@ export const createCategoryService = async (
   return { category: savedCategory };
 };
 
-export const getCategoryService = async ({ level }) => {
-  const categories = await Categories.find({ level })
-    .select("name slug createdAt updatedAt isActive image.url -_id")
-    .populate(
-      "parentCategory",
-      "name slug createdAt updatedAt isActive image.url -_id"
-    );
-  if (categories.length <= 0) {
-    throw new ApiError(404, "Categories not found.");
-  }
-  return categories;
-};
-
 export const updateCategoryService = async ({
   catId,
   name,
   isActive,
   attributes,
+  description,
+  parent,
 }) => {
   const category = await Categories.findById(catId).populate(
     "parentCategory",
-    "name slug"
+    "name slug",
   );
 
   if (!category) {
@@ -114,30 +101,29 @@ export const updateCategoryService = async ({
 
   if (name) category.name = name;
   if (isActive !== undefined) category.isActive = isActive;
-
+  if (description) category.description = description;
   if (attributes?.length > 0) category.attributes = attributes;
-
-  const saved = await category.save();
-  if (!saved) {
-    fs.unlinkSync(file.path);
-    throw new ApiError(500, "Technical issue, cannot save category.");
+  if (parent) {
+    const newParent = await Categories.findOne({ _id: parent })
+      .select("_id")
+      .lean();
+    if (!newParent) {
+      throw new ApiError(500, "Cannot find parent category.");
+    }
+    category.parentCategory = newParent._id;
   }
 
+  let saved = await category.save();
+  if (!saved) {
+    throw new ApiError(500, "Technical issue, cannot save category.");
+  }
+  saved = await saved.populate({
+    path: "childCategories",
+    populate: { path: "childCategories" },
+  });
+  delete saved.attributes;
   return {
-    category: {
-      name: category.name,
-      parentCategory: category.parentCategory
-        ? {
-            name: category.parentCategory.name,
-            slug: category.parentCategory.slug,
-          }
-        : null,
-      level: category.level,
-      image: category.image?.url || null,
-      slug: category.slug,
-      isActive: category.isActive,
-      attributes: category.attributes,
-    },
+    category: saved,
   };
 };
 
@@ -169,6 +155,26 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
   const category = await Categories.findById(categoryId);
   if (!category) throw new ApiError(400, "Cannot find category.");
 
+  if (category.level === 3) {
+    if (category.image?.public_id) {
+      await deleteFromCloudinary(category.image.public_id);
+    }
+    //find its parent and unlink this category
+    await Categories.findByIdAndUpdate(category?.parentCategory, {
+      $pull: { childCategories: category._id },
+    });
+    return;
+  }
+
+  if (category === 2) {
+    if (category.image?.public_id) {
+      await deleteFromCloudinary(category.image.public_id);
+    }
+    await Categories.findByIdAndUpdate(category?.parentCategory, {
+      $pull: { childCategories: category._id },
+    });
+  }
+
   // 2. delete its images from cloudinary
   if (category.image?.public_id) {
     await deleteFromCloudinary(category.image.public_id);
@@ -185,30 +191,4 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
   }
   // 5.Delete this category
   await Categories.deleteOne(category._id);
-};
-
-const recursivelyBuildCategoryTree = async (parentId = null) => {
-  const categories = await Categories.find({ parentCategory: parentId });
-  let result = [];
-  for (const category of categories) {
-    const children = await recursivelyBuildCategoryTree(category._id);
-    result.push({
-      name: category.name,
-      slug: category.slug,
-      subcategories: children,
-      image: category.image,
-    });
-  }
-
-  return result;
-};
-
-export const getStructuredCategories = async () => {
-  const structuredCategories = await recursivelyBuildCategoryTree(null);
-
-  if (!structuredCategories.length) {
-    throw new ApiError(400, "No categories found.");
-  }
-
-  return structuredCategories;
 };

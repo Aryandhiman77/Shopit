@@ -40,7 +40,6 @@ export const registerAsAdmin = AsyncWrapper(async (req, res) => {
 });
 
 export const loginController = AsyncWrapper(async (req, res) => {
-  console.log("request login");
   const { email, user, authToken, refreshToken } = await loginUserService(
     req.data,
   );
@@ -86,7 +85,7 @@ export const registrationController = AsyncWrapper(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        null,
+        { otpRequired: true, isAuthenticated: false },
         `Registration successful. 6-digit verification code sent to ${email}.`,
       ),
     );
@@ -152,7 +151,6 @@ export const forgotPassOTPCheckController = AsyncWrapper(async (req, res) => {
     userId: user.id,
     role: user.role,
   });
-  console.log(authToken);
   res.cookie("authToken", authToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

@@ -10,9 +10,9 @@ const variantSchema = new mongoose.Schema(
       type: String,
       unique: true,
       lowercase: true,
-      index: true,
+      index:true
     },
-    sku: { type: String, required: true, unique: true },
+    sku: { type: String, required: true ,unique:true},
     attributes: {
       type: Map,
       of: String, // { color: "Red", size: "M" }
@@ -40,7 +40,7 @@ const variantSchema = new mongoose.Schema(
       },
     },
   },
-  { _id: true }
+  { _id: true },
 );
 
 const productSchema = new mongoose.Schema(
@@ -48,7 +48,7 @@ const productSchema = new mongoose.Schema(
     title: { type: String, required: true, trim: true },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "brand",
+      ref: "Brand",
       required: true,
       index: true,
     },
@@ -92,10 +92,12 @@ const productSchema = new mongoose.Schema(
     },
 
     // Variants
-    variants: {
-      type: [variantSchema],
-      validate: [(arr) => arr.length <= 50, "Too many variants"],
-    },
+    variants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Variants",
+      },
+    ],
 
     isFeatured: { type: Boolean, default: false },
     isTrending: { type: Boolean, default: false }, // set by admin
@@ -117,7 +119,7 @@ const productSchema = new mongoose.Schema(
     },
   },
 
-  { timestamps: true }
+  { timestamps: true },
 );
 productSchema.index({
   category: 1,

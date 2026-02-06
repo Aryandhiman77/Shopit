@@ -48,8 +48,8 @@ export const createProductService = async (
     tags,
     status: "draft",
     seller: creater_user_id,
-    base_price,
-    base_mrp,
+    price: base_price,
+    mrp: base_mrp,
     stock,
     brand,
   });

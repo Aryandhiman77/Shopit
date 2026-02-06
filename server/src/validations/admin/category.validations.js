@@ -29,7 +29,10 @@ const attributeSchema = Joi.array()
               "Options field is only allowed when inputType is select.",
           }),
         }),
-    }).unknown(false)
+      required: Joi.boolean().messages({
+        "boolean.base": "required must be either Yes or No.",
+      }),
+    }).unknown(false),
   )
   .messages({
     "array.base": "Attributes must be an array of objects.",
@@ -44,11 +47,12 @@ export const createCategorySchema = Joi.object({
     "any.required": "Category name is required.",
     "string.empty": "Category name cannot be empty.",
   }),
-  parent: Joi.string().lowercase().min(3).max(35).optional().messages({
-    "string.min": "Parent Category slug must be at least 3 characters long.",
-    "string.max": "Parent Category slug must be less than 30 characters.",
-    "string.empty": "Parent Category slug cannot be empty.",
+  description: Joi.string().lowercase().max(300).messages({
+    "string.max": "Category description must be less than 300 characters.",
+    "any.required": "Category description is required.",
+    "string.empty": "Category description cannot be empty.",
   }),
+  parent: Joi.string().lowercase().optional(),
   level: Joi.number().valid(1, 2, 3).required().messages({
     "any.only": "Category level must be either 1, 2, or 3.",
     "number.base": "Category level must be a number.",
@@ -70,10 +74,16 @@ export const updateCategorySchema = Joi.object({
     "any.required": "Category name is required.",
     "string.empty": "Category name cannot be empty.",
   }),
+  description: Joi.string().lowercase().max(300).messages({
+    "string.max": "Category description must be less than 300 characters.",
+    "any.required": "Category description is required.",
+    "string.empty": "Category description cannot be empty.",
+  }),
   isActive: Joi.boolean().messages({
     "boolean.base": "Category status must be either true or false",
     "any.required": "Category status is required.",
   }),
+  parent: Joi.string().lowercase(),
   attributes: attributeSchema,
 })
   .unknown(false)

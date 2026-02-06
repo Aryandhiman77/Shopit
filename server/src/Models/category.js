@@ -5,19 +5,23 @@ const categorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true, trim: true },
     slug: { type: String, unique: true, lowercase: true, index: true },
+    description: { type: String, max: 400, required: false },
     parentCategory: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Category",
       default: null, // default for level-1 category
     },
+    childCategories: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category",
+        default: null,
+      },
+    ],
     level: {
       type: Number,
       enum: [1, 2, 3],
       default: 1,
-    },
-    isLeaf: {
-      type: Boolean,
-      default: false,
     },
     image: {
       url: { type: String },
@@ -40,7 +44,7 @@ const categorySchema = new mongoose.Schema(
       },
     ],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Auto-generate slug
