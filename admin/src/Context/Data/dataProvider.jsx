@@ -79,6 +79,7 @@ export const DataProvider = ({ children }) => {
   const [level1Categories, setLevel1Categories] = useState([]);
   const [level2Categories, setLevel2Categories] = useState([]);
   const [level3Categories, setLevel3Categories] = useState([]);
+  const [orderedCategories, setOrderedCategories] = useState([]);
   const [addedCategory, setAddedCategory] = useState({});
   const [formErrors, setFormErrors] = useState(null);
   const [errors, setErrors] = useState({ categories: null, products: null });
@@ -98,9 +99,27 @@ export const DataProvider = ({ children }) => {
   const isLoading = (key) => {
     return (loading[key] || 0) > 0;
   };
+
+  const getAllOrderedCategories = async () => {
+    startLoading(`ordered-categories`);
+    const response = await fetchData({
+      url: `/common/categories`,
+      method: "GET",
+    });
+    if (response?.success) {
+      setOrderedCategories(response.data);
+      stopLoading(`ordered-categories`);
+      return true;
+    }
+    if (response?.error) {
+      setErrors(response.error);
+      stopLoading(`ordered-categories`);
+    }
+  };
+
   const getCategoriesByLevel = async (level) => {
     if (!level || level > 3) return;
-    setLoading(`level-${level}-categories`);
+    startLoading(`level${level}categories`);
     const response = await fetchData({
       url: `/common/categories/${level}`,
       method: "GET",
@@ -113,12 +132,13 @@ export const DataProvider = ({ children }) => {
       } else {
         setLevel3Categories(response.data);
       }
-      stopLoading("add-category");
-      return true;
+      stopLoading(`level${level}categories`);
     }
-    stopLoading(`level-${level}-categories`);
+    if (response?.error) {
+      setErrors(response.error);
+      stopLoading(`level${level}categories`);
+    }
   };
-
   const addCategory = async (details) => {
     startLoading("add-category");
     const formdata = ConvertToFormData(details);
@@ -129,18 +149,46 @@ export const DataProvider = ({ children }) => {
       isFormData: true,
     });
     if (response?.success) {
-      setAddedCategory(response?.data);
+      // setAddedCategory(response?.data);
       toast.success("Category added.");
       stopLoading("add-category");
+      return true; // for reseting the form
+    }
+    if (response?.error) {
+      setErrors({ ...errors, categoriesByLevel: result.error });
+      stopLoading("add-category");
+    }
+    if (response?.formErrors) {
+      setFormErrors(response?.formErrors);
+      stopLoading("add-category");
+    }
+  };
+
+  const updateCategory = async (details) => {
+    const id = details.id;
+    delete details.id;
+    startLoading("update-category");
+    // const formdata = ConvertToFormData(details);
+    const response = await fetchData({
+      url: `/admin/categories/update/${id}`,
+      method: "PATCH",
+      payload: details,
+    });
+    if (response?.success) {
+      getAllOrderedCategories();
+      toast.success("Category updated.");
+      stopLoading("update-category");
       return true;
     }
     if (response?.error) {
-      stopLoading("add-category");
-      setErrors({ ...errors, categoriesByLevel: result.error });
+      setErrors({ ...errors, categoriesErrors: response.error });
+      stopLoading("update-category");
     }
-    stopLoading("add-category");
+    if (response?.formErrors) {
+      setFormErrors(response?.formErrors);
+      stopLoading("update-category");
+    }
   };
-
   return (
     <DataContext.Provider
       value={{
@@ -153,6 +201,9 @@ export const DataProvider = ({ children }) => {
         level2Categories,
         level3Categories,
         getCategoriesByLevel,
+        getAllOrderedCategories,
+        orderedCategories,
+        updateCategory,
       }}
     >
       {children}

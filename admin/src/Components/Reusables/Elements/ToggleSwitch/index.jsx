@@ -6,11 +6,17 @@ import {
 } from "react-icons/io";
 import { PiCheckCircle, PiCrossDuotone } from "react-icons/pi";
 
-const CustomToggle = ({ defaultChecked, setValue=()=>{}, setIsActive=()=>{} }) => {
+const CustomToggle = ({
+  defaultChecked,
+  setValue = () => {},
+  setIsActive = () => {},
+  getValue = () => {},
+}) => {
   const [isOn, setIsOn] = useState(defaultChecked ? true : false);
   useEffect(() => {
     setValue("isActive", isOn);
     setIsActive(isOn);
+    getValue(isOn);
   }, [isOn]);
   return (
     <div
@@ -19,12 +25,13 @@ const CustomToggle = ({ defaultChecked, setValue=()=>{}, setIsActive=()=>{} }) =
       }}
       className={`relative w-12 h-7 flex items-center rounded-full cursor-pointer transition-colors ${
         isOn ? "bg-green-600" : "bg-red-600"
-      }`}
+      } `}
     >
       <div
-        className={`absolute top-[2px] w-6 h-6 rounded-full flex items-center justify-center bg-white shadow-md transform transition-transform ${
+        className={`absolute top-[2px] w-6 h-6 rounded-full flex items-center justify-center bg-white shadow-md transform transition-transform  ${
           isOn ? "translate-x-[22px]" : "translate-x-[2px]"
-        }`}
+        }
+          `}
       >
         {isOn ? (
           <IoMdCheckmarkCircle size={30} className="text-green-600" />

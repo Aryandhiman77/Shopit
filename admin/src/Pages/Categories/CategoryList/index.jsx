@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Table from "../../../Components/Table";
 import CategoryRow from "../../../Components/Table/CategoryRow";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { PiExport } from "react-icons/pi";
 import Search from "../../../Components/Reusables/Search";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
@@ -10,19 +10,24 @@ import Box from "../../../Components/Reusables/Elements/Box";
 import { Divider } from "@mui/material";
 import CustomButton from "../../../Components/Reusables/Elements/CustomBtn";
 import Spinner from "../../../Components/Reusables/Elements/Loader/Spinner";
+import { SkeletonText } from "../../../Components/Reusables/Elements/Loader/Skeleton";
 
 const CategoryList = () => {
+  const navigate = useNavigate();
   const {
     level1Categories,
     level2Categories,
     level3Categories,
     getCategoriesByLevel,
+    getAllOrderedCategories,
+    orderedCategories,
     isLoading,
   } = useData();
   useEffect(() => {
-    getCategoriesByLevel(1);
-    getCategoriesByLevel(2);
-    getCategoriesByLevel(3);
+    // getCategoriesByLevel(1);
+    // getCategoriesByLevel(2);
+    // getCategoriesByLevel(3);
+    getAllOrderedCategories();
   }, []);
   return (
     <div className="flex flex-col gap-4">
@@ -44,12 +49,11 @@ const CategoryList = () => {
       <div className="w-[20%]">
         <Search placeholder={"Search Category ..."} />
       </div>
-      <Box className="space-y-4 bg-white">
+      <Box className="space-y-4 bg-white dark:bg-black">
         <div className="flex justify-between items-center">
-          <p className="text-gray-500 font-semibold text-xl">
-            Top level Categories
-          </p>
+          <p className="text-gray-500 font-semibold text-xl">Categories List</p>
           <CustomButton
+            onClick={() => navigate("/categories/add")}
             type="button"
             bg={"#9ca1dc"}
             title={"+ Add Top-level-Category"}
@@ -57,25 +61,25 @@ const CategoryList = () => {
           />
         </div>
         <Divider className="mb-4!" />
-        {isLoading("level-1-categories") ? (
+        {isLoading("ordered-categories") ? (
           <div className="flex justify-center items-center p-4">
-            <Spinner />
+            <Spinner size={40} />
           </div>
-        ) : level1Categories?.length > 0 ? (
+        ) : orderedCategories?.length > 0 ? (
           <Table
             attributes={[
+              "S.no",
               "Image",
               "Category Name",
-              // "Sub-Category",
-              // "Leaf-Category",
+              "Sub-Cateogories",
               "Status",
               "Created At",
               "Modified At",
               "Operations",
             ]}
           >
-            {level1Categories.map((cat) => (
-              <>{<CategoryRow category={cat} />}</>
+            {orderedCategories.map((cat, i) => (
+              <CategoryRow category={cat} index={i} key={`category-${i}`} />
             ))}
           </Table>
         ) : (

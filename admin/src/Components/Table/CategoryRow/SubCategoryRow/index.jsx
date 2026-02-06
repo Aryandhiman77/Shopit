@@ -1,5 +1,5 @@
+import React, { useState } from "react";
 import { Tooltip } from "@mui/joy";
-import React, { useEffect, useState } from "react";
 import {
   IoIosArrowDown,
   IoIosArrowUp,
@@ -8,34 +8,28 @@ import {
 } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import ToggleSwitch from "../../Reusables/Elements/ToggleSwitch";
-import { getFixedDateAndTimeString } from "../../../utilities/getDateAndTime";
-import SubCategoryRow from "./SubCategoryRow";
-import useData from "../../hooks/useData";
-
-const CategoryRow = ({ category, index = 0 }) => {
-  const [isItemsHidden, setIsItemsHidden] = useState(true);
+import ToggleSwitch from "../../../Reusables/Elements/ToggleSwitch";
+import { getFixedDateAndTimeString } from "../../../../utilities/getDateAndTime";
+import InnerSubCategoryRow from "../InnerSubCategoryRow";
+import useData from "../../../hooks/useData";
+const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
+  const [isSubItemsHidden, setIsSubItemsHidden] = useState(true);
   const { updateCategory } = useData();
-
   return (
     <>
-      {!isItemsHidden && (
+      {!isSubItemsHidden && (
         <tr>
           <td>&nbsp;</td>
         </tr>
       )}
-
-      <tr
-        className={`bg-white ${isItemsHidden ? "border" : "border-2 border-black! border-b-0 bg-amber-50!"} dark:bg-gray-900 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 overflow-hidden`}
-      >
+      <tr className="border-2 bg-amber-100 dark:bg-gray-800 hover:dark:bg-gray-700 ">
         <td className="px-2 py-4 whitespace-nowrap text-center border">
-          {index + 1}
+          {indexParent + 1}.{indexSubCat + 1}.
         </td>
-        <td className="px-6 py-4 border border-gray-400">
+        <td className="px-6 py-4">
           <div className="w-[150px]">
             <img
-              loading="lazy"
-              src={category?.image?.url}
+              src={subCategory?.image?.url}
               className="w-40 h-auto rounded-xl  object-cover"
               alt=""
             />
@@ -44,19 +38,19 @@ const CategoryRow = ({ category, index = 0 }) => {
         <td className="px-6 py-4 border border-gray-400 ">
           <div className="p-2">
             <p className="text-[12px] font-[600] capitalize">
-              {category?.name}
+              {subCategory?.name}
             </p>
           </div>
         </td>
         <td className="px-2 py-4 whitespace-nowrap text-center border border-gray-400 ">
-          {category?.subcategories?.length > 0 && (
+          {subCategory?.subcategories?.length > 0 && (
             <button
               className="custom-btn bg-primary!"
-              onClick={() => setIsItemsHidden(!isItemsHidden)}
+              onClick={() => setIsSubItemsHidden(!isSubItemsHidden)}
             >
               <div className="flex items-center gap-2 text-white">
-                {category?.subcategories?.length}
-                {isItemsHidden ? (
+                {subCategory?.subcategories?.length}
+                {isSubItemsHidden ? (
                   <IoMdEye color="white" size={20} />
                 ) : (
                   <IoMdEyeOff color="white" size={20} />
@@ -65,31 +59,24 @@ const CategoryRow = ({ category, index = 0 }) => {
             </button>
           )}
         </td>
-
-        {/* <td className="px-6 py-4 whitespace-nowrap border border-r-gray-400">
-          {category?.level2?.name}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap border border-r-gray-400">
-          {category?.level3?.name}
-        </td> */}
         <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
           <ToggleSwitch
-            defaultChecked={category.isActive}
+            defaultChecked={subCategory.isActive}
             getValue={(val) => {
-              if (category.isActive !== val) {
-                updateCategory({ isActive: val, id: category.id });
+              if (subCategory.isActive !== val) {
+                updateCategory({ isActive: val, id: subCategory.id });
               }
             }}
           />
         </td>
         <td className="px-6 py-4 whitespace-nowrap  border border-gray-400">
-          {getFixedDateAndTimeString(category?.createdAt)}
+          {getFixedDateAndTimeString(subCategory?.createdAt)}
         </td>
         <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
-          {getFixedDateAndTimeString(category?.updatedAt)}
+          {getFixedDateAndTimeString(subCategory?.updatedAt)}
         </td>
 
-        <td className="px-2 py-4 border border-gray-400">
+        <td className="px-6 py-4 border border-gray-400">
           <div className="flex gap-4 justify-center">
             <Tooltip title="Edit Category">
               <button className="custom-btn custom-border bg-green-600! text-white hover:text-[#e5e5e5]!">
@@ -104,18 +91,17 @@ const CategoryRow = ({ category, index = 0 }) => {
           </div>
         </td>
       </tr>
-      <>
-        {!isItemsHidden &&
-          category.subcategories?.map((subcat, i) => (
-            <SubCategoryRow
-              key={`subcat-${i}`}
-              subCategory={subcat}
-              indexParent={index}
-              indexSubCat={i}
-            />
-          ))}
-      </>
-      {!isItemsHidden && (
+      {!isSubItemsHidden &&
+        subCategory?.subcategories?.map((innerCat, i) => (
+          <InnerSubCategoryRow
+            key={`InnerSubCat-${i}`}
+            innerSubcategory={innerCat}
+            indexParent={indexParent}
+            indexSubCat={indexSubCat}
+            indexInnerSubCat={i}
+          />
+        ))}
+      {!isSubItemsHidden && (
         <tr>
           <td>&nbsp;</td>
         </tr>
@@ -124,4 +110,21 @@ const CategoryRow = ({ category, index = 0 }) => {
   );
 };
 
-export default CategoryRow;
+export default SubCategoryRow;
+
+//   {
+//     subcats?.map((subcat, idx) => (
+//       <React.Fragment key={`subCat-${index}-${idx + 1}`}>
+
+//         {isSubItemsHidden ? "YES" : "NO"}
+//         <InnerSubCategoryRow
+//           isHidden={isSubItemsHidden}
+//           innerSubcategories={subcat?.subcategories}
+//           indexParent={index}
+//           indeSubChild={idx}
+//         />
+//       </React.Fragment>
+//     ))}
+//   <tr>
+//     <td>&nbsp;</td>
+//   </tr>

@@ -1,7 +1,25 @@
 import axios from "axios";
+import { useEffect } from "react";
 import toast from "react-hot-toast";
 
 const MAX_RETRY = 3;
+
+let globalAbortController = new AbortController();
+const getGlobalSignal = () => globalAbortController.signal;
+
+const abortRequests = (reason = "Network Error") => {
+  globalAbortController.abort(reason);
+  globalAbortController = new AbortController();
+};
+let toastId = null;
+window.addEventListener("offline", () => {
+  toastId = toast.error("You are currently offline.", { duration: Infinity });
+});
+window.addEventListener("online", () => {
+  toast.dismiss(toastId);
+  globalAbortController = new AbortController();
+  toast.success("Connected to network.");
+});
 
 const api = axios.create({
   baseURL: "http://localhost:8000/api",
@@ -15,6 +33,9 @@ let isRefreshing = false;
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    if (error.code === "ERR_NETWORK") {
+      abortRequests("Cannot reach servers.");
+    }
     const originalRequest = error.config;
 
     if (
@@ -43,6 +64,12 @@ api.interceptors.response.use(
   },
 );
 
+/*-------------------Request Interceptors ------------------*/
+api.interceptors.request.use((config) => {
+  config.signal = getGlobalSignal();
+  return config;
+});
+
 /* ================= GENERIC REQUEST ================= */
 export const fetchData = async ({
   url,
@@ -58,15 +85,21 @@ export const fetchData = async ({
       method,
       data: payload,
       params,
-      signal,
       headers: isFormData ? undefined : { "Content-Type": "application/json" },
     });
-
     retryCount = 0;
     return res.data;
   } catch (err) {
+    if (err.code === "ERR_NETWORK") {
+      toast.error("Cannot connect to server.");
+      return { error: err };
+    }
+    if (err.name === "CanceledError") {
+      console.log("Request aborted:", err.message);
+      return;
+    }
     const apiErrors = err?.response?.data?.errors;
-    if (Array.isArray(apiErrors?.length > 0)) {
+    if (Array.isArray(apiErrors) && apiErrors.length > 0) {
       return { formErrors: apiErrors };
     }
 
