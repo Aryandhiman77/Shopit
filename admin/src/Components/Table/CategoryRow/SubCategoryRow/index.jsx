@@ -30,7 +30,7 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
           <div className="w-[150px]">
             <img
               src={subCategory?.image?.url}
-              className="w-40 h-auto rounded-xl  object-cover"
+              className="w-20 h-auto rounded-xl  object-cover"
               alt=""
             />
           </div>
@@ -43,13 +43,13 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
           </div>
         </td>
         <td className="px-2 py-4 whitespace-nowrap text-center border border-gray-400 ">
-          {subCategory?.subcategories?.length > 0 && (
+          {subCategory?.childCategories?.length > 0 && (
             <button
               className="custom-btn bg-primary!"
               onClick={() => setIsSubItemsHidden(!isSubItemsHidden)}
             >
               <div className="flex items-center gap-2 text-white">
-                {subCategory?.subcategories?.length}
+                {subCategory?.childCategories?.length}
                 {isSubItemsHidden ? (
                   <IoMdEye color="white" size={20} />
                 ) : (
@@ -64,7 +64,13 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
             defaultChecked={subCategory.isActive}
             getValue={(val) => {
               if (subCategory.isActive !== val) {
-                updateCategory({ isActive: val, id: subCategory.id });
+                updateCategory({
+                  isActive: val,
+                  id: subCategory._id,
+                  level: subCategory.level,
+                  parentIndex: indexParent,
+                  subCatIndex: indexSubCat,
+                });
               }
             }}
           />
@@ -92,7 +98,7 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
         </td>
       </tr>
       {!isSubItemsHidden &&
-        subCategory?.subcategories?.map((innerCat, i) => (
+        subCategory?.childCategories?.map((innerCat, i) => (
           <InnerSubCategoryRow
             key={`InnerSubCat-${i}`}
             innerSubcategory={innerCat}
@@ -111,20 +117,3 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
 };
 
 export default SubCategoryRow;
-
-//   {
-//     subcats?.map((subcat, idx) => (
-//       <React.Fragment key={`subCat-${index}-${idx + 1}`}>
-
-//         {isSubItemsHidden ? "YES" : "NO"}
-//         <InnerSubCategoryRow
-//           isHidden={isSubItemsHidden}
-//           innerSubcategories={subcat?.subcategories}
-//           indexParent={index}
-//           indeSubChild={idx}
-//         />
-//       </React.Fragment>
-//     ))}
-//   <tr>
-//     <td>&nbsp;</td>
-//   </tr>

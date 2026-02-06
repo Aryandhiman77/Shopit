@@ -165,17 +165,51 @@ export const DataProvider = ({ children }) => {
   };
 
   const updateCategory = async (details) => {
+    if (!details.level) return;
     const id = details.id;
+    const level = details.level;
+    const indexes = {
+      parentIndex: details.parentIndex,
+      subCatIndex: details.subCatIndex,
+      innerSubCatIndex: details.innerSubCatIndex,
+    };
+    delete details.parentIndex;
+    delete details.subCatIndex;
+    delete details.innerSubCatIndex;
     delete details.id;
+    delete details.level;
     startLoading("update-category");
-    // const formdata = ConvertToFormData(details);
     const response = await fetchData({
       url: `/admin/categories/update/${id}`,
       method: "PATCH",
       payload: details,
     });
     if (response?.success) {
-      getAllOrderedCategories();
+      let allcategories = orderedCategories;
+      if (level === 1 && indexes.parentIndex !== undefined) {
+        allcategories[indexes.parentIndex] = response?.data;
+        console.log(allcategories);
+        setOrderedCategories(allcategories);
+      } else if (
+        level === 2 &&
+        indexes.parentIndex !== undefined &&
+        indexes.subCatIndex !== undefined
+      ) {
+        allcategories[indexes.parentIndex].childCategories[
+          indexes.subCatIndex
+        ] = response?.data;
+        setOrderedCategories(allcategories);
+      } else if (
+        level === 3 &&
+        indexes.parentIndex !== undefined &&
+        indexes.subCatIndex !== undefined &&
+        indexes.innerSubCatIndex !== undefined
+      ) {
+        allcategories[indexes.parentIndex].childCategories[
+          indexes.subCatIndex
+        ].childCategories[indexes.innerSubCatIndex] = response?.data;
+        console.log(allcategories);
+      }
       toast.success("Category updated.");
       stopLoading("update-category");
       return true;

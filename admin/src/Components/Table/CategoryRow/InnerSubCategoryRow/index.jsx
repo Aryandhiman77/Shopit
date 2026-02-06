@@ -25,10 +25,10 @@ const InnerSubCategoryRow = ({
           {indexParent + 1}.{indexSubCat + 1}.{indexInnerSubCat + 1}.
         </td>
         <td className="px-6 py-4">
-          <div className="w-[150px]">
+          <div className="w-[150px] flex justify-center ">
             <img
               src={innerSubcategory?.image?.url}
-              className="w-40 h-auto rounded-xl  object-cover"
+              className="w-20 h-auto rounded-xl  object-cover"
               alt=""
             />
           </div>
@@ -48,7 +48,14 @@ const InnerSubCategoryRow = ({
             defaultChecked={innerSubcategory.isActive}
             getValue={(val) => {
               if (innerSubcategory.isActive !== val) {
-                updateCategory({ isActive: val, id: innerSubcategory.id });
+                updateCategory({
+                  isActive: val,
+                  id: innerSubcategory._id,
+                  level: innerSubcategory.level,
+                  parentIndex: indexParent,
+                  subCatIndex: indexSubCat,
+                  innerSubCatIndex: indexInnerSubCat,
+                });
               }
             }}
           />

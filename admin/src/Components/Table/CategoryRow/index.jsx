@@ -13,7 +13,7 @@ import { getFixedDateAndTimeString } from "../../../utilities/getDateAndTime";
 import SubCategoryRow from "./SubCategoryRow";
 import useData from "../../hooks/useData";
 
-const CategoryRow = ({ category, index = 0 }) => {
+const CategoryRow = ({ category, index }) => {
   const [isItemsHidden, setIsItemsHidden] = useState(true);
   const { updateCategory } = useData();
 
@@ -26,7 +26,7 @@ const CategoryRow = ({ category, index = 0 }) => {
       )}
 
       <tr
-        className={`bg-white ${isItemsHidden ? "border" : "border-2 border-black! border-b-0 bg-amber-50!"} dark:bg-gray-900 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 overflow-hidden`}
+        className={`border ${isItemsHidden ? "border" : "border-2 border-black border-b-0 bg-amber-50"} dark:bg-gray-900 dark:border-gray-400! border-gray-500`}
       >
         <td className="px-2 py-4 whitespace-nowrap text-center border">
           {index + 1}
@@ -36,7 +36,7 @@ const CategoryRow = ({ category, index = 0 }) => {
             <img
               loading="lazy"
               src={category?.image?.url}
-              className="w-40 h-auto rounded-xl  object-cover"
+              className="w-20 h-auto rounded-xl  object-cover"
               alt=""
             />
           </div>
@@ -49,13 +49,13 @@ const CategoryRow = ({ category, index = 0 }) => {
           </div>
         </td>
         <td className="px-2 py-4 whitespace-nowrap text-center border border-gray-400 ">
-          {category?.subcategories?.length > 0 && (
+          {category?.childCategories?.length > 0 && (
             <button
               className="custom-btn bg-primary!"
               onClick={() => setIsItemsHidden(!isItemsHidden)}
             >
               <div className="flex items-center gap-2 text-white">
-                {category?.subcategories?.length}
+                {category?.childCategories?.length}
                 {isItemsHidden ? (
                   <IoMdEye color="white" size={20} />
                 ) : (
@@ -77,7 +77,12 @@ const CategoryRow = ({ category, index = 0 }) => {
             defaultChecked={category.isActive}
             getValue={(val) => {
               if (category.isActive !== val) {
-                updateCategory({ isActive: val, id: category.id });
+                updateCategory({
+                  isActive: val,
+                  id: category._id,
+                  level: category.level,
+                  parentIndex: index,
+                });
               }
             }}
           />
@@ -106,7 +111,7 @@ const CategoryRow = ({ category, index = 0 }) => {
       </tr>
       <>
         {!isItemsHidden &&
-          category.subcategories?.map((subcat, i) => (
+          category.childCategories?.map((subcat, i) => (
             <SubCategoryRow
               key={`subcat-${i}`}
               subCategory={subcat}
