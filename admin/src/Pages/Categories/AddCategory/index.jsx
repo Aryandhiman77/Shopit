@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Divider, TextField } from "@mui/material";
+import { Divider, FormControl, FormHelperText, TextField } from "@mui/material";
 import ImageDropBox from "../../../Components/Reusables/ImageDropBox";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
 import { useForm } from "react-hook-form";
@@ -24,6 +24,9 @@ import {
 } from "react-icons/bs";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa6";
+import MenuItem from "@mui/material/MenuItem";
+import Spinner from "../../../Components/Reusables/Elements/Loader/Spinner";
+import js from "@eslint/js";
 
 const AddCategory = () => {
   const {
@@ -31,13 +34,21 @@ const AddCategory = () => {
     handleSubmit,
     setValue,
     reset,
+    watch,
     formState: { errors },
   } = useForm({ resolver: yupResolver(categoryValidationSchema) });
-
+  const categoryLevelStatus = watch("level");
+  const {
+    addCategory,
+    isLoading,
+    getCategoriesByLevel,
+    level2Categories,
+    level1Categories,
+  } = useData();
+  const mergedCategories = [...level1Categories, ...level2Categories];
   const [isActive, setIsActive] = useState(false);
   const [images, setImages] = useState([]);
   const [resetDropBox, setResetDropBox] = useState(false);
-  const { addCategory, isLoading } = useData();
   const [attributes, setAttributes] = useState([]);
   const [isAddAttributeFormEnabled, setisAddAttributesFormEnabled] =
     useState(false);
@@ -48,7 +59,6 @@ const AddCategory = () => {
     setisAddAttributesFormEnabled(true);
   };
   const deleteAttribute = (i) => {
-    console.log(i);
     const filteredAttributes = attributes?.filter((_, index) => index !== i);
     setAttributes(filteredAttributes);
   };
@@ -70,9 +80,6 @@ const AddCategory = () => {
       setImages([]);
     }
   };
-  useEffect(() => {
-    console.log(attributes);
-  }, [attributes]);
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
@@ -82,16 +89,87 @@ const AddCategory = () => {
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4 ">
         <>
-          <TextField
-            className="w-full bg-white"
-            {...register("name")}
-            name="name"
-            label="Category Name"
-            variant="outlined"
-            required
-            size="small"
-          />
-          <FormError error={errors.name?.message} />
+          <div className="flex items-center gap-4">
+            <>
+              <TextField
+                select
+                className="w-full bg-white"
+                {...register("level")}
+                name="level"
+                label="Select Level"
+                defaultValue={1}
+                variant="outlined"
+                required
+                onChange={(e) => {
+                  setValue("level", e.target.value);
+                  if (level1Categories.length && level2Categories.length) {
+                    return;
+                  }
+                  if (e.target.value === 2) {
+                    getCategoriesByLevel(1);
+                  } else if (e.target.value === 3) {
+                    getCategoriesByLevel(2);
+                  }
+                }}
+                size="small"
+              >
+                <MenuItem value={1}>Main-Category</MenuItem>
+                <MenuItem value={2}>Sub-Category</MenuItem>
+                <MenuItem value={3}>Leaf-Category</MenuItem>
+              </TextField>
+              <FormError error={errors.level?.message} />
+            </>
+            {categoryLevelStatus > 1 && (
+              <>
+                <TextField
+                  select
+                  className="w-full bg-white capitalize"
+                  {...register("parent")}
+                  name="parent"
+                  label="Select Parent Category"
+                  variant="outlined"
+                  defaultValue={"none"}
+                  required
+                  size="small"
+                >
+                  <MenuItem value={"none"}>None</MenuItem>
+                  {isLoading(
+                    `level${categoryLevelStatus === 2 ? 1 : 2}categories`,
+                  ) ? (
+                    <div className="flex justify-center items-center h-20">
+                      <Spinner size={30} />
+                    </div>
+                  ) : categoryLevelStatus === 3 ? (
+                    mergedCategories?.map((item) => (
+                      <MenuItem className="capitalize" value={item?._id}>
+                        {item.name}
+                      </MenuItem>
+                    ))
+                  ) : (
+                    categoryLevelStatus === 2 &&
+                    level1Categories?.map((item) => (
+                      <MenuItem className="capitalize" value={item?._id}>
+                        {item?.name}
+                      </MenuItem>
+                    ))
+                  )}
+                </TextField>
+                <FormError error={errors.parent?.message} />
+              </>
+            )}
+          </div>
+          <>
+            <TextField
+              className="w-full bg-white"
+              {...register("name")}
+              name="name"
+              label="Category Name"
+              variant="outlined"
+              required
+              size="small"
+            />
+            <FormError error={errors.name?.message} />
+          </>
         </>
 
         <>
@@ -118,9 +196,11 @@ const AddCategory = () => {
         </div>
         <div className="flex gap-2 items-center">
           <CustomToggle
-            defaultChecked={isActive}
-            setValue={setValue}
-            setIsActive={setIsActive}
+            checked={isActive}
+            onChange={(val) => {
+              setIsActive(val);
+              setValue("isActive", val);
+            }}
           />
           {isActive ? (
             <span className="text-green-600">Active</span>
