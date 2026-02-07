@@ -52,7 +52,7 @@ export const createCategorySchema = Joi.object({
     "any.required": "Category description is required.",
     "string.empty": "Category description cannot be empty.",
   }),
-  parent: Joi.string().lowercase().optional(),
+  parent: Joi.string().lowercase().optional().max(24), //mongodb id is 24 characters.
   level: Joi.number().valid(1, 2, 3).required().messages({
     "any.only": "Category level must be either 1, 2, or 3.",
     "number.base": "Category level must be a number.",

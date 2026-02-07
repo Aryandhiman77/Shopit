@@ -23,11 +23,10 @@ export const createCategory = AsyncWrapper(async (req, res, next) => {
         ),
       );
   } catch (error) {
-    let err = error;
     if (req.file) {
-      fs.unlink(req.file?.path, (errors) => (err += errors));
+      fs.unlink(req.file?.path);
     }
-    next(err);
+    next(error);
   }
 });
 
@@ -67,7 +66,12 @@ export const updateCategoryImageController = AsyncWrapper(
       return res
         .status(200)
         .json(new ApiResponse(200, updatedCategory, `category updated.`));
-    } catch (error) {}
+    } catch (error) {
+      if (req.file) {
+        fs.unlink(req.file?.path);
+      }
+      next(error);
+    }
   },
 );
 
@@ -78,3 +82,5 @@ export const deleteCategory = AsyncWrapper(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, null, `category deleted along with childrens.`));
 });
+
+//! todo-> fix needed in category file deletion in catch block in createCategories.

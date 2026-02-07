@@ -23,7 +23,7 @@ export const createCategoryService = async (
   }
   let parentCategory = null;
   if (level >= 2) {
-    parentCategory = await Categories.findOne({ slug: parent }).select(
+    parentCategory = await Categories.findOne({ _id: parent }).select(
       "_id level name slug childCategories",
     );
 
