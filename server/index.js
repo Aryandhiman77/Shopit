@@ -40,14 +40,15 @@ app.use(express.static(path.join(__dirname, "/public")));
 app.use(cookieParser());
 
 const limiter = rateLimit({
-  windowMs: 60 * 1000, // 1s
-  limit: 10,
+  windowMs: 60 * 1000, // 1minute
+  limit: 60,
   handler: (req, res, next, options) => {
     throw new ApiError(429, "Too many clicks, please wait..");
   },
 });
 
-app.use(limiter);
+app.use(limiter); // endpoints must have separate api limitations
+
 app.use(morgan("dev"));
 app.use("/api/", routes);
 

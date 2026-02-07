@@ -117,23 +117,43 @@ export const updateCategoryService = async ({
   if (!saved) {
     throw new ApiError(500, "Technical issue, cannot save category.");
   }
-  saved = await saved.populate({
-    path: "childCategories",
-    populate: { path: "childCategories" },
-  });
-  delete saved.attributes;
+  saved = await Categories.findById(saved._id)
+    .select("-attributes")
+    .populate({
+      path: "childCategories",
+      select: "-attributes",
+      populate: {
+        path: "childCategories",
+        select: "-attributes",
+      },
+    });
+
   return { category: saved };
 };
 
 export const updateCategoryStatusService = async ({ catId }, { isActive }) => {
-  const category = await Categories.findById(catId);
+  const category = await Categories.findById(catId).populate({
+    path: "parentCategory",
+    select: "isActive name",
+  });
   if (!category) {
     throw new ApiError(400, "Invalid category.");
   }
+  if (category.parentCategory?.isActive === false) {
+    throw new ApiError(
+      400,
+      `First enable Parent Category (${category.parentCategory.name}).`,
+    );
+  }
   category.isActive = isActive;
+
   if (category.childCategories?.length && isActive === false) {
+    const childrens = await Categories.find({
+      _id: { $in: category.childCategories },
+    }).select("childCategories");
+    const subChildrens = childrens?.flatMap((child) => child.childCategories);
     await Categories.updateMany(
-      { _id: { $in: [...category.childCategories] } },
+      { _id: { $in: [...category.childCategories, ...subChildrens] } },
       {
         $set: {
           isActive: false,
@@ -145,12 +165,17 @@ export const updateCategoryStatusService = async ({ catId }, { isActive }) => {
   if (!saved) {
     throw new ApiError(500, "Technical issue, cannot save category.");
   }
-  saved = await saved.populate({
-    path: "childCategories",
-    select: "-attributes",
-    populate: { path: "childCategories", select: "-attributes" },
-  });
-  delete saved.attributes;
+  saved = await Categories.findById(saved._id)
+    .select("-attributes")
+    .populate({
+      path: "childCategories",
+      select: "-attributes",
+      populate: {
+        path: "childCategories",
+        select: "-attributes",
+      },
+    });
+
   return { category: saved };
 };
 
