@@ -5,11 +5,13 @@ import {
   updateCategory,
   deleteCategory,
   updateCategoryImageController,
+  updateCategoryStatus,
 } from "../../Controllers/admin/category.controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
   createCategorySchema,
   updateCategorySchema,
+  updateStatusSchema,
 } from "../../validations/admin/category.validations.js";
 import { jsonParser } from "../../Helpers/jsonParser.js";
 const categoryRoutes = express.Router();
@@ -23,6 +25,11 @@ categoryRoutes
     createCategory,
   )
   .patch("/update/:catId", validate(updateCategorySchema), updateCategory)
+  .patch(
+    "/update-cat-status/:catId",
+    validate(updateStatusSchema),
+    updateCategoryStatus,
+  )
   .patch(
     "/update/:catId/image",
     upload.single("image"),

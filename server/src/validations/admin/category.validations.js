@@ -79,14 +79,21 @@ export const updateCategorySchema = Joi.object({
     "any.required": "Category description is required.",
     "string.empty": "Category description cannot be empty.",
   }),
-  isActive: Joi.boolean().messages({
-    "boolean.base": "Category status must be either true or false",
-    "any.required": "Category status is required.",
-  }),
   parent: Joi.string().lowercase(),
   attributes: attributeSchema,
 })
   .unknown(false)
   .messages({
     "object.unknown": "Extra fields are not allowed in category.",
+  });
+
+export const updateStatusSchema = Joi.object({
+  isActive: Joi.boolean().required().messages({
+    "boolean.base": "Category status must be either true or false",
+    "any.required": "Category status is required.",
+  }),
+})
+  .unknown(false)
+  .messages({
+    "object.unknown": "Extra fields are not allowed.",
   });

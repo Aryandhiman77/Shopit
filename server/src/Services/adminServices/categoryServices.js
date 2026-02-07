@@ -85,7 +85,7 @@ export const createCategoryService = async (
 export const updateCategoryService = async ({
   catId,
   name,
-  isActive,
+  // isActive,
   attributes,
   description,
   parent,
@@ -100,7 +100,7 @@ export const updateCategoryService = async ({
   }
 
   if (name) category.name = name;
-  if (isActive !== undefined) category.isActive = isActive;
+  // if (isActive !== undefined) category.isActive = isActive;
   if (description) category.description = description;
   if (attributes?.length > 0) category.attributes = attributes;
   if (parent) {
@@ -122,9 +122,36 @@ export const updateCategoryService = async ({
     populate: { path: "childCategories" },
   });
   delete saved.attributes;
-  return {
-    category: saved,
-  };
+  return { category: saved };
+};
+
+export const updateCategoryStatusService = async ({ catId }, { isActive }) => {
+  const category = await Categories.findById(catId);
+  if (!category) {
+    throw new ApiError(400, "Invalid category.");
+  }
+  category.isActive = isActive;
+  if (category.childCategories?.length && isActive === false) {
+    await Categories.updateMany(
+      { _id: { $in: [...category.childCategories] } },
+      {
+        $set: {
+          isActive: false,
+        },
+      },
+    );
+  }
+  let saved = await category.save();
+  if (!saved) {
+    throw new ApiError(500, "Technical issue, cannot save category.");
+  }
+  saved = await saved.populate({
+    path: "childCategories",
+    select: "-attributes",
+    populate: { path: "childCategories", select: "-attributes" },
+  });
+  delete saved.attributes;
+  return { category: saved };
 };
 
 export const updateCategoryImage = async (catId, image) => {

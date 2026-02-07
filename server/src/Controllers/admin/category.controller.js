@@ -5,6 +5,7 @@ import {
   recursiveDeleteCategoryService,
   updateCategoryImage,
   updateCategoryService,
+  updateCategoryStatusService,
 } from "../../Services/adminServices/categoryServices.js";
 import Categories from "../../Models/category.js";
 import fs from "fs";
@@ -44,6 +45,20 @@ export const updateCategory = AsyncWrapper(async (req, res) => {
       ),
     );
 });
+
+export const updateCategoryStatus = AsyncWrapper(async (req, res) => {
+  const { category } = await updateCategoryStatusService(req.params, req.body);
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        category,
+        `Level-${category.level} category ${category.isActive ? "enabled." : "disabled"}.`,
+      ),
+    );
+});
+
 export const updateCategoryImageController = AsyncWrapper(
   async (req, res, next) => {
     const { catId } = req.params;
