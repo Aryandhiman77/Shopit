@@ -35,6 +35,7 @@ const AddCategory = () => {
     setValue,
     reset,
     watch,
+    getValues,
     formState: { errors },
   } = useForm({ resolver: yupResolver(categoryValidationSchema) });
   const categoryLevelStatus = watch("level");
@@ -45,7 +46,6 @@ const AddCategory = () => {
     level2Categories,
     level1Categories,
   } = useData();
-  const mergedCategories = [...level1Categories, ...level2Categories];
   const [isActive, setIsActive] = useState(false);
   const [images, setImages] = useState([]);
   const [resetDropBox, setResetDropBox] = useState(false);
@@ -67,7 +67,7 @@ const AddCategory = () => {
     if (images.length === 0) {
       return toast.error("Image is required.");
     }
-    let details = { ...data, image: images[0], level: 1 };
+    let details = { ...data, image: images[0] };
     if (attributes.length > 0) {
       const strinfiedAtt = JSON.stringify(attributes);
       details = { ...details, attributes: strinfiedAtt };
@@ -140,7 +140,7 @@ const AddCategory = () => {
                       <Spinner size={30} />
                     </div>
                   ) : categoryLevelStatus === 3 ? (
-                    mergedCategories?.map((item) => (
+                    level2Categories?.map((item) => (
                       <MenuItem className="capitalize" value={item?._id}>
                         {item.name}
                       </MenuItem>

@@ -18,8 +18,9 @@ const categoryValidationSchema = yup
     name: "parent-required",
     message: "Select Parent Category.",
     test: (value) => {
-      const level = value.level > 0 ? level : 1;
+      const level = value.level;
       const parent = value.parent;
+      if (level === 1) return true;
       if (level > 1 && parent !== "none") {
         return true;
       }
