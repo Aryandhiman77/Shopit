@@ -8,14 +8,42 @@ import {
 } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import ToggleSwitch from "../../Reusables/Elements/ToggleSwitch";
 import { getFixedDateAndTimeString } from "../../../utilities/getDateAndTime";
 import SubCategoryRow from "./SubCategoryRow";
 import useData from "../../hooks/useData";
+import CustomToggle from "../../Reusables/Elements/CustomToggle";
 
 const CategoryRow = ({ category, index }) => {
   const [isItemsHidden, setIsItemsHidden] = useState(true);
-  const { updateCategory } = useData();
+  const { updateCategory, isLoading, handleFullScreenConfirmation } = useData();
+
+  const handleStatusChange = (val) => {
+    {
+      if (category?.isActive === true) {
+        handleFullScreenConfirmation({
+          fn: () =>
+            updateCategory({
+              id: category._id,
+              isActive: val,
+            }),
+          message: category.isActive === true && (
+            <>
+              Disabling this Category will also disable its all
+              children-categories.
+              <br />
+              <br /> Are you Sure you want to delete it.
+            </>
+          ),
+        });
+        return;
+      } else {
+        updateCategory({
+          id: category._id,
+          isActive: val,
+        });
+      }
+    }
+  };
 
   return (
     <>
@@ -73,18 +101,11 @@ const CategoryRow = ({ category, index }) => {
           {category?.level3?.name}
         </td> */}
         <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
-          <ToggleSwitch
-            defaultChecked={category.isActive}
-            getValue={(val) => {
-              if (category.isActive !== val) {
-                updateCategory({
-                  isActive: val,
-                  id: category._id,
-                  level: category.level,
-                  parentIndex: index,
-                });
-              }
-            }}
+          <CustomToggle
+            checked={category.isActive}
+            loading={isLoading(`update-${category._id}-category`)}
+            disabled={isLoading(`update-${category._id}-category`)}
+            onChange={(val) => handleStatusChange(val)}
           />
         </td>
         <td className="px-6 py-4 whitespace-nowrap  border border-gray-400">

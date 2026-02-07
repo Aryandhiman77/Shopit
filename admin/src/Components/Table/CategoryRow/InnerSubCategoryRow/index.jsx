@@ -8,16 +8,16 @@ import {
 } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import ToggleSwitch from "../../../Reusables/Elements/ToggleSwitch";
 import { getFixedDateAndTimeString } from "../../../../utilities/getDateAndTime";
 import useData from "../../../hooks/useData";
+import CustomToggle from "../../../Reusables/Elements/CustomToggle";
 const InnerSubCategoryRow = ({
   innerSubcategory,
   indexParent,
   indexSubCat,
   indexInnerSubCat,
 }) => {
-  const { updateCategory } = useData();
+  const { updateCategory, isLoading } = useData();
   return (
     <>
       <tr className="border-2 bg-[#f4dba8] dark:bg-gray-700 hover:dark:bg-gray-600 ">
@@ -44,19 +44,15 @@ const InnerSubCategoryRow = ({
           -
         </td>
         <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
-          <ToggleSwitch
-            defaultChecked={innerSubcategory.isActive}
-            getValue={(val) => {
-              if (innerSubcategory.isActive !== val) {
-                updateCategory({
-                  isActive: val,
-                  id: innerSubcategory._id,
-                  level: innerSubcategory.level,
-                  parentIndex: indexParent,
-                  subCatIndex: indexSubCat,
-                  innerSubCatIndex: indexInnerSubCat,
-                });
-              }
+          <CustomToggle
+            checked={innerSubcategory.isActive}
+            loading={isLoading(`update-${innerSubcategory._id}-category`)}
+            disabled={isLoading(`update-${innerSubcategory._id}-category`)}
+            onChange={(val) => {
+              updateCategory({
+                id: innerSubcategory._id,
+                isActive: val,
+              });
             }}
           />
         </td>

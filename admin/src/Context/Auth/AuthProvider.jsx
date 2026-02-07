@@ -105,6 +105,13 @@ const AuthProvider = ({ children }) => {
         url: "/auth/logout",
         method: "PATCH",
       });
+      if (
+        response?.error?.response?.data?.message.includes("Already logged out.")
+      ) {
+        console.log(response);
+        localStorage.clear();
+        navigate("/login", { replace: true });
+      }
       if (response?.success) {
         localStorage.removeItem("user");
         setUser(null);

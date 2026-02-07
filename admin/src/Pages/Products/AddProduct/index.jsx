@@ -4,7 +4,7 @@ import { TextField } from "@mui/material";
 import DropDownField from "../../../Components/Reusables/DropDownField";
 import TinyEditor from "../../../Components/Reusables/TinyEditor";
 import ImageDropBox from "../../../Components/Reusables/ImageDropBox";
-import ToggleSwitch from "../../../Components/Reusables/Elements/ToggleSwitch";
+import CustomToggle from "../../../Components/Reusables/Elements/CustomToggle";
 import Box from "../../../Components/Reusables/Elements/Box";
 import { Link } from "react-router-dom";
 import { PiPlus, PiPlusBold } from "react-icons/pi";
@@ -176,22 +176,22 @@ const AddProduct = () => {
               <h1 className="heading-1 py-2">Product settings</h1>
               <div className="flex my-4 gap-2 justify-between ">
                 <p className="font-[500]"> In Stock ?</p>
-                <ToggleSwitch />
+                <CustomToggle />
               </div>
               <div className="flex my-4 gap-2 justify-between ">
                 <p className="font-[500]"> Is Featured ?</p>
-                <ToggleSwitch />
+                <CustomToggle />
               </div>
               <div className="flex my-4 gap-2 justify-between">
                 <p className="font-[500]"> Is Trending ?</p>
-                <ToggleSwitch defaultChecked={true} />
+                <CustomToggle defaultChecked={true} />
               </div>
             </Box>
           </div>
           <Box className={"flex  items-center gap-10  bg-white"}>
             <div className="flex my-4 gap-2 ">
               <p className="font-[500]"> Free Shipping ?</p>
-              <ToggleSwitch />
+              <CustomToggle />
             </div>
             <TextField
               className="w-1/2"

@@ -6,15 +6,43 @@ import {
   IoMdEye,
   IoMdEyeOff,
 } from "react-icons/io";
-import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import ToggleSwitch from "../../../Reusables/Elements/ToggleSwitch";
 import { getFixedDateAndTimeString } from "../../../../utilities/getDateAndTime";
 import InnerSubCategoryRow from "../InnerSubCategoryRow";
 import useData from "../../../hooks/useData";
+import CustomToggle from "../../../Reusables/Elements/CustomToggle";
 const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
   const [isSubItemsHidden, setIsSubItemsHidden] = useState(true);
-  const { updateCategory } = useData();
+  const { updateCategory, isLoading, handleFullScreenConfirmation } = useData();
+
+  const handleStatusChange = (val) => {
+    {
+      if (subCategory?.isActive === true) {
+        handleFullScreenConfirmation({
+          fn: () =>
+            updateCategory({
+              id: subCategory._id,
+              isActive: val,
+            }),
+          message: subCategory.isActive === true && (
+            <>
+              Disabling this Sub-Category will also disable its all
+              children-categories.
+              <br />
+              <br /> Are you Sure you want to delete it.
+            </>
+          ),
+        });
+        return;
+      } else {
+        updateCategory({
+          id: subCategory._id,
+          isActive: val,
+        });
+      }
+    }
+  };
+
   return (
     <>
       {!isSubItemsHidden && (
@@ -60,19 +88,11 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
           )}
         </td>
         <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
-          <ToggleSwitch
-            defaultChecked={subCategory.isActive}
-            getValue={(val) => {
-              if (subCategory.isActive !== val) {
-                updateCategory({
-                  isActive: val,
-                  id: subCategory._id,
-                  level: subCategory.level,
-                  parentIndex: indexParent,
-                  subCatIndex: indexSubCat,
-                });
-              }
-            }}
+          <CustomToggle
+            checked={subCategory.isActive}
+            loading={isLoading(`update-${subCategory._id}-category`)}
+            disabled={isLoading(`update-${subCategory._id}-category`)}
+            onChange={(val) => handleStatusChange(val)}
           />
         </td>
         <td className="px-6 py-4 whitespace-nowrap  border border-gray-400">

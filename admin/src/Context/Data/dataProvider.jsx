@@ -5,6 +5,7 @@ import { DataContext } from "./DataContext";
 import { fetchData } from "../../utilities/RequestAPI";
 import ConvertToFormData from "../../utilities/ConvertToFormData";
 import toast from "react-hot-toast";
+import CustomToast from "../../Components/Reusables/CustomToast";
 
 // ✅ Provider Component
 export const DataProvider = ({ children }) => {
@@ -100,6 +101,15 @@ export const DataProvider = ({ children }) => {
     return (loading[key] || 0) > 0;
   };
 
+  const handleFullScreenConfirmation = ({ fn, message }) => {
+    toast.custom(
+      (obj) => <CustomToast callFn={fn} toastId={obj.id} message={message} />,
+      {
+        duration: Infinity,
+      },
+    );
+  };
+
   const getAllOrderedCategories = async () => {
     startLoading(`ordered-categories`);
     const response = await fetchData({
@@ -164,63 +174,46 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  const replaceCategoryById = (tree, updated) => {
+    return tree?.map((cat) => {
+      if (updated._id === cat._id) {
+        return updated;
+      }
+      if (cat.childCategories?.length) {
+        return {
+          ...cat,
+          childCategories: replaceCategoryById(cat.childCategories, updated),
+        };
+      }
+      return cat;
+    });
+  };
+
   const updateCategory = async (details) => {
-    if (!details.level) return;
     const id = details.id;
-    const level = details.level;
-    const indexes = {
-      parentIndex: details.parentIndex,
-      subCatIndex: details.subCatIndex,
-      innerSubCatIndex: details.innerSubCatIndex,
-    };
-    delete details.parentIndex;
-    delete details.subCatIndex;
-    delete details.innerSubCatIndex;
     delete details.id;
-    delete details.level;
-    startLoading("update-category");
+    startLoading(`update-${id}-category`);
     const response = await fetchData({
-      url: `/admin/categories/update/${id}`,
+      url: `/admin/categories/update-cat-status/${id}`,
       method: "PATCH",
       payload: details,
     });
     if (response?.success) {
-      let allcategories = orderedCategories;
-      if (level === 1 && indexes.parentIndex !== undefined) {
-        allcategories[indexes.parentIndex] = response?.data;
-        console.log(allcategories);
-        setOrderedCategories(allcategories);
-      } else if (
-        level === 2 &&
-        indexes.parentIndex !== undefined &&
-        indexes.subCatIndex !== undefined
-      ) {
-        allcategories[indexes.parentIndex].childCategories[
-          indexes.subCatIndex
-        ] = response?.data;
-        setOrderedCategories(allcategories);
-      } else if (
-        level === 3 &&
-        indexes.parentIndex !== undefined &&
-        indexes.subCatIndex !== undefined &&
-        indexes.innerSubCatIndex !== undefined
-      ) {
-        allcategories[indexes.parentIndex].childCategories[
-          indexes.subCatIndex
-        ].childCategories[indexes.innerSubCatIndex] = response?.data;
-        console.log(allcategories);
-      }
-      toast.success("Category updated.");
-      stopLoading("update-category");
+      setOrderedCategories((prev) => {
+        const replacedData = replaceCategoryById(prev, response?.data);
+        return replacedData;
+      });
+      toast.success(response?.message);
+      stopLoading(`update-${id}-category`);
       return true;
     }
     if (response?.error) {
       setErrors({ ...errors, categoriesErrors: response.error });
-      stopLoading("update-category");
+      stopLoading(`update-${id}-category`);
     }
     if (response?.formErrors) {
       setFormErrors(response?.formErrors);
-      stopLoading("update-category");
+      stopLoading(`update-${id}-category`);
     }
   };
   return (
@@ -238,6 +231,7 @@ export const DataProvider = ({ children }) => {
         getAllOrderedCategories,
         orderedCategories,
         updateCategory,
+        handleFullScreenConfirmation,
       }}
     >
       {children}

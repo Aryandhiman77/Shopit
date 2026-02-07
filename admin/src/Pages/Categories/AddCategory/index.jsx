@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import categoryValidationSchema from "../validation";
 import FormError from "../../../Components/Reusables/FormError";
-import CustomToggle from "../../../Components/Reusables/Elements/ToggleSwitch";
+import CustomToggle from "../../../Components/Reusables/Elements/CustomToggle";
 import toast from "react-hot-toast";
 import useData from "../../../Components/hooks/useData";
 import CustomButton from "../../../Components/Reusables/Elements/CustomBtn";

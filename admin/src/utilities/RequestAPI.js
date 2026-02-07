@@ -91,7 +91,7 @@ export const fetchData = async ({
     return res.data;
   } catch (err) {
     if (err.code === "ERR_NETWORK") {
-      toast.error("Cannot connect to server.");
+      toast.error("Server is currently unreachable.");
       return { error: err };
     }
     if (err.name === "CanceledError") {

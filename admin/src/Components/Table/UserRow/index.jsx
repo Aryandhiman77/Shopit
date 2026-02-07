@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import CustomToggle from "../../Reusables/Elements/ToggleSwitch";
+import CustomToggle from "../../Reusables/Elements/CustomToggle";
 
 const UserRow = ({ user }) => {
   return (
