@@ -29,7 +29,7 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
               Disabling this Sub-Category will also disable its all
               children-categories.
               <br />
-              <br /> Are you Sure you want to delete it.
+              <br /> Are you sure you want to save changes.
             </>
           ),
         });

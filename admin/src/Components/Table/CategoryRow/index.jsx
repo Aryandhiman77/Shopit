@@ -28,10 +28,10 @@ const CategoryRow = ({ category, index }) => {
             }),
           message: category.isActive === true && (
             <>
-              Disabling this Category will also disable its all
+              Disabling this category will also disable its all
               children-categories.
               <br />
-              <br /> Are you Sure you want to delete it.
+              <br /> Are you sure you want to save changes.
             </>
           ),
         });
