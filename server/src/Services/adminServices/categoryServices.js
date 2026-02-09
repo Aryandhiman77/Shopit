@@ -244,3 +244,9 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
   // 5.Delete this category
   await Categories.deleteOne(category._id);
 };
+
+export const getSingleCategoryService = async ({ catId }) => {
+  const category = await Categories.findById(catId);
+  if (!category) throw new ApiError(400, "No category found.");
+  return category;
+};

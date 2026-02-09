@@ -10,6 +10,7 @@ import {
   registerUserService,
   logoutUserService,
   forgotPassService,
+  getMyDetails,
 } from "../../Services/AuthService.js";
 import {
   createPasswordHash,
@@ -215,4 +216,9 @@ export const renewUserTokens = AsyncWrapper(async (req, res) => {
         "Authorization refreshed.",
       ),
     );
+});
+
+export const getMe = AsyncWrapper(async (req, res) => {
+  const user = await getMyDetails(req.user);
+  return res.status(200).json(new ApiResponse(200, user, "Session Verified."));
 });

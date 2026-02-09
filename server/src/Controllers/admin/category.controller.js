@@ -6,8 +6,8 @@ import {
   updateCategoryImage,
   updateCategoryService,
   updateCategoryStatusService,
+  getSingleCategoryService,
 } from "../../Services/adminServices/categoryServices.js";
-import Categories from "../../Models/category.js";
 import fs from "fs";
 
 export const createCategory = AsyncWrapper(async (req, res, next) => {
@@ -33,7 +33,6 @@ export const createCategory = AsyncWrapper(async (req, res, next) => {
 export const updateCategory = AsyncWrapper(async (req, res) => {
   const { catId } = req.params;
   const { category } = await updateCategoryService({ ...req.data, catId });
-
   return res
     .status(200)
     .json(
@@ -84,3 +83,10 @@ export const deleteCategory = AsyncWrapper(async (req, res) => {
 });
 
 //! todo-> fix needed in category file deletion in catch block in createCategories.
+
+export const getSingleCategory = AsyncWrapper(async (req, res) => {
+  const category = await getSingleCategoryService(req.params);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, category, `Category found.`));
+});

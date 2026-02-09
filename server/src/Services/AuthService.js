@@ -186,3 +186,19 @@ export const forgotPassService = async ({ email, phoneNumber }) => {
   }
   return null;
 };
+
+export const getMyDetails = async (user) => {
+  const userDetails = await User.findOne(user);
+  if (!userDetails) {
+    throw new ApiError(404, "User not found.");
+  }
+  const savedUser = {
+    UUID: userDetails.UUID,
+    name: userDetails.name,
+    email: userDetails.email,
+    phoneNumber: userDetails.phoneNumber,
+    loggedInUserCount: userDetails.loggedInUserCount,
+    isAuthenticated: true,
+  };
+  return savedUser;
+};

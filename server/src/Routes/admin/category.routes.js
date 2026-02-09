@@ -6,6 +6,7 @@ import {
   deleteCategory,
   updateCategoryImageController,
   updateCategoryStatus,
+  getSingleCategory,
 } from "../../Controllers/admin/category.controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
@@ -24,6 +25,7 @@ categoryRoutes
     validate(createCategorySchema),
     createCategory,
   )
+  .get("/:catId", getSingleCategory)
   .patch("/update/:catId", validate(updateCategorySchema), updateCategory)
   .patch(
     "/update-cat-status/:catId",
