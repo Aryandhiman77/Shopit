@@ -13,16 +13,17 @@ import SubCategoryRow from "./SubCategoryRow";
 import useData from "../../hooks/useData";
 import CustomToggle from "../../Reusables/Elements/CustomToggle";
 
-const CategoryRow = ({ category, index }) => {
+const CategoryRow = ({ category, index, handleEdit }) => {
   const [isItemsHidden, setIsItemsHidden] = useState(true);
-  const { updateCategory, isLoading, handleFullScreenConfirmation } = useData();
+  const { updateCategoryStatus, isLoading, handleFullScreenConfirmation } =
+    useData();
 
   const handleStatusChange = (val) => {
     {
-      if (category?.isActive === true) {
+      if (category?.isActive === true && category.childCategories?.length) {
         handleFullScreenConfirmation({
           fn: () =>
-            updateCategory({
+            updateCategoryStatus({
               id: category._id,
               isActive: val,
             }),
@@ -37,14 +38,13 @@ const CategoryRow = ({ category, index }) => {
         });
         return;
       } else {
-        updateCategory({
+        updateCategoryStatus({
           id: category._id,
           isActive: val,
         });
       }
     }
   };
-
   return (
     <>
       {!isItemsHidden && (
@@ -118,7 +118,10 @@ const CategoryRow = ({ category, index }) => {
         <td className="px-2 py-4 border border-gray-400">
           <div className="flex gap-4 justify-center">
             <Tooltip title="Edit Category">
-              <button className="custom-btn custom-border bg-green-600! text-white hover:text-[#e5e5e5]!">
+              <button
+                onClick={() => handleEdit(category._id)}
+                className="custom-btn custom-border bg-green-600! text-white hover:text-[#e5e5e5]!"
+              >
                 <MdModeEditOutline className="text-lg" />
               </button>
             </Tooltip>
@@ -138,6 +141,7 @@ const CategoryRow = ({ category, index }) => {
               subCategory={subcat}
               indexParent={index}
               indexSubCat={i}
+              handleEdit={handleEdit}
             />
           ))}
       </>

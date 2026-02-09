@@ -81,6 +81,7 @@ export const DataProvider = ({ children }) => {
   const [level2Categories, setLevel2Categories] = useState([]);
   const [level3Categories, setLevel3Categories] = useState([]);
   const [orderedCategories, setOrderedCategories] = useState([]);
+  const [category, setCategory] = useState();
   const [addedCategory, setAddedCategory] = useState({});
   const [formErrors, setFormErrors] = useState(null);
   const [errors, setErrors] = useState({ categories: null, products: null });
@@ -189,7 +190,24 @@ export const DataProvider = ({ children }) => {
     });
   };
 
-  const updateCategory = async (details) => {
+  const getCategory = async (id) => {
+    if (!id) return;
+    startLoading("get-category");
+    const response = await fetchData({
+      url: `/admin/categories/${id}`,
+    });
+    if (response?.success) {
+      setCategory(response.data);
+      stopLoading("get-category");
+    }
+    if (response?.error) {
+      setErrors(response.error);
+      stopLoading("get-category");
+    }
+    stopLoading("get-category");
+  };
+
+  const updateCategoryStatus = async (details) => {
     const id = details.id;
     delete details.id;
     startLoading(`update-${id}-category`);
@@ -216,6 +234,51 @@ export const DataProvider = ({ children }) => {
       stopLoading(`update-${id}-category`);
     }
   };
+  const updateCategoryImage = async (image) => {
+    const response = await fetchData({
+      url: `/admin/categories/update/${id}/image`,
+      method: "PATCH",
+      payload: image,
+      isFormData: true,
+    });
+
+    if (response?.success) {
+      return true;
+    }
+    return false;
+  };
+  const updateCategory = async (details) => {
+    const id = details.id;
+    delete details.id;
+    startLoading(`update-category`);
+    if (details.image) {
+      console.log("image present");
+      const update = await updateCategoryImage(details.image);
+      if (!update) return;
+    }
+    const response = await fetchData({
+      url: `/admin/categories/update/${id}`,
+      method: "PATCH",
+      payload: details,
+    });
+    if (response?.success) {
+      setOrderedCategories((prev) => {
+        const replacedData = replaceCategoryById(prev, response?.data);
+        return replacedData;
+      });
+      toast.success(response?.message);
+      stopLoading(`update-category`);
+      return true;
+    }
+    if (response?.error) {
+      setErrors({ ...errors, categoriesErrors: response.error });
+      stopLoading(`update-category`);
+    }
+    if (response?.formErrors) {
+      setFormErrors(response?.formErrors);
+      stopLoading(`update-category`);
+    }
+  };
   return (
     <DataContext.Provider
       value={{
@@ -232,6 +295,9 @@ export const DataProvider = ({ children }) => {
         orderedCategories,
         updateCategory,
         handleFullScreenConfirmation,
+        getCategory,
+        category,
+        updateCategoryStatus,
       }}
     >
       {children}

@@ -11,16 +11,25 @@ import { getFixedDateAndTimeString } from "../../../../utilities/getDateAndTime"
 import InnerSubCategoryRow from "../InnerSubCategoryRow";
 import useData from "../../../hooks/useData";
 import CustomToggle from "../../../Reusables/Elements/CustomToggle";
-const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
+const SubCategoryRow = ({
+  subCategory,
+  indexParent,
+  indexSubCat,
+  handleEdit,
+}) => {
   const [isSubItemsHidden, setIsSubItemsHidden] = useState(true);
-  const { updateCategory, isLoading, handleFullScreenConfirmation } = useData();
+  const { updateCategoryStatus, isLoading, handleFullScreenConfirmation } =
+    useData();
 
   const handleStatusChange = (val) => {
     {
-      if (subCategory?.isActive === true) {
+      if (
+        subCategory?.isActive === true &&
+        subCategory.childCategories?.length
+      ) {
         handleFullScreenConfirmation({
           fn: () =>
-            updateCategory({
+            updateCategoryStatus({
               id: subCategory._id,
               isActive: val,
             }),
@@ -35,7 +44,7 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
         });
         return;
       } else {
-        updateCategory({
+        updateCategoryStatus({
           id: subCategory._id,
           isActive: val,
         });
@@ -105,7 +114,10 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
         <td className="px-6 py-4 border border-gray-400">
           <div className="flex gap-4 justify-center">
             <Tooltip title="Edit Category">
-              <button className="custom-btn custom-border bg-green-600! text-white hover:text-[#e5e5e5]!">
+              <button
+                onClick={() => handleEdit(subCategory._id)}
+                className="custom-btn custom-border bg-green-600! text-white hover:text-[#e5e5e5]!"
+              >
                 <MdModeEditOutline className="text-lg" />
               </button>
             </Tooltip>
@@ -125,6 +137,7 @@ const SubCategoryRow = ({ subCategory, indexParent, indexSubCat }) => {
             indexParent={indexParent}
             indexSubCat={indexSubCat}
             indexInnerSubCat={i}
+            handleEdit={handleEdit}
           />
         ))}
       {!isSubItemsHidden && (

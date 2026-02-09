@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import CustomButton from "../../Components/Reusables/Elements/CustomBtn";
-import Box from "../../Components/Reusables/Elements/Box";
+import CustomButton from "../Reusables/Elements/CustomBtn";
+import Box from "../Reusables/Elements/Box";
 import { Divider, MenuItem, TextField } from "@mui/material";
 import { BsPlus, BsTrash } from "react-icons/bs";
 import { _normalizeConversionConsumables } from "ckeditor5";
@@ -8,7 +8,7 @@ import attributesSchema from "./attributesValidation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import toast from "react-hot-toast";
-import FormError from "../../Components/Reusables/FormError";
+import FormError from "../Reusables/FormError";
 
 const AttributeForm = ({
   attributes,

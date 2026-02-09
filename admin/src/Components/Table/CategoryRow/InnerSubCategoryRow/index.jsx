@@ -16,8 +16,9 @@ const InnerSubCategoryRow = ({
   indexParent,
   indexSubCat,
   indexInnerSubCat,
+  handleEdit,
 }) => {
-  const { updateCategory, isLoading } = useData();
+  const { updateCategoryStatus, isLoading } = useData();
   return (
     <>
       <tr className="border-2 bg-[#f4dba8] dark:bg-gray-700 hover:dark:bg-gray-600 ">
@@ -49,7 +50,7 @@ const InnerSubCategoryRow = ({
             loading={isLoading(`update-${innerSubcategory._id}-category`)}
             disabled={isLoading(`update-${innerSubcategory._id}-category`)}
             onChange={(val) => {
-              updateCategory({
+              updateCategoryStatus({
                 id: innerSubcategory._id,
                 isActive: val,
               });
@@ -66,7 +67,10 @@ const InnerSubCategoryRow = ({
         <td className="px-6 py-4 border border-gray-400">
           <div className="flex gap-4 justify-center">
             <Tooltip title="Edit Category">
-              <button className="custom-btn custom-border bg-green-600! text-white hover:text-[#e5e5e5]!">
+              <button
+                onClick={() => handleEdit(innerSubcategory._id)}
+                className="custom-btn custom-border bg-green-600! text-white hover:text-[#e5e5e5]!"
+              >
                 <MdModeEditOutline className="text-lg" />
               </button>
             </Tooltip>

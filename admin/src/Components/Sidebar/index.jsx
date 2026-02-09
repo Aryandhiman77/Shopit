@@ -97,17 +97,7 @@ const menuConfig = [
         title: "Add Category",
         icon: <MdOutlineDashboard className="text-lg" />,
         path: "/categories/add",
-      },
-      {
-        title: "Add Sub-category",
-        icon: <MdOutlineDashboard className="text-lg" />,
-        path: "/categories/add-subcategory",
-      },
-      {
-        title: "Add Leaf-category",
-        icon: <MdOutlineDashboard className="text-lg" />,
-        path: "/categories/add-leafcategory",
-      },
+      },  
     ],
   },
   {

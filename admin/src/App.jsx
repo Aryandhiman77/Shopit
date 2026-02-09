@@ -28,10 +28,8 @@ import Orders from "./Pages/AllOrders";
 import AuthProvider from "./Context/Auth/AuthProvider";
 import OTPVerification from "./Pages/OTPVerification";
 import { Toaster } from "react-hot-toast";
+import UpdateCategoryModal from "./Components/Reusables/Elements/Modal";
 const App = () => {
-
-
-
   return (
     <BrowserRouter>
       <ThemeProvider>

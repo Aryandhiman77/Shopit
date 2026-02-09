@@ -6,9 +6,16 @@ const ImageDropBox = ({
   maxFiles = 5,
   resetDropBox,
   setResetDropBox,
+  initialImages = [], // 👈 STATIC URLS FROM BACKEND
 }) => {
-  const [previews, setPreviews] = useState([]);
   const dropRef = useRef(null);
+
+  const [previews, setPreviews] = useState(() =>
+    initialImages.map((url) => ({
+      url,
+      isRemote: true,
+    })),
+  );
 
   /* ================= FILE HANDLING ================= */
 
@@ -22,6 +29,7 @@ const ImageDropBox = ({
     const newPreviews = newFiles.map((file) => ({
       file,
       url: URL.createObjectURL(file),
+      isRemote: false,
     }));
 
     setPreviews((prev) => [...prev, ...newPreviews]);
@@ -38,31 +46,32 @@ const ImageDropBox = ({
     dropRef.current.classList.add("border-blue-500", "bg-gray-100");
   };
 
-  const handleDragLeave = (e) => {
-    e.preventDefault();
+  const handleDragLeave = () => {
     dropRef.current.classList.remove("border-blue-500", "bg-gray-100");
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    dropRef.current.classList.remove("border-blue-500", "bg-gray-100");
+    handleDragLeave();
     handleFiles(e.dataTransfer.files);
   };
 
   /* ================= REMOVE IMAGE ================= */
 
-  const removeImage = (e, index) => {
-    e?.preventDefault();
+  const removeImage = (index) => {
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  /* ================= SYNC WITH PARENT ================= */
+  /* ================= SYNC FILES TO PARENT ================= */
+  // ONLY SEND FILES (backend already has remote ones)
 
   useEffect(() => {
-    setImages(previews.map((item) => item.file));
+    const filesOnly = previews.filter((p) => !p.isRemote).map((p) => p.file);
+
+    setImages(filesOnly);
   }, [previews, setImages]);
 
-  /* ================= RESET HANDLING ================= */
+  /* ================= RESET ================= */
 
   useEffect(() => {
     if (resetDropBox) {
@@ -75,92 +84,75 @@ const ImageDropBox = ({
 
   useEffect(() => {
     return () => {
-      previews.forEach((item) => URL.revokeObjectURL(item.url));
+      previews.forEach((item) => {
+        if (!item.isRemote) URL.revokeObjectURL(item.url);
+      });
     };
-  }, [previews]);
+  }, []);
 
   /* ================= UI ================= */
 
   return (
-    <div className="flex flex-col gap-2">
-      <div
-        ref={dropRef}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        className="relative flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600 transition-all overflow-hidden"
-      >
-        <input
-          type="file"
-          accept="image/*"
-          multiple={maxFiles > 1}
-          className="hidden"
-          id="dropzone-file"
-          onChange={handleFileChange}
-        />
+    <div
+      ref={dropRef}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+      className="relative flex flex-wrap gap-2 w-full min-h-[200px] border-2 border-dashed rounded-lg p-3"
+    >
+      <input
+        type="file"
+        accept="image/*"
+        multiple={maxFiles > 1}
+        hidden
+        id="dropzone-file"
+        onChange={handleFileChange}
+      />
 
-        {previews.length > 0 ? (
-          <div className="gap-2 w-full h-full">
-            {previews.map((item, index) => (
-              <div key={index} className="relative w-full h-full min-h-0">
-                <img
-                  src={item.url}
-                  alt={`Preview ${index}`}
-                  className="aspect-square w-full h-full object-contain rounded border border-gray-300"
-                />
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeImage(e, index);
-                  }}
-                  className="absolute top-1 right-1 bg-white/80 backdrop-blur-sm rounded-full p-1 shadow hover:bg-red-500 hover:text-white transition z-30"
-                >
-                  <AiOutlineClose size={14} />
-                </button>
-              </div>
-            ))}
-
-            {previews.length < maxFiles && (
-              <label
-                htmlFor="dropzone-file"
-                className="flex items-center justify-center border-2 border-dashed border-gray-400 rounded hover:bg-gray-200 transition"
-              >
-                <span className="text-2xl text-gray-400">+</span>
-              </label>
-            )}
-          </div>
-        ) : (
-          <label
-            htmlFor="dropzone-file"
-            className="flex flex-col items-center justify-center w-full h-full cursor-pointer"
+      {previews.length === 1 ? (
+        /* ===== SINGLE IMAGE FULL SIZE ===== */
+        <div className="relative w-full h-full">
+          <img
+            src={previews[0].url}
+            alt="preview"
+            className="w-full h-full object-contain rounded"
+          />
+          <button
+            onClick={() => removeImage(0)}
+            className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-500 hover:text-white z-10"
           >
-            <svg
-              className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 20 16"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+            <AiOutlineClose size={16} />
+          </button>
+        </div>
+      ) : (
+        /* ===== MULTIPLE IMAGES GRID ===== */
+        <>
+          {previews.map((item, index) => (
+            <div key={index} className="relative w-24 h-24">
+              <img
+                src={item.url}
+                alt=""
+                className="w-full h-full object-cover rounded border"
               />
-            </svg>
-            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400 text-center px-2">
-              <span className="font-semibold">Click to upload</span> or drag and
-              drop
-            </p>
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              Max {maxFiles} images
-            </p>
-          </label>
-        )}
-      </div>
+              <button
+                onClick={() => removeImage(index)}
+                className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow hover:bg-red-500 hover:text-white"
+              >
+                <AiOutlineClose size={12} />
+              </button>
+            </div>
+          ))}
+        </>
+      )}
+
+      {previews.length < maxFiles && (
+        <label
+          htmlFor="dropzone-file"
+          className="w-24 h-24 flex items-center justify-center border rounded cursor-pointer text-gray-400 hover:bg-gray-100"
+        >
+          <p className="text-sm">Add {maxFiles === 1 ? "Image" : "Images"}</p>
+        </label>
+      )}
     </div>
   );
 };

@@ -108,8 +108,6 @@ const AuthProvider = ({ children }) => {
       if (
         response?.error?.response?.data?.message.includes("Already logged out.")
       ) {
-        console.log(response);
-        localStorage.clear();
         navigate("/login", { replace: true });
       }
       if (response?.success) {
@@ -125,13 +123,25 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  const verifyMySession = async () => {
+    setLoading(true);
+    const response = await fetchData({
+      url: "/auth/me",
+      method: "GET",
+    });
+    if (response?.success) {
+      localStorage.setItem("user", JSON.stringify(response.data));
+      setUser(response.data);
+      setAuthenticated(true);
+      setLoading(false);
+    } else {
+      handleLogout();
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setUser(user);
-      setAuthenticated(true);
-    }
+    verifyMySession();
   }, []);
   return (
     <AuthContext.Provider
