@@ -17,6 +17,7 @@ import CustomToggle from "../Reusables/Elements/CustomToggle";
 import FormError from "../Reusables/FormError";
 import ImageDropBox from "../Reusables/ImageDropBox";
 import { useNavigate } from "react-router-dom";
+import MenuItems from "./MenuItems";
 
 const CategoryForm = ({
   mode = "add",
@@ -32,7 +33,7 @@ const CategoryForm = ({
     getValues,
     formState: { errors },
   } = useForm({ resolver: yupResolver(categoryValidationSchema) });
-  const categoryLevelStatus = watch("level");
+
   const navigate = useNavigate();
   const {
     addCategory,
@@ -42,6 +43,7 @@ const CategoryForm = ({
     level1Categories,
     updateCategory,
   } = useData();
+  const categoryLevelStatus = watch("level");
   const [isActive, setIsActive] = useState(
     mode === "edit" ? updationCategory.isActive : false,
   );
@@ -62,30 +64,32 @@ const CategoryForm = ({
     const filteredAttributes = attributes?.filter((_, index) => index !== i);
     setAttributes(filteredAttributes);
   };
+
   const resetFormStates = () => {
     reset();
     setIsActive(false);
     setAttributes([]);
+    setEditIndex(-1);
     setResetDropBox(true);
     setImages([]);
   };
   const handleUpdateCategory = async (data) => {
     console.log("update", data);
-    // const update = await updateCategory(details);
-    // if (update) {
-    //   setEditModal(false);
-    //   resetFormStates();
-    // }
+    const update = await updateCategory(data);
+    if (update) {
+      resetFormStates();
+      setEditModal(false);
+    }
   };
   const onSubmit = async (data) => {
     if (mode === "edit") {
-      let details = data;
+      const updationId = updationCategory._id;
+      let details = { ...data, id: updationId };
       if (images.length > 0) {
         details = { ...details, image: images[0] };
       }
       if (attributes.length > 0) {
-        const stringifiedAtt = JSON.stringify(attributes);
-        details = { ...details, attributes: stringifiedAtt };
+        details = { ...details, attributes };
       }
       handleUpdateCategory(details);
       return;
@@ -99,26 +103,37 @@ const CategoryForm = ({
       details = { ...details, attributes: stringifiedAtt };
     }
     if (await addCategory(details)) {
+      resetFormStates();
       navigate("/categories");
     }
   };
   useEffect(() => {
-    if (updationCategory.level === 2) {
-      getCategoriesByLevel(1);
-    } else if (updationCategory.level === 3) {
-      getCategoriesByLevel(2);
-      console.log(updateCategory);
-    }
-  }, []);
+    if (mode !== "edit" && updationCategory.level > 1) return;
+    (async () => {
+      if (updationCategory?.level === 2) {
+        await getCategoriesByLevel(1);
+      } else if (updationCategory?.level === 3) {
+        await getCategoriesByLevel(2);
+      }
+      setValue("level", updationCategory.level);
+      setValue("parent", updationCategory.parentCategory);
+      setValue("name", updationCategory.name);
+      setValue("description", updationCategory.description);
+      setIsActive(updationCategory.isActive);
+      setAttributes(updationCategory.attributes || []);
+      return;
+    })(); 
+  }, [mode]);
+
   return (
     <>
       <div className="flex flex-col gap-4">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 "
+          className="flex flex-col gap-4 w-full "
         >
           <>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 w-full">
               <>
                 <TextField
                   select
@@ -126,17 +141,19 @@ const CategoryForm = ({
                   {...register("level")}
                   name="level"
                   label="Select Level"
-                  // defaultValue={mode === "edit" ? updationCategory?.level : 1}
+                  defaultValue={
+                    updationCategory?.level ? updationCategory.level : 1
+                  }
                   variant="outlined"
                   required
                   onChange={(e) => {
                     setValue("level", e.target.value);
-                    if (level1Categories.length && level2Categories.length) {
-                      return;
-                    }
-                    if (e.target.value === 2) {
+                    if (e.target.value === 2 && !level1Categories.length) {
                       getCategoriesByLevel(1);
-                    } else if (e.target.value === 3) {
+                    } else if (
+                      e.target.value === 3 &&
+                      !level2Categories.length
+                    ) {
                       getCategoriesByLevel(2);
                     }
                   }}
@@ -163,33 +180,32 @@ const CategoryForm = ({
                     name="parent"
                     label="Select Parent Category"
                     variant="outlined"
-                    // defaultValue={
-                    //   mode === "edit" ? updationCategory.parentCategory : "none"
-                    // }
+                    defaultValue={
+                      mode === "edit" ? updationCategory.parentCategory : ""
+                    }
                     required
                     size="small"
                   >
-                    <MenuItem value={"none"}>None</MenuItem>
-                    {isLoading(
-                      `level${categoryLevelStatus === 2 ? 1 : 2}categories`,
-                    ) ? (
-                      <div className="flex justify-center items-center h-20">
-                        <Spinner size={30} />
-                      </div>
-                    ) : categoryLevelStatus === 3 ? (
-                      level2Categories?.map((item) => (
-                        <MenuItem className="capitalize" value={item?._id}>
-                          {item.name}
-                        </MenuItem>
-                      ))
-                    ) : (
-                      categoryLevelStatus === 2 &&
-                      level1Categories?.map((item) => (
-                        <MenuItem className="capitalize" value={item?._id}>
-                          {item?.name}
-                        </MenuItem>
-                      ))
-                    )}
+                    {/* <MenuItem value={""}>None</MenuItem> */}
+                    {categoryLevelStatus === 3
+                      ? level2Categories?.map((item, i) => (
+                          <MenuItem
+                            key={`menuitem-${i}-2`}
+                            className="capitalize"
+                            value={item?._id}
+                          >
+                            {item?.name}
+                          </MenuItem>
+                        ))
+                      : level1Categories?.map((item, i) => (
+                          <MenuItem
+                            key={`menuitem-${i}-1`}
+                            className="capitalize"
+                            value={item?._id}
+                          >
+                            {item?.name}
+                          </MenuItem>
+                        ))}
                   </TextField>
                   <FormError error={errors.parent?.message} />
                 </>
@@ -228,28 +244,13 @@ const CategoryForm = ({
           <div className="w-[30%]">
             <ImageDropBox
               initialImages={
-                mode === "edit" ? [updationCategory?.image.url] : []
+                mode === "edit" ? [updationCategory?.image?.url] : []
               }
               setImages={setImages}
               maxFiles={1}
               resetDropBox={resetDropBox}
               setResetDropBox={setResetDropBox}
             />
-          </div>
-          <div className="flex gap-2 items-center">
-            <CustomToggle
-              checked={isActive}
-              onChange={(val) => {
-                setIsActive(val);
-                setValue("isActive", val);
-              }}
-            />
-            {isActive ? (
-              <span className="text-green-600">Active</span>
-            ) : (
-              <span className="text-red-600">Inactive</span>
-            )}
-            <FormError error={errors.isActive?.message} />
           </div>
 
           <Box className={"bg-white rounded-sm!"}>
@@ -374,3 +375,13 @@ const CategoryForm = ({
 };
 
 export default CategoryForm;
+
+// import React from 'react'
+
+// const renderMenus = () => {
+//   return (
+//     <div>
+
+//     </div>
+//   )
+// }

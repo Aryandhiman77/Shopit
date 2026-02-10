@@ -19,13 +19,13 @@ const Modal = ({
     return () => {
       document.body.style.overflow = originalOverflow || "auto";
     };
-  }, [open]); // ✅ IMPORTANT
+  }, [open]); 
 
   if (!open) return null;
 
   return ReactDOM.createPortal(
     <div
-      className={`fixed inset-0 z-[9999] bg-white ${
+      className={`fixed inset-0 z-100 bg-white ${
         fullScreen ? "h-screen w-screen" : ""
       } ${className}`}
     >
@@ -38,11 +38,9 @@ const Modal = ({
       </div>
 
       {/* Content */}
-      <div className="overflow-y-auto h-[calc(100vh-64px)]">
-        {children}
-      </div>
+      <div className="overflow-y-auto h-[calc(100vh-64px)]">{children}</div>
     </div>,
-    document.getElementById("modal")
+    document.getElementById("modal"),
   );
 };
 

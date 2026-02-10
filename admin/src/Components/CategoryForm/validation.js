@@ -6,7 +6,6 @@ const categoryValidationSchema = yup
       .required("Category name is required.")
       .min(3, "Category name must contain atleast 3 characters.")
       .max(25, "Category name cannot be more than 25 characters."),
-    isActive: yup.boolean().required(),
     description: yup
       .string()
       .max(300, "Category description must be less than 300 characters."),
@@ -20,12 +19,14 @@ const categoryValidationSchema = yup
     test: (value) => {
       const level = value.level;
       const parent = value.parent;
-      if (level === 1) return true;
-      if (level > 1 && parent !== "none") {
+      if (level === 1) {
+        return true;
+      }
+      if (level > 1 && parent !== "") {
         return true;
       }
       return false;
     },
-  })
-  .unknown(false, "Other Values not allowed.");
+  });
+// .unknown(false, "Other Values not allowed.");
 export default categoryValidationSchema;

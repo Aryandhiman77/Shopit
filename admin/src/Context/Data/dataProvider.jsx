@@ -234,7 +234,7 @@ export const DataProvider = ({ children }) => {
       stopLoading(`update-${id}-category`);
     }
   };
-  const updateCategoryImage = async (image) => {
+  const updateCategoryImage = async (image, id) => {
     const response = await fetchData({
       url: `/admin/categories/update/${id}/image`,
       method: "PATCH",
@@ -250,11 +250,14 @@ export const DataProvider = ({ children }) => {
   const updateCategory = async (details) => {
     const id = details.id;
     delete details.id;
+    delete details.level;
     startLoading(`update-category`);
     if (details.image) {
-      console.log("image present");
-      const update = await updateCategoryImage(details.image);
-      if (!update) return;
+      const update = await updateCategoryImage(details.image, id);
+      if (!update) {
+        console.log("problem updating image...");
+        stopLoading(`update-category`);
+      }
     }
     const response = await fetchData({
       url: `/admin/categories/update/${id}`,

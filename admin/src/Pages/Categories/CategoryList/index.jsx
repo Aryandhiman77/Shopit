@@ -31,24 +31,13 @@ const CategoryList = () => {
   };
   useEffect(() => {
     getAllOrderedCategories();
-    console.log(category)
-  }, [category]);
+  }, []);
   return (
     <>
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl font-[700] text-black">Categories</h1>
             <BreadCrumb addBreadCrumb={"List"} />
-          </div>
-          <div className="flex flex-row gap-2">
-            <Link
-              to={"/"}
-              className="custom-btn custom-border flex items-center gap-2 !bg-green-600 !text-white text-sm font-[500]"
-            >
-              <PiExport />
-              Export{" "}
-            </Link>
           </div>
         </div>
         <div className="w-[20%]">
@@ -59,13 +48,34 @@ const CategoryList = () => {
             <p className="text-gray-500 font-semibold text-xl">
               Categories List
             </p>
-            <CustomButton
-              onClick={() => navigate("/categories/add")}
-              type="button"
-              bg={"#9ca1dc"}
-              title={"+ Add Top-level-Category"}
-              fontSize={12}
-            />
+            <p className="text-gray-500 font-normal text-sm">
+              {orderedCategories?.length ? (
+                <>Results : {orderedCategories?.length}</>
+              ) : (
+                ""
+              )}
+            </p>
+            <div className="flex gap-3 items-center">
+              <CustomButton
+                type={"button"}
+                title={
+                  <>
+                    <PiExport />
+                    Export
+                  </>
+                }
+                className="custom-btn custom-border flex items-center gap-2 !bg-green-600 !text-white text-sm font-[500]"
+                fontSize={12}
+              />
+
+              <CustomButton
+                onClick={() => navigate("/categories/add")}
+                type="button"
+                className="custom-btn custom-border flex items-center gap-2 !bg-green-600 !text-white text-sm font-[500]"
+                title={"Add Category"}
+                fontSize={12}
+              />
+            </div>
           </div>
           <Divider className="mb-4!" />
           {isLoading("ordered-categories") ? (
@@ -108,7 +118,7 @@ const CategoryList = () => {
             <Spinner />
           </div>
         ) : (
-          <div className="p-4 overflow-y-scroll!">
+          <div className=" p-5">
             <CategoryForm
               mode="edit"
               setEditModal={setOpen}
