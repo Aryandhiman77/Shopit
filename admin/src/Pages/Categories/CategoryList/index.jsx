@@ -40,21 +40,10 @@ const CategoryList = () => {
             <BreadCrumb addBreadCrumb={"List"} />
           </div>
         </div>
-        <div className="w-[20%]">
-          <Search placeholder={"Search Category ..."} />
-        </div>
+
         <Box className="space-y-4 bg-white dark:bg-black">
-          <div className="flex justify-between items-center">
-            <p className="text-gray-500 font-semibold text-xl">
-              Categories List
-            </p>
-            <p className="text-gray-500 font-normal text-sm">
-              {orderedCategories?.length ? (
-                <>Results : {orderedCategories?.length}</>
-              ) : (
-                ""
-              )}
-            </p>
+          <div className="flex items-center justify-between">
+            <p className="text-gray-500 font-semibold text-xl">Categories</p>
             <div className="flex gap-3 items-center">
               <CustomButton
                 type={"button"}
@@ -71,12 +60,25 @@ const CategoryList = () => {
               <CustomButton
                 onClick={() => navigate("/categories/add")}
                 type="button"
-                className="custom-btn custom-border flex items-center gap-2 !bg-green-600 !text-white text-sm font-[500]"
+                className="custom-btn custom-border flex items-center gap-2 !bg-blue-600 !text-white text-sm font-[500]"
                 title={"Add Category"}
                 fontSize={12}
               />
             </div>
           </div>
+          <div className="flex justify-between items-center">
+            <div className="w-[20%]">
+              <Search placeholder={"Search Category ..."} />
+            </div>
+            <p className="text-gray-500 font-normal text-sm px-2">
+              {orderedCategories?.length ? (
+                <>Results : {orderedCategories?.length}</>
+              ) : (
+                ""
+              )}
+            </p>
+          </div>
+
           <Divider className="mb-4!" />
           {isLoading("ordered-categories") ? (
             <div className="flex justify-center items-center p-4">

@@ -26,6 +26,7 @@ const Header = ({ sidebarOpened, setSidebarOpened }) => {
           {sidebarOpened ? <MdOutlineMenuOpen /> : <MdOutlineMenu />}
         </button>
         <Search
+          onSearch={(v)=>console.log(v)}
           endIcon={
             <code className="flex flex-row items-center bg-blue-500 rounded-lg px-2 text-white text-sm">
               <PiCommandBold />K
