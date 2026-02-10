@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Divider, TextField } from "@mui/material";
 import BreadCrumb from "../Reusables/Elements/BreadCrumb";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import categoryValidationSchema from "./validation";
 import toast from "react-hot-toast";
@@ -17,7 +17,7 @@ import CustomToggle from "../Reusables/Elements/CustomToggle";
 import FormError from "../Reusables/FormError";
 import ImageDropBox from "../Reusables/ImageDropBox";
 import { useNavigate } from "react-router-dom";
-import MenuItems from "./MenuItems";
+import Autocomplete from "@mui/material/Autocomplete";
 
 const CategoryForm = ({
   mode = "add",
@@ -31,6 +31,7 @@ const CategoryForm = ({
     reset,
     watch,
     getValues,
+    control,
     formState: { errors },
   } = useForm({ resolver: yupResolver(categoryValidationSchema) });
 
@@ -88,8 +89,9 @@ const CategoryForm = ({
       if (images.length > 0) {
         details = { ...details, image: images[0] };
       }
+      let stringifiedAtts = JSON.stringify(attributes);
       if (attributes.length > 0) {
-        details = { ...details, attributes };
+        details = { ...details, attributes: stringifiedAtts };
       }
       handleUpdateCategory(details);
       return;
@@ -107,6 +109,11 @@ const CategoryForm = ({
       navigate("/categories");
     }
   };
+  let options =
+    updateCategory?.level === 3 ? level2Categories : level1Categories;
+  options = options.map((opt) => ({ label: opt.name, value: opt._id }));
+
+  // const value = options.filter((item) => updateCategory._id === item._id);
   useEffect(() => {
     if (mode !== "edit" && updationCategory.level > 1) return;
     (async () => {
@@ -116,13 +123,12 @@ const CategoryForm = ({
         await getCategoriesByLevel(2);
       }
       setValue("level", updationCategory.level);
-      setValue("parent", updationCategory.parentCategory);
       setValue("name", updationCategory.name);
       setValue("description", updationCategory.description);
       setIsActive(updationCategory.isActive);
       setAttributes(updationCategory.attributes || []);
       return;
-    })(); 
+    })();
   }, [mode]);
 
   return (
@@ -173,40 +179,31 @@ const CategoryForm = ({
               </>
               {categoryLevelStatus > 1 && (
                 <>
-                  <TextField
-                    select
-                    className="w-full bg-white capitalize"
-                    {...register("parent")}
+                  <Controller
                     name="parent"
-                    label="Select Parent Category"
-                    variant="outlined"
-                    defaultValue={
-                      mode === "edit" ? updationCategory.parentCategory : ""
-                    }
-                    required
-                    size="small"
-                  >
-                    {/* <MenuItem value={""}>None</MenuItem> */}
-                    {categoryLevelStatus === 3
-                      ? level2Categories?.map((item, i) => (
-                          <MenuItem
-                            key={`menuitem-${i}-2`}
-                            className="capitalize"
-                            value={item?._id}
-                          >
-                            {item?.name}
-                          </MenuItem>
-                        ))
-                      : level1Categories?.map((item, i) => (
-                          <MenuItem
-                            key={`menuitem-${i}-1`}
-                            className="capitalize"
-                            value={item?._id}
-                          >
-                            {item?.name}
-                          </MenuItem>
-                        ))}
-                  </TextField>
+                    control={control}
+                    defaultValue={updationCategory?.parentCategory || ""}
+                    render={({ field }) => (
+                      <Autocomplete
+                        options={options}
+                        value={
+                          options.find((opt) => opt.value === field.value) ||
+                          null
+                        }
+                        onChange={(_, val) =>
+                          field.onChange(val ? val.value : "")
+                        }
+                        isOptionEqualToValue={(opt, val) =>
+                          opt.value === val.value
+                        }
+                        getOptionLabel={(option) => option?.label ?? ""}
+                        className="w-full"
+                        renderInput={(params) => (
+                          <TextField {...params} label="Select parent" />
+                        )}
+                      />
+                    )}
+                  />
                   <FormError error={errors.parent?.message} />
                 </>
               )}
