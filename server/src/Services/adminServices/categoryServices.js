@@ -186,7 +186,7 @@ export const updateCategoryImage = async (catId, image) => {
   if (category.image.public_id) {
     await deleteFromCloudinary(category.image.public_id);
   }
-  // add new image
+  // add new imag
   if (!image) {
     throw new ApiError(400, "Category image is required.");
   }
@@ -246,7 +246,7 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
 };
 
 export const getSingleCategoryService = async ({ catId }) => {
-  const category = await Categories.findById(catId);
+  const category = await Categories.findById(catId, { attributes: { _id: 0 } });
   if (!category) throw new ApiError(400, "No category found.");
   return category;
 };

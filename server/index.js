@@ -12,6 +12,7 @@ import routes from "./src/Routes/index.js";
 import rateLimit, { ipKeyGenerator } from "express-rate-limit";
 import ApiError from "./src/Helpers/ApiError.js";
 import morgan from "morgan";
+import os from "os";
 
 const app = express();
 
@@ -21,7 +22,6 @@ app.use(
     origin: "http://localhost:5173",
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-    allowedHeaders: ["Content-Type"],
   }),
 );
 
@@ -46,10 +46,9 @@ const limiter = rateLimit({
     throw new ApiError(429, "Too many clicks, please wait..");
   },
 });
-
 app.use(limiter); // endpoints must have separate api limitations
 
-app.use(morgan("dev"));
+app.use(morgan(process.env.NODE_ENV !== "production" && "dev"));
 app.use("/api/", routes);
 
 app.use(errorHandler);

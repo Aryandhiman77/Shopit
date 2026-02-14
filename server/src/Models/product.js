@@ -10,9 +10,9 @@ const variantSchema = new mongoose.Schema(
       type: String,
       unique: true,
       lowercase: true,
-      index:true
+      index: true,
     },
-    sku: { type: String, required: true ,unique:true},
+    sku: { type: String, required: true, unique: true },
     attributes: {
       type: Map,
       of: String, // { color: "Red", size: "M" }

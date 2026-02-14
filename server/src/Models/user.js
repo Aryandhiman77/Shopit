@@ -70,7 +70,7 @@ const userSchema = new mongoose.Schema(
     resetCodeExpires: Date,
     passwordChangedAt: Date,
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 userSchema.methods.createResetCode = function () {
@@ -96,7 +96,6 @@ userSchema.methods.generateRefreshToken = function ({ userId, role }) {
   return token;
 };
 
-
 const suspensionDurations = [
   1 * 60 * 1000, // 1 min
   5 * 60 * 1000, // 5 min
@@ -111,13 +110,14 @@ const sendSuspensionEmail = async (email, duration) => {
     to: email,
     subject: "Shopit Account Suspended",
     html: `<h1>Someone is trying to login in your account, your account is suspended until ${formatDate(
-      duration
+      duration,
     )} ${formatTime(
-      duration
+      duration,
     )}. If not you, report otherwise your account might be suspended again.</h1>`,
     // html: verificationOtp({ otp }),
   });
-  if (sent) console.log("email sent:", email); return true;
+  if (sent) console.log("email sent:", email);
+  return true;
 };
 userSchema.methods.suspendUser = function () {
   this.suspensionCount += 1;
@@ -132,7 +132,7 @@ userSchema.methods.suspendUser = function () {
     // Beyond 1 month → keep doubling until 6 months max
     const months = Math.min(
       30 * Math.pow(2, this.suspensionCount - suspensionDurations.length),
-      180
+      180,
     );
     duration = months * 24 * 60 * 60 * 1000;
     sendSuspensionEmail(this.email, new Date(Date.now() + duration));

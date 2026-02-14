@@ -160,13 +160,13 @@ export const logoutUserService = async ({ refreshToken }) => {
   if (!refreshToken) {
     throw new ApiError(403, "Already logged out.");
   }
-  const user = await User.findOne({ refreshToken });
-  if (!user) throw new ApiError(403, "Already logged out.");
-  user.refreshToken = user.refreshToken.filter((t) => t !== refreshToken);
-  if (user.loggedInUserCount > 0) {
-    user.loggedInUserCount--;
-  }
-  await user.save();
+  await User.findOneAndUpdate(
+    { refreshToken },
+    {
+      $pull: { refreshToken },
+      $inc: { loggedInUserCount: -1 },
+    },
+  );
 };
 
 export const forgotPassService = async ({ email, phoneNumber }) => {
@@ -187,10 +187,29 @@ export const forgotPassService = async ({ email, phoneNumber }) => {
   return null;
 };
 
+// export const revalidateUserSession = async ({ password = "" }) => {
+//   if (!password) {
+//     throw new ApiError(400, "Password is required.");
+//   }
+
+//   const user = await User.findOne({ email });
+//   if (!user) {
+//     throw new ApiError(404, "User not found.");
+//   }
+//   const comparePassword = await bcrypt.compare(password, user.passwordHash);
+//   if (!comparePassword) {
+//     throw new ApiError(404, "Invalid credentials.");
+//   }
+//   const { authToken, refreshToken } = await generateTokens(user);
+//   // const comparePassword = await bcrypt.compare(password,)
+
+//   return { user, refreshToken, authToken };
+// };
+
 export const getMyDetails = async (user) => {
   const userDetails = await User.findOne(user);
   if (!userDetails) {
-    throw new ApiError(404, "User not found.");
+    throw new ApiError(404, "User not found..");
   }
   const savedUser = {
     UUID: userDetails.UUID,

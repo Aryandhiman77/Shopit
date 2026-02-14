@@ -9,7 +9,7 @@ export const jsonParser = (fields) => {
           return res.status(400).json({
             success: false,
             message: "Invalid JSON format for attributes",
-            error:err
+            error: err,
           });
         }
       }

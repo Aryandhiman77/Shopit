@@ -26,7 +26,12 @@ categoryRoutes
     createCategory,
   )
   .get("/:catId", getSingleCategory)
-  .patch("/update/:catId", validate(updateCategorySchema), updateCategory)
+  .patch(
+    "/update/:catId",
+    jsonParser(["attributes"]),
+    validate(updateCategorySchema),
+    updateCategory,
+  )
   .patch(
     "/update-cat-status/:catId",
     validate(updateStatusSchema),

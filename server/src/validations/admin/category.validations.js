@@ -3,6 +3,7 @@ import Joi from "joi";
 const attributeSchema = Joi.array()
   .items(
     Joi.object({
+      _id: Joi.string().max(24),
       name: Joi.string().lowercase().min(3).max(25).messages({
         "string.min": "Attribute name must be at least 3 characters long.",
         "string.max": "Attribute name must be less than 25 characters.",
@@ -81,11 +82,10 @@ export const updateCategorySchema = Joi.object({
   }),
   parent: Joi.string().lowercase(),
   attributes: attributeSchema,
-})
-  .unknown(false)
-  .messages({
-    "object.unknown": "Extra fields are not allowed in category.",
-  });
+}).unknown(false);
+// .messages({
+//   "object.unknown": "Extra fields are not allowed in category.",
+// });
 
 export const updateStatusSchema = Joi.object({
   isActive: Joi.boolean().required().messages({

@@ -17,6 +17,7 @@ import {
   generateTokens,
 } from "../../Helpers/Auth/authHelper.js";
 import ApiError from "../../Helpers/ApiError.js";
+import JWT from "jsonwebtoken";
 
 export const registerAsAdmin = AsyncWrapper(async (req, res) => {
   const { name, email, password, phoneNumber } = req.body;
@@ -179,30 +180,40 @@ export const resetPassController = AsyncWrapper(async (req, res) => {
     .json(new ApiResponse(200, true, "Password changed successfully."));
 });
 
-export const renewUserTokens = AsyncWrapper(async (req, res) => {
+export const renewAccessToken = AsyncWrapper(async (req, res) => {
   const { refreshToken: oldToken } = req.cookies;
 
   if (!oldToken) {
-    throw new ApiError(400, null, "No refresh authorization received.");
+    throw new ApiError(
+      400,
+      "Login again.",
+      "No refresh authorization received.",
+    );
   }
-  const user = await User.findOne({ refreshToken: oldToken });
-
-  const { authToken, refreshToken: new_token } = await generateTokens(user);
-
-  const updated = await User.updateOne(
-    { refreshToken: oldToken },
-    { $set: { "refreshToken.$": new_token } },
-  );
-  if (!updated) {
-    throw new ApiError(400, "Login again.", "Already logged out.");
+  let data;
+  try {
+    data = JWT.verify(oldToken, process.env.JWT_REFRESH_SECRET);
+  } catch {
+    throw new ApiError(
+      403,
+      "Session Expired, enter password to re-validate.",
+      "Refresh token expired or invalid.",
+    );
   }
+  // ----x-----
+  const user = await User.findOne({
+    _id: data.userId,
+    role: data.role,
+    refreshToken: oldToken,
+  });
+
+  if (!user) {
+    throw new ApiError(404, "User not found.", "User not found.");
+  }
+
+  const { authToken } = await generateTokens(user);
 
   res.cookie("authToken", authToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  });
-  res.cookie("refreshToken", new_token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
@@ -218,7 +229,23 @@ export const renewUserTokens = AsyncWrapper(async (req, res) => {
     );
 });
 
+// const revalidateSession = AsyncWrapper(async (req, res) => {
+//   const { user, refreshToken, authToken } = await revalidateUserSession(req.body);
+
+//   res.cookie("authToken", authToken, {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite: "strict",
+//   });
+//   res.cookie("refreshToken", refreshToken, {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite: "strict",
+//   });
+// });
+
 export const getMe = AsyncWrapper(async (req, res) => {
+  console.log("getting my details");
   const user = await getMyDetails(req.user);
   return res.status(200).json(new ApiResponse(200, user, "Session Verified."));
 });

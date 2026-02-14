@@ -8,8 +8,8 @@ import {
   verifyOTP,
   forgotPassOTPCheckController,
   resetPassController,
-  renewUserTokens,
-  getMe
+  getMe,
+  renewAccessToken,
 } from "../../Controllers/auth/controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
@@ -43,8 +43,8 @@ authRoutes
     resetPassController,
   )
   .patch("/logout", logoutController)
-  .patch("/refresh-access", renewUserTokens);
+  .patch("/refresh-access", renewAccessToken);
 
-authRoutes.get("/me", tokenVerification, getMe);
+authRoutes.get("/getme", tokenVerification, getMe);
 
 export default authRoutes;

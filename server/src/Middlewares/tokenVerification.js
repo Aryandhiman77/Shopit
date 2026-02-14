@@ -11,7 +11,7 @@ const tokenVerification = AsyncWrapper(async (req, res, next) => {
   const { err, data } = JWT.verify(
     token,
     process.env.JWT_AUTH_SECRET,
-    (err, data) => ({ err, data })
+    (err, data) => ({ err, data }),
   );
   if (err && err.message === "jwt expired") {
     throw new ApiError(401, "Invalid Authorization.");
