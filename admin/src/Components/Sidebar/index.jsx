@@ -97,7 +97,7 @@ const menuConfig = [
         title: "Add Category",
         icon: <MdOutlineDashboard className="text-lg" />,
         path: "/categories/add",
-      },  
+      },
     ],
   },
   {
@@ -123,12 +123,12 @@ const SideBar = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
 
   const toggleDropdown = (item) => {
-  if (openDropdown === item.title) {
-    setOpenDropdown(null); // close dropdown if it's open
-  } else {
-    setOpenDropdown(item.title); // open dropdown
-  }
-};
+    if (openDropdown === item.title) {
+      setOpenDropdown(null); // close dropdown if it's open
+    } else {
+      setOpenDropdown(item.title); // open dropdown
+    }
+  };
   const isParentActive = (item) => {
     if (pathname === item.path) return true;
     if (item.dropdown) {
@@ -160,7 +160,7 @@ const SideBar = () => {
                     title={item.title}
                     className={`${
                       active
-                        ? "!text-primary !border-l-[5px] !rounded-none"
+                        ? "!border-l-[3px] text-red-500! !rounded-none bg-gradient-to-r from-blue-400 to-white"
                         : ""
                     }`}
                     startIcon={item.icon}
@@ -185,7 +185,7 @@ const SideBar = () => {
                   {item.dropdown && (
                     <CollapablePanel
                       isOpened={openDropdown === item.title || active}
-                      className="px-5"
+                      className="px-5 "
                     >
                       {item.dropdown.map((sub, i) => (
                         <Link to={sub.path} key={i}>

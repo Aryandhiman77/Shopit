@@ -1,34 +1,17 @@
 import axios from "axios";
-import { useEffect } from "react";
 import toast from "react-hot-toast";
-import useData from "../Components/hooks/useData";
-
-const MAX_RETRY = 3;
 
 let globalAbortController = new AbortController();
-const getGlobalSignal = () => globalAbortController.signal;
 
-const abortRequests = (reason = "Network Error") => {
-  globalAbortController.abort(reason);
+const abortRequests = () => {
+  globalAbortController.abort();
   globalAbortController = new AbortController();
 };
-let toastId = null;
-window.addEventListener("offline", () => {
-  toastId = toast.error("You are currently offline.", { duration: Infinity });
-});
-window.addEventListener("online", () => {
-  toast.dismiss(toastId);
-  globalAbortController = new AbortController();
-  toast.success("Connected to network.");
-});
 
 const api = axios.create({
   baseURL: "http://localhost:8000/api",
   withCredentials: true,
 });
-
-let retryCount = 0;
-let isRefreshing = false;
 
 /* ================= RESPONSE INTERCEPTOR ================= */
 api.interceptors.response.use(
@@ -39,24 +22,19 @@ api.interceptors.response.use(
     }
     const originalRequest = error.config;
 
-    if (
-      error.response?.status === 401 &&
-      !originalRequest._retry &&
-      retryCount < MAX_RETRY
-    ) {
+    if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      retryCount++;
 
       try {
-        if (!isRefreshing) {
-          isRefreshing = true;
-          await api.patch("/auth/refresh-access");
-          isRefreshing = false;
-        }
-
+        await api.patch("/auth/refresh-access");
         return api(originalRequest);
       } catch (err) {
-        isRefreshing = false;
+        // dispatch event for force logout when cannot refresh access
+        console.log(window.location.pathname.includes("/login"));
+        if (!window.location.pathname.includes("/login")) {
+          window.dispatchEvent(new Event("ASK_LOGIN"));
+        }
+
         return Promise.reject(err);
       }
     }
@@ -67,7 +45,7 @@ api.interceptors.response.use(
 
 /*-------------------Request Interceptors ------------------*/
 api.interceptors.request.use((config) => {
-  config.signal = getGlobalSignal();
+  config.signal = globalAbortController.signal;
   return config;
 });
 
@@ -77,7 +55,6 @@ export const fetchData = async ({
   method = "GET",
   payload = {},
   params = {},
-  signal,
   isFormData = false,
 }) => {
   try {
@@ -88,11 +65,13 @@ export const fetchData = async ({
       params,
       headers: isFormData ? undefined : { "Content-Type": "application/json" },
     });
-    retryCount = 0;
     return res.data;
   } catch (err) {
     if (err.code === "ERR_NETWORK") {
-      toast.error("Server is currently unreachable.");
+      const message = err.message.includes("Network Error")
+        ? "Cannot reach servers."
+        : err.message;
+      toast.error(message);
       return { error: err };
     }
     if (err.name === "CanceledError") {
@@ -101,6 +80,7 @@ export const fetchData = async ({
     }
     const apiErrors = err?.response?.data?.errors;
     if (Array.isArray(apiErrors) && apiErrors.length > 0) {
+      console.log(apiErrors);
       return { formErrors: apiErrors };
     }
 
@@ -116,4 +96,46 @@ export const fetchData = async ({
   }
 };
 
+// ================================== status handling ======================================
+let toastId = null;
+window.addEventListener("offline", () => {
+  toastId = toast.error("You are currently offline.", { duration: Infinity });
+});
+window.addEventListener("online", () => {
+  toast.dismiss(toastId);
+  globalAbortController = new AbortController();
+  toast.success("Connected to network.");
+});
+
 export default api;
+
+// const BASE_URL = "http://localhost:8000/api";
+
+// export const fetchData = async ({
+//   url,
+//   method,
+//   headers,
+//   payload,
+//   isFormData,
+// }) => {
+//   const abortController = new AbortController();
+//   const header = {
+//     "Content-Type": "application/json",
+//     signal: abortController.signal,
+//   };
+//   try {
+//     const request = await fetch(`${BASE_URL}${url}`, {
+//       method,
+//       headers: isFormData ? {} : header,
+//       credentials: "include",
+//       body: isFormData ? payload : JSON.stringify(payload),
+//     });
+
+//     if (response.success) {
+//       return response;
+//     }
+//   } catch (error) {
+//     console.log(error);
+//     return error;
+//   }
+// };

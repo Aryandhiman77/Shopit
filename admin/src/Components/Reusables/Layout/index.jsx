@@ -2,14 +2,19 @@ import React, { useEffect, useState } from "react";
 import Header from "../../Header";
 import SideBar from "../../Sidebar";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import Modal from "../Elements/Modal";
+import OTPInput from "../OTPInput";
+import { TextField } from "@mui/material";
+import CollapsablePanel from "../CollapsablePanel";
+import SessionRevalidationModel from "../../Modals/sessionRevalidationModel";
 
 const Layout = () => {
   const [sideBarOpened, setSideBarOpened] = useState(true);
-
+  
   //redirect provider after refresh
   const location = useLocation();
   const navigate = useNavigate();
-
   useEffect(() => {
     const refreshSavedURL = sessionStorage.getItem("redirectToUrlAfterRefresh");
     if (refreshSavedURL) {
@@ -44,6 +49,7 @@ const Layout = () => {
           </div>
         </div>
       </div>
+      <SessionRevalidationModel />
     </>
   );
 };

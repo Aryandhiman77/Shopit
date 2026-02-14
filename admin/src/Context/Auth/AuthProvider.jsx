@@ -9,6 +9,8 @@ const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
   const [formErrors, setFormErrors] = useState(null);
+  const [isPasswordModelOpen, setIsPasswordModelOpen] = useState(false);
+  const [isOTPModelOpen, setIsOTPModelOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (details) => {
@@ -19,7 +21,6 @@ const AuthProvider = ({ children }) => {
         method: "POST",
         payload: { ...details, role: "admin" },
       });
-      console.log(response);
       if (response?.formErrors) {
         setFormErrors(response.formErrors);
       }
@@ -33,10 +34,36 @@ const AuthProvider = ({ children }) => {
         });
         return;
       }
+      // during session revalidation
+      // if (response?.data?.otpRequired && isPasswordModelOpen) {
+      //   setIsOTPModelOpen(true);
+      // }
       if (response?.data?.isAuthenticated) {
         setUser(response.data);
         setAuthenticated(true);
         localStorage.setItem("user", JSON.stringify(response.data));
+        navigate("/", { replace: true });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleSessionReValidation = async (details) => {
+    setLoading(true);
+    try {
+      const response = await fetchData({
+        url: "/auth/login",
+        method: "POST",
+        payload: { ...details, role: "admin" },
+      });
+      if (response?.formErrors) {
+        setFormErrors(response.formErrors);
+      }
+      if (response?.data?.otpRequired) {
+        setIsOTPModelOpen(true);
+        return;
       }
     } catch (error) {
       console.log(error);
@@ -74,7 +101,8 @@ const AuthProvider = ({ children }) => {
   //   }
   // };
 
-  const handleOtpVerification = async ({ email, otp }) => {
+  const handleOtpVerification = async ({ email, otp }, navigate = true) => {
+    console.log(navigate);
     setLoading(true);
     try {
       const response = await fetchData({
@@ -83,12 +111,16 @@ const AuthProvider = ({ children }) => {
         payload: { email: email, otp },
       });
       if (response?.success && response?.data?.isAuthenticated) {
+        if (!navigate) {
+          return true;
+        }
         setUser(response.data);
-        toast.success(response?.message);
         if (!JSON.parse(localStorage.getItem("user"))) {
           setAuthenticated(true);
           localStorage.setItem("user", JSON.stringify(response.data));
-          toast.success("Login successful.");
+          setLoading(false);
+
+          navigate("/", { replace: true });
         }
       }
     } catch (error) {
@@ -114,6 +146,7 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem("user");
         setUser(null);
         setAuthenticated(false);
+        setLoading(false);
         toast.success(response?.message);
       }
       return true;
@@ -123,36 +156,58 @@ const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  const verifyMySession = async () => {
-    setLoading(true);
-    const response = await fetchData({
-      url: "/auth/me",
-      method: "GET",
-    });
-    if (response?.success) {
-      localStorage.setItem("user", JSON.stringify(response.data));
-      setUser(response.data);
-      setAuthenticated(true);
-      setLoading(false);
-    } else {
-      handleLogout();
-      setLoading(false);
-    }
-  };
 
   useEffect(() => {
-    verifyMySession();
+    const logout = () => handleLogout();
+    const askToRevalidateLogin = () => {
+      setIsPasswordModelOpen(true);
+    };
+    // received from request api
+    window.addEventListener("ASK_LOGIN", askToRevalidateLogin);
+    window.addEventListener("FORCE-LOGOUT", logout);
+
+    return () => {
+      window.removeEventListener("ASK_LOGIN", askToRevalidateLogin);
+      window.removeEventListener("FORCE-LOGOUT", logout);
+    };
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      setLoading(false);
+      return;
+    }
+    (async () => {
+      const res = await fetchData({ url: "/auth/getme", method: "GET" });
+      if (res.success) {
+        setUser(res.data);
+        setAuthenticated(true);
+        setLoading(false);
+        navigate("/", { replace: true });
+        localStorage.setItem("user", JSON.stringify(res.data));
+      } else {
+        handleLogout();
+      }
+      setLoading(false);
+    })();
   }, []);
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated,
-        handleLogin,
         loading,
+        isAuthenticated,
         formErrors,
-        handleOtpVerification,
         user,
+        isPasswordModelOpen,
+        isOTPModelOpen,
+        setIsOTPModelOpen,
+        setIsPasswordModelOpen,
+        handleLogin,
+        handleOtpVerification,
         handleLogout,
+        handleSessionReValidation,
       }}
     >
       {children}

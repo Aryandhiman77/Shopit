@@ -6,6 +6,7 @@ const CustomToast = ({
   messageClasses,
   message = "Enter a message",
   toastId,
+  buttonTitle="Save Changes",
   callFn = () => {},
 }) => {
   useEffect(() => {
@@ -30,7 +31,7 @@ const CustomToast = ({
               }}
               className="custom-btn bg-green-600! text-white! w-full!"
             >
-              Save Changes
+              {buttonTitle}
             </button>
             <button
               onClick={() => {
