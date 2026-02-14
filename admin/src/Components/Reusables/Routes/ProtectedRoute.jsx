@@ -5,7 +5,7 @@ import logo from "../../../assets/admin-logo.jpg";
 
 const ProtectedRoute = () => {
   const { isAuthenticated, loading, error } = useAuth();
-  if (loading) {
+  if (loading && !isAuthenticated) {
     return (
       <div className="flex justify-center items-center h-[100vh] bg-[#e5e5e5]">
         <div className="flex justify-center items-center flex-col border border-gray-400 p-10 bg-[rgba(154,192,247,0.4)]">

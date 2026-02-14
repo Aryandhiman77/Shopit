@@ -63,7 +63,6 @@ const AuthProvider = ({ children }) => {
       }
       if (response?.data?.otpRequired) {
         setIsOTPModelOpen(true);
-        return;
       }
     } catch (error) {
       console.log(error);
