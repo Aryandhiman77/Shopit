@@ -54,8 +54,8 @@ const SessionRevalidationModel = ({ isOpen, setOpened }) => {
       false,
     );
     if (verified) {
-      console.log("resetting states");
       resetStates();
+      toast.success("Session Revalidated.");
     }
   };
   return (

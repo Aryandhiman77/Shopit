@@ -17,7 +17,7 @@ import LinesChart from "../../Components/Reusables/Charts/LinesChart";
 import { GoDotFill } from "react-icons/go";
 import ProductList from "./ProductList";
 import OrderList from "./OrderList";
-import useData from "../../Components/hooks/useData";
+import useData from "../../Components/hooks/useCategory";
 
 const Dashboard = () => {
   const { lineChartData } = useData();

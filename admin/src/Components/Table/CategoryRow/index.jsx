@@ -10,7 +10,7 @@ import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { getFixedDateAndTimeString } from "../../../utilities/getDateAndTime";
 import SubCategoryRow from "./SubCategoryRow";
-import useData from "../../hooks/useData";
+import useData from "../../hooks/useCategory";
 import CustomToggle from "../../Reusables/Elements/CustomToggle";
 
 const CategoryRow = ({ category, index, handleEdit }) => {

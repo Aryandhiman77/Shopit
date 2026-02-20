@@ -1,14 +1,13 @@
 // src/Context/Data/DataContext.js
-import { createContext, useContext, useState } from "react";
-
-import { DataContext } from "./DataContext";
+import { useState } from "react";
 import { fetchData } from "../../utilities/RequestAPI";
 import ConvertToFormData from "../../utilities/ConvertToFormData";
 import toast from "react-hot-toast";
 import CustomToast from "../../Components/Reusables/CustomToast";
+import CategoryContext from "../../Context/Category/CategoryContext";
 
 // ✅ Provider Component
-export const DataProvider = ({ children }) => {
+const CategoryProvider = ({ children }) => {
   const [orders, setOrders] = useState([
     {
       orderId: "#32422432",
@@ -208,6 +207,7 @@ export const DataProvider = ({ children }) => {
   };
 
   const updateCategoryStatus = async (details) => {
+    console.log(details);
     const id = details.id;
     delete details.id;
     startLoading(`update-${id}-category`);
@@ -235,10 +235,11 @@ export const DataProvider = ({ children }) => {
     }
   };
   const updateCategoryImage = async (image, id) => {
+    const formdata = ConvertToFormData({ image });
     const response = await fetchData({
       url: `/admin/categories/update/${id}/image`,
       method: "PATCH",
-      payload: image,
+      payload: formdata,
       isFormData: true,
     });
 
@@ -255,9 +256,11 @@ export const DataProvider = ({ children }) => {
     if (details.image) {
       const update = await updateCategoryImage(details.image, id);
       if (!update) {
-        console.log("problem updating image...");
+        console.log(update);
         stopLoading(`update-category`);
+        return;
       }
+      delete details.image;
     }
     const response = await fetchData({
       url: `/admin/categories/update/${id}`,
@@ -283,7 +286,7 @@ export const DataProvider = ({ children }) => {
     }
   };
   return (
-    <DataContext.Provider
+    <CategoryContext.Provider
       value={{
         orders,
         products,
@@ -304,9 +307,8 @@ export const DataProvider = ({ children }) => {
       }}
     >
       {children}
-    </DataContext.Provider>
+    </CategoryContext.Provider>
   );
 };
 
-// ✅ Hook
-export default DataProvider;
+export default CategoryProvider;

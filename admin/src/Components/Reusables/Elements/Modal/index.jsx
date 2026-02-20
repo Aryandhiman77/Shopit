@@ -8,7 +8,7 @@ const Modal = ({
   children,
   title,
   className = "",
-  fullScreen = true,
+  fullScreen = false,
   header = true,
 }) => {
   useEffect(() => {
