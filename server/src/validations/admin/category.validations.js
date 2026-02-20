@@ -3,7 +3,6 @@ import Joi from "joi";
 const attributeSchema = Joi.array()
   .items(
     Joi.object({
-      _id: Joi.string().max(24),
       name: Joi.string().lowercase().min(3).max(25).messages({
         "string.min": "Attribute name must be at least 3 characters long.",
         "string.max": "Attribute name must be less than 25 characters.",
@@ -25,9 +24,8 @@ const attributeSchema = Joi.array()
           then: Joi.required().messages({
             "any.required": "Options are required when inputType is select.",
           }),
-          otherwise: Joi.forbidden().messages({
-            "any.unknown":
-              "Options field is only allowed when inputType is select.",
+          otherwise: Joi.array().max(0).messages({
+            "array.max": "Options is only allowed when inputType is select.",
           }),
         }),
       required: Joi.boolean().messages({
@@ -68,6 +66,41 @@ export const createCategorySchema = Joi.object({
   .messages({
     "object.unknown": "Extra fields are not allowed.",
   });
+
+const updateAttributeSchema = Joi.array().items(
+  Joi.object({
+    _id: Joi.string().hex().max(24),
+    name: Joi.string().lowercase().min(3).max(25).messages({
+      "string.min": "Attribute name must be at least 3 characters long.",
+      "string.max": "Attribute name must be less than 25 characters.",
+      "any.required": "Attribute name is required.",
+      "string.empty": "Attribute name cannot be empty.",
+    }),
+    inputType: Joi.string()
+      .valid("string", "number", "boolean", "select")
+      .messages({
+        "any.only":
+          "Input type must be one of: string, number, boolean, select.",
+        "any.required": "Input type is required.",
+      }),
+    options: Joi.array()
+      .items(Joi.string())
+      .max(50)
+      .when("inputType", {
+        is: "select",
+        then: Joi.required().messages({
+          "any.required": "Options are required when inputType is select.",
+        }),
+        otherwise: Joi.array().max(0).messages({
+          "array.max": "Options is only allowed when inputType is select.",
+        }),
+      }),
+    required: Joi.boolean().messages({
+      "boolean.base": "required must be either Yes or No.",
+    }),
+  }).unknown(false),
+);
+
 export const updateCategorySchema = Joi.object({
   name: Joi.string().lowercase().min(3).max(25).messages({
     "string.min": "Category name must be at least 2 characters long.",
@@ -80,8 +113,8 @@ export const updateCategorySchema = Joi.object({
     "any.required": "Category description is required.",
     "string.empty": "Category description cannot be empty.",
   }),
-  parent: Joi.string().lowercase(),
-  attributes: attributeSchema,
+  parent: Joi.string().hex().max(24),
+  attributes: updateAttributeSchema,
 }).unknown(false);
 // .messages({
 //   "object.unknown": "Extra fields are not allowed in category.",

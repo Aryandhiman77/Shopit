@@ -194,11 +194,7 @@ export const renewAccessToken = AsyncWrapper(async (req, res) => {
   try {
     data = JWT.verify(oldToken, process.env.JWT_REFRESH_SECRET);
   } catch {
-    throw new ApiError(
-      403,
-      "Session Expired, enter password to re-validate.",
-      "Refresh token expired or invalid.",
-    );
+    throw new ApiError(403, "", "Refresh token expired or invalid.");
   }
   // ----x-----
   const user = await User.findOne({

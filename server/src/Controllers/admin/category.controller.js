@@ -60,6 +60,7 @@ export const updateCategoryStatus = AsyncWrapper(async (req, res) => {
 export const updateCategoryImageController = AsyncWrapper(
   async (req, res, next) => {
     const { catId } = req.params;
+    console.log(req.file);
     try {
       const updatedCategory = await updateCategoryImage(catId, req.file);
       return res
