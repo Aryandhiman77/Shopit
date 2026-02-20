@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import { ThemeProvider } from "./Context/Theme/themeProvider";
 import Layout from "./Components/Reusables/Layout";
+import { DataProvider } from "./Context/Data/DataProvider";
 import Login from "./Pages/Auth/Login";
 import Signup from "./Pages/Auth/Signup";
 import ProtectedRoute from "./Components/Reusables/Routes/ProtectedRoute";
@@ -27,14 +28,13 @@ import Orders from "./Pages/AllOrders";
 import AuthProvider from "./Context/Auth/AuthProvider";
 import OTPVerification from "./Pages/OTPVerification";
 import { Toaster } from "react-hot-toast";
-import CategoryProvider from "./Context/Category/CategoryProvider";
-
+import UpdateCategoryModal from "./Components/Reusables/Elements/Modal";
 const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <CategoryProvider>
+          <DataProvider>
             <Toaster />
             <Routes>
               <Route element={<PublicRoute />}>
@@ -68,7 +68,7 @@ const App = () => {
               {/* FALLBACK ROUTE */}
               <Route path="*" element={<Navigate to="/page-not-found" />} />
             </Routes>
-          </CategoryProvider>
+          </DataProvider>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

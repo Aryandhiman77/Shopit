@@ -1,6 +1,6 @@
 import ProductRow from "../../../Components/Table/ProductRow";
 import Table from "../../../Components/Table";
-import useData from "../../../Components/hooks/useCategory";
+import useData from "../../../Components/hooks/useData";
 
 const ProductList = () => {
   const productTableHeadings = [

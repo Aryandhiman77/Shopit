@@ -12,7 +12,7 @@ import Table from "../Table";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import MenuItem from "@mui/material/MenuItem";
 import Spinner from "../Reusables/Elements/Loader/Spinner";
-import useData from "../hooks/useCategory";
+import useData from "../hooks/useData";
 import CustomToggle from "../Reusables/Elements/CustomToggle";
 import FormError from "../Reusables/FormError";
 import ImageDropBox from "../Reusables/ImageDropBox";
@@ -89,9 +89,9 @@ const CategoryForm = ({
       if (images.length > 0) {
         details = { ...details, image: images[0] };
       }
-      // let stringifiedAtts = JSON.stringify(attributes);
+      let stringifiedAtts = JSON.stringify(attributes);
       if (attributes.length > 0) {
-        details = { ...details, attributes };
+        details = { ...details, attributes: stringifiedAtts };
       }
       handleUpdateCategory(details);
       return;
@@ -110,9 +110,10 @@ const CategoryForm = ({
     }
   };
   let options =
-    updationCategory?.level === 3 ? level2Categories : level1Categories;
+    updateCategory?.level === 3 ? level2Categories : level1Categories;
   options = options.map((opt) => ({ label: opt.name, value: opt._id }));
 
+  // const value = options.filter((item) => updateCategory._id === item._id);
   useEffect(() => {
     if (mode !== "edit" && updationCategory.level > 1) return;
     (async () => {

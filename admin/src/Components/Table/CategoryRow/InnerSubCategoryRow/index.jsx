@@ -9,7 +9,7 @@ import {
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { getFixedDateAndTimeString } from "../../../../utilities/getDateAndTime";
-import useData from "../../../hooks/useCategory";
+import useData from "../../../hooks/useData";
 import CustomToggle from "../../../Reusables/Elements/CustomToggle";
 const InnerSubCategoryRow = ({
   innerSubcategory,

@@ -9,7 +9,7 @@ import {
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { getFixedDateAndTimeString } from "../../../../utilities/getDateAndTime";
 import InnerSubCategoryRow from "../InnerSubCategoryRow";
-import useData from "../../../hooks/useCategory";
+import useData from "../../../hooks/useData";
 import CustomToggle from "../../../Reusables/Elements/CustomToggle";
 const SubCategoryRow = ({
   subCategory,

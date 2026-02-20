@@ -30,7 +30,8 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         // dispatch event for force logout when cannot refresh access
-        if (window.location.pathname !== "/login") {
+        console.log(window.location.pathname.includes("/login"));
+        if (!window.location.pathname.includes("/login")) {
           window.dispatchEvent(new Event("ASK_LOGIN"));
         }
 

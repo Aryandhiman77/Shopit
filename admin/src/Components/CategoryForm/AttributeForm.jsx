@@ -81,7 +81,7 @@ const AttributeForm = ({
     if (attribute.inputType !== "select") {
       setOptions([]);
       attributeData = data;
-    } else if (options.length > 0) {
+    } else {
       attributeData = { ...data, options };
     }
     if (editIndex > -1) {
@@ -92,6 +92,7 @@ const AttributeForm = ({
     } else {
       setAttributes([...attributes, attributeData]);
     }
+    console.log(attributes);
     resetAttributesFormStates();
   };
 
