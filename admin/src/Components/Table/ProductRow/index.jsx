@@ -1,49 +1,43 @@
 import { Tooltip } from "@mui/joy";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import CollapsablePanel from "../../Reusables/CollapsablePanel";
 import Table from "..";
 import ProgressBar from "../../Reusables/Elements/ProgressBar";
+import { getFixedDateAndTimeString } from "../../../utilities/getDateAndTime";
 
-const ProductRow = ({ product }) => {
+const ProductRow = ({ product, index }) => {
   const [itemsHidden, setItemsHidden] = useState(true);
   return (
     <>
       <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600 overflow-hidden">
-        <td className="px-4 py-4 w-10">
-          <button
-            onClick={() => setItemsHidden(!itemsHidden)}
-            className={`custom-btn !rounded-full custom-border !p-1 ${
-              itemsHidden ? "!bg-white" : "!bg-gray-800"
-            }`}
-          >
-            {itemsHidden ? (
-              <IoIosArrowDown className="text-2xl" />
-            ) : (
-              <IoIosArrowUp className="text-2xl text-white" />
-            )}
-          </button>
-        </td>
+        <td className="px-4 py-4 text-center">{index}</td>
         <th
           scope="row"
           className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          {product?.id}
+          {product?._id}
+        </th>
+        <th
+          scope="row"
+          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+        >
+          {product?.sku}
         </th>
 
         <td className="px-6 py-4 ">
-          <div className="flex w-[250px] items-center">
+          <div className="flex w-45 items-center">
             <img
-              src={product?.thumbnail}
-              className="h-20 w-auto rounded-xl  object-cover"
+              src={product?.thumbnail?.url}
+              className="w-20 h-20 rounded-xl object-cover"
               alt=""
             />
             <div className="p-2">
-              <p className="text-[12px] font-[600]">{product?.name}</p>
+              <p className="text-[12px] font-[600]">{product?.title}</p>
               <p className="text-[12px] font-[500] text-black">
-                {product?.brand}
+                {product?.brand.name}
               </p>
             </div>
           </div>
@@ -57,20 +51,31 @@ const ProductRow = ({ product }) => {
         <td className="px-6 py-4 whitespace-nowrap">
           {product?.categories?.level3.name}
         </td>
-       
         <td className="px-6 py-4 whitespace-nowrap">
-          <div className="flex flex-col items-center" >
-          <ProgressBar value={2}/>
-          <p className="text-[12px]"><span className="text-gray-600 font-[600]">23</span> sales</p>
-          </div>
+          {product?.seller?.name}
         </td>
-         <td className="px-6 py-4 whitespace-nowrap">
+
+        {/* <td className="px-6 py-4 whitespace-nowrap">
+          <div className="flex flex-col items-center">
+            <ProgressBar value={2} />
+            <p className="text-[12px]">
+              <span className="text-gray-600 font-[600]">23</span> sales
+            </p>
+          </div>
+        </td> */}
+        <td className="px-6 py-4 whitespace-nowrap">
           {product?.variants?.length}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap">{product?.createdAt}</td>
-        <td className="px-6 py-4 whitespace-nowrap">{product?.modifiedAt}</td>
         <td className="px-6 py-4 whitespace-nowrap">
-          <div className={`p-2  rounded-2xl text-white text-[12px] font-[500] tracking-wide ${product?.status==="active"?"bg-green-700":product?.status==="inactive"?"bg-red-700":"bg-black"}`}>
+          {getFixedDateAndTimeString(product?.createdAt)}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          {getFixedDateAndTimeString(product?.updatedAt)}
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap">
+          <div
+            className={`p-2  rounded-2xl text-white text-[12px] font-[500] tracking-wide ${product?.status === "active" ? "bg-green-700" : product?.status === "inactive" ? "bg-red-700" : "bg-black"}`}
+          >
             {product?.status}
           </div>
         </td>
@@ -96,7 +101,7 @@ const ProductRow = ({ product }) => {
         </td>
       </tr>
 
-      {!itemsHidden && (
+      {/* {!itemsHidden && (
         <>
           <tr className="text-xs text-gray-700 uppercase bg-gray-200 dark:bg-gray-700 dark:text-gray-400 w-full">
             <th scope="col" className="px-16 py-3">
@@ -173,7 +178,7 @@ const ProductRow = ({ product }) => {
             </tr>
           ))}
         </>
-      )}
+      )} */}
     </>
   );
 };

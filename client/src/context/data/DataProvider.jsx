@@ -5,12 +5,27 @@ const DataProvider = ({ children }) => {
   const [products, setProducts] = useState([]); // for listing
   const [productDetails, setDetails] = useState({}); // for showing the product detail page..
   const [categories, setCategories] = useState([]); // all categories
+  const [brandsByCategory, setBrandsByCategory] = useState([]);
   const [level1Categories, setLevel1Categories] = useState([]);
   const [errors, setErrors] = useState({ categories: null, products: null });
-  const [loading, setLoading] = useState({
-    products: false,
-    allCategories: false,
-  });
+  const [loading, setLoading] = useState({});
+
+  const startLoading = (key) =>
+    setLoading((prev) => ({
+      ...prev,
+      [key]: (prev[key] || 0) + 1,
+    }));
+
+  const stopLoading = (key) =>
+    setLoading((prev) => ({
+      ...prev,
+      [key]: Math.max((prev[key] || 1) - 1, 0),
+    }));
+
+  const isLoading = (key) => {
+    return (loading[key] || 0) > 0;
+  };
+
   const [adsBannerData, setAdsBannerData] = useState([
     {
       img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
@@ -82,7 +97,7 @@ const DataProvider = ({ children }) => {
     },
   ]);
   const getOrderedCategories = async () => {
-    setLoading({ ...loading, allCategories: true });
+    startLoading("orderedCategories");
     const result = await fetchData({
       url: `/categories`,
       method: "GET",
@@ -90,30 +105,34 @@ const DataProvider = ({ children }) => {
     if (result?.success) {
       console.log(result.data);
       setCategories(result.data);
-      setLoading({ ...loading, allCategories: false });
-      return true;
     }
     if (result?.error) {
       setErrors({ ...errors, categories: result.error });
-      console.log(result.error);
-      setLoading({ ...loading, allCategories: false });
     }
+    stopLoading("orderedCategories");
   };
 
-  const getCategoryProducts = async (category, { limit }) => {
-    setLoading({ ...loading, products: true });
+  const getCategoryProducts = async (category) => {
+    startLoading("categoryProducts");
     const result = await fetchData({
       url: `/products/${category}`,
       method: "GET",
     });
     if (result?.success) {
       setProducts(result.data);
-      setLoading({ ...loading, products: false });
-      return true;
     }
-    // if (error) {
-    //   setLoading({ ...loading, products: false });
-    // }
+    stopLoading("categoryProducts");
+  };
+  const getBrandsByCategory = async (category) => {
+    startLoading("categoryBrands");
+    const result = await fetchData({
+      url: `/brands/${category}`,
+      method: "GET",
+    });
+    if (result?.success) {
+      setBrandsByCategory(result.data);
+    }
+    stopLoading("categoryBrands");
   };
 
   const getFeaturedProducts = async () => {};
@@ -137,6 +156,7 @@ const DataProvider = ({ children }) => {
       fullAddress: "Vpo sarsehri, ambala cantt, haryana - 133001",
     },
   ];
+
   return (
     <DataContext.Provider
       value={{
@@ -151,6 +171,9 @@ const DataProvider = ({ children }) => {
         getCategoryProducts,
         loading,
         getOrderedCategories,
+        brandsByCategory,
+        getBrandsByCategory,
+        isLoading,
       }}
     >
       {children}

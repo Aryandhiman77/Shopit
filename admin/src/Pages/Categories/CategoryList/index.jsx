@@ -13,6 +13,9 @@ import Spinner from "../../../Components/Reusables/Elements/Loader/Spinner";
 import UpdateCategoryModal from "../../../Components/Reusables/Elements/Modal";
 import Modal from "../../../Components/Reusables/Elements/Modal";
 import CategoryForm from "../../../Components/CategoryForm/CategoryForm";
+import DropDownField from "../../../Components/Reusables/DropDownField";
+import { IoFilterCircleOutline } from "react-icons/io5";
+import { FaFilter } from "react-icons/fa";
 
 const CategoryList = () => {
   const navigate = useNavigate();
@@ -41,9 +44,9 @@ const CategoryList = () => {
           </div>
         </div>
 
-        <Box className="space-y-4 bg-white dark:bg-black">
+        <Box className="space-y-4 bg-white dark:bg-black rounded-sm!">
           <div className="flex items-center justify-between">
-            <p className="text-gray-500 font-semibold text-xl">Categories</p>
+            <p className="text-gray-600 font-medium text-xl">Categories</p>
             <div className="flex gap-3 items-center">
               <CustomButton
                 type={"button"}
@@ -67,8 +70,25 @@ const CategoryList = () => {
             </div>
           </div>
           <div className="flex justify-between items-center">
-            <div className="w-[20%]">
+            <div className="flex gap-5">
               <Search placeholder={"Search Category ..."} />
+              <div className="w-30">
+                <DropDownField
+                  defaultSelected={"All"}
+                  items={[
+                    "All",
+                    "Main Categories",
+                    "Sub Categories",
+                    "Leaf Categories",
+                  ]}
+                />
+              </div>
+              <div className="w-30">
+                <DropDownField
+                  defaultSelected={"Both"}
+                  items={["Both", "Active", "Inactive"]}
+                />
+              </div>
             </div>
             <p className="text-gray-500 font-normal text-sm px-2">
               {orderedCategories?.length ? (

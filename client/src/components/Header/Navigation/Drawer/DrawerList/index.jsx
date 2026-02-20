@@ -31,7 +31,7 @@ const DrawerList = ({ setDrawerOpen, categories = [], loading = false }) => {
               <SkeletonText width="30" className="h-6!" />
             </div>
           ) : (
-            <DrawerItems items={categories} />
+            <DrawerItems items={categories} setDrawerOpen={setDrawerOpen} />
           )}
         </ul>
       </div>

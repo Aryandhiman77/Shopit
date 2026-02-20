@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-const DropDownField = ({ title, items, setValue }) => {
+const DropDownField = ({ title, items, setValue, defaultSelected }) => {
   const [age, setAge] = React.useState("");
 
   const handleChange = (event) => {
@@ -21,6 +21,7 @@ const DropDownField = ({ title, items, setValue }) => {
         value={age}
         label={title}
         onChange={handleChange}
+        defaultValue={defaultSelected}
       >
         {items?.map((item, i) => (
           <MenuItem key={i} value={item}>

@@ -229,7 +229,7 @@ const AddProduct = () => {
               </Link>
             </div>
           </Box>
-          <Box className={"bg-white flex flex-col gap-4"}>
+          {/* <Box className={"bg-white flex flex-col gap-4"}>
             <div className="flex items-center justify-between">
               <h1 className="heading-1">Product Variant</h1>
               <Link className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm flex items-center gap-1">
@@ -382,7 +382,7 @@ const AddProduct = () => {
                 </label>
               </div>
             </div>
-          </Box>
+          </Box> */}
           <div className="flex gap-3 justify-end">
             <Link className="custom-btn !bg-black !text-white !font-[500] text-sm">
               Save as Draft

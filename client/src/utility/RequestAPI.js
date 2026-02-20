@@ -67,7 +67,7 @@ export const fetchData = async ({
     return res.data;
   } catch (err) {
     const apiErrors = err?.response?.data?.errors;
-    if (Array.isArray(apiErrors.length > 0)) {
+    if (Array.isArray(apiErrors?.length > 0)) {
       return { formErrors: apiErrors };
     }
 

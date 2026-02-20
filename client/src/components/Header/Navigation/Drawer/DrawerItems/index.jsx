@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaRegSquareMinus, FaRegSquarePlus } from "react-icons/fa6";
 import { Link, useLocation } from "react-router-dom";
 
-const DrawerItems = ({ items }) => {
+const DrawerItems = ({ items, setDrawerOpen }) => {
   const [openSubmenus, setOpenSubmenus] = useState({});
   const [openInnerSubmenus, setOpenInnerSubmenus] = useState({});
   const location = useLocation();
@@ -28,9 +28,9 @@ const DrawerItems = ({ items }) => {
     // Example: you can adjust this to match your routes
     return location.pathname.toLowerCase().includes(name.toLowerCase());
   };
-  useEffect(()=>{
-    console.log("drawre")
-  },[])
+  useEffect(() => {
+    console.log("drawre");
+  }, []);
 
   return (
     <ul className="space-y-2">
@@ -43,6 +43,7 @@ const DrawerItems = ({ items }) => {
             <Link
               to={`/category/${category.slug}`}
               className="hover:text-primary capitalize"
+              onClick={() => setDrawerOpen(false)}
             >
               {category.name}
             </Link>
@@ -64,6 +65,7 @@ const DrawerItems = ({ items }) => {
                     <Link
                       to={`/category/${sub.slug}`}
                       className="hover:text-primary capitalize"
+                      onClick={() => setDrawerOpen(false)}
                     >
                       {sub.name}
                     </Link>
@@ -92,6 +94,7 @@ const DrawerItems = ({ items }) => {
                           >
                             <Link
                               to={`/category/${category.slug}`}
+                              onClick={() => setDrawerOpen(false)}
                               className="hover:text-primary capitalize"
                             >
                               {item.name}

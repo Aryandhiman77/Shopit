@@ -16,13 +16,18 @@ import ProductSkeleton from "../../components/Reusables/Items/ProductItem/Produc
 import ProductSkeletonPage from "./ProductSkeletonPage";
 
 const ProductsListing = () => {
-  const { category } = useParams();
-  const { products, getCategoryProducts, loading } = useData();
+  const params = useParams();
+  const category = params?.category;
+  const { products, getCategoryProducts, isLoading } = useData();
 
   const [viewStyle, setViewStyle] = useState("grid");
   const [anchorEl, setAnchorEl] = useState(null);
-  const [productsLimit, setProductsLimit] = useState(10);
-  // const [animate,setAnimate] = useState(false)
+  const [filters, setFilter] = useState({
+    categories: [], // slugs
+    rating: undefined,
+    price: undefined,
+    brands: [], // slugs
+  });
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,7 +40,7 @@ const ProductsListing = () => {
     if (!category) {
       return;
     }
-    getCategoryProducts(category, { limit: productsLimit });
+    getCategoryProducts(category);
   }, [category]);
   return (
     <div className="max-w-full">
@@ -110,24 +115,14 @@ const ProductsListing = () => {
             </div>
           </div>
           <div className="products w-full">
-            {loading.products ? (
+            {isLoading("categoryProducts") ? (
               <ProductSkeletonPage
                 viewStyle={viewStyle}
                 horizontal={viewStyle === "list"}
                 count={viewStyle === "grid" ? 20 : 30}
               />
-            ) : !loading?.products && products.length === 0 ? (
-              <div className="flex justify-center items-center">
-                <div className="p-35">
-                  <img
-                    src={noProductsImage}
-                    className="h-50"
-                    alt="No products available in this category"
-                  />
-                </div>
-              </div>
             ) : (
-              !loading?.products &&
+              !isLoading("categoryProducts") &&
               products?.length > 0 && (
                 <div
                   className={`product-list mt-2 ${
@@ -147,11 +142,22 @@ const ProductsListing = () => {
                 </div>
               )
             )}
+            {/* : !loading?.products && products.length === 0 ? (
+              <div className="flex justify-center items-center">
+                <div className="p-35">
+                  <img
+                    src={noProductsImage}
+                    className="h-50"
+                    alt="No products available in this category"
+                  />
+                </div>
+              </div>
+            )  */}
           </div>
           <div className="pagination flex justify-center mt-5">
-            {productsLimit > 0 && products?.length > 0 && (
+            {filters?.limit > 0 && products?.length > 0 && (
               <Pagination
-                count={productsLimit / products?.length}
+                count={filters.limit / products?.length}
                 variant="outlined"
                 shape="rounded"
               />

@@ -1,7 +1,7 @@
 import Divider from "@mui/material/Divider";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import { Link } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { IoSearchOutline } from "react-icons/io5";
 import PropTypes from "prop-types";
@@ -13,16 +13,21 @@ import { Collapse } from "react-collapse";
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 import Rating from "@mui/material/Rating";
+import useData from "../../hooks/useData";
+import { SkeletonText } from "../Reusables/Elements/Loader/skeleton";
 
 const Sidebar = () => {
-  const [rating,setRating]=useState(0);
+  const { category } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [rating, setRating] = useState(-1);
   const [dropdowns, setDropdowns] = useState({
     brand: true,
     categories: false,
     price: false,
-    rating:true
+    rating: true,
   });
   const [values, setValues] = useState([20, 4000]);
+  const { getBrandsByCategory, brandsByCategory, isLoading } = useData();
   const toggleDropdown = (key) => {
     setDropdowns((prev) => ({
       ...prev,
@@ -32,6 +37,41 @@ const Sidebar = () => {
   const handleInput = (val) => {
     setValues(val);
   };
+  const toggleQueryArray = (params, key, slug) => {
+    // first create the array
+    // check if the slug already exists in array if so then return the prev arr
+  };
+
+  const handleBrandFilter = (slug) => {
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      const brands = params.getAll("brands");
+
+      if (brands.includes(slug)) {
+        // remove
+        const filtered = brands.filter((b) => b !== slug);
+        params.delete("brands");
+        filtered.forEach((b) => params.append("brands", b));
+      } else {
+        // add
+        params.append("brands", slug);
+      }
+
+      return params;
+    });
+  };
+
+  const handleRefreshForQueryString = () => {
+    let allBrandsInParams = searchParams.getAll("brand");
+    console.log(allBrandsInParams);
+  };
+
+  useEffect(() => {
+    if (category) {
+      getBrandsByCategory(category);
+    }
+    handleRefreshForQueryString();
+  }, []);
 
   return (
     <div className="w-full bg-[#e9e9e9] rounded-xl">
@@ -40,7 +80,6 @@ const Sidebar = () => {
           Filter
         </div>
       </div>
-
       <div className="wrapper flex flex-col p-1 gap-1 min-h-[20vh]">
         {/* Brand Section */}
         <div className="brand bg-white rounded-xl">
@@ -60,44 +99,43 @@ const Sidebar = () => {
                 placeholder="Search Brand ..."
               />
             </div>
-            <ul className="p-1 scrolling">
-              {[
-                {
-                  name: "RedTape",
-                  img: "https://i.pinimg.com/736x/ba/bf/e4/babfe4cadba602b742f08cb2cc73cc2f.jpg",
-                },
-                {
-                  name: "Woodland",
-                  img: "https://static.vecteezy.com/system/resources/previews/020/975/578/non_2x/woodland-logo-woodland-icon-transparent-free-png.png",
-                },
-                {
-                  name: "Nike",
-                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwEvSxIXOQ7AFQri4IMYwOIJ2ufRiur64l9A&s",
-                },
-                {
-                  name: "Adidas",
-                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyYrlGRxpJkdqkUHNfYNfp7ZaTJKXKPFk8fw&s",
-                },
-                {
-                  name: "Apple",
-                  img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGlpdEI6Xlo9wxFEJHom_dDyxkyF_32Y1T4A&s",
-                },
-              ].map((brand, idx) => (
-                <li key={idx} className="flex justify-between">
-                  <div className="flex flex-row items-center">
-                    <img
-                      src={brand.img}
-                      className="w-10 h-auto object-cover"
-                      alt={brand.name}
+            <div className="p-1 scrolling">
+              {isLoading("categoryBrands") ? (
+                <div className="space-y-4">
+                  <SkeletonText className="h-8!" />
+                  <SkeletonText className="h-8!" />
+                  <SkeletonText className="h-8!" />
+                  <SkeletonText className="h-8!" />
+                  <SkeletonText className="h-8!" />
+                </div>
+              ) : (
+                brandsByCategory?.map((brand, idx) => (
+                  <label
+                    key={idx}
+                    className="flex justify-between hover:bg-[#e5e5e5] p-1 rounded-xl cursor-pointer"
+                    htmlFor={`checkbox-brand-${idx}`}
+                  >
+                    <div className="flex flex-row items-center">
+                      <img
+                        src={brand.logo.url}
+                        className="w-10 h-auto object-cover "
+                        alt={brand.name}
+                        loading="eager"
+                      />
+                      <div className="p-2 text-sm font-[500] capitalize">
+                        {brand.name}
+                      </div>
+                    </div>
+                    <input
+                      onChange={() => handleBrandFilter(brand?.slug)}
+                      type="checkbox"
+                      id={`checkbox-brand-${idx}`}
+                      className="accent-primary"
                     />
-                    <Link className="p-2 text-sm font-[500]" to={"/"}>
-                      {brand.name}
-                    </Link>
-                  </div>
-                  <input type="checkbox" className="accent-primary" />
-                </li>
-              ))}
-            </ul>
+                  </label>
+                ))
+              )}
+            </div>
           </Collapse>
         </div>
 
@@ -189,10 +227,15 @@ const Sidebar = () => {
           </div>
           <Collapse isOpened={dropdowns.rating}>
             <div className="p-3 flex flex-col">
-              <Rating value={rating} precision={0.1} className="!text-primary" onChange={(e,val)=>setRating(val)} />
-                <div>
+              <Rating
+                value={rating}
+                precision={0.1}
+                className="!text-primary"
+                onChange={(e, val) => setRating(val)}
+              />
+              <div>
                 <p>{rating}/5</p>
-                </div>
+              </div>
             </div>
           </Collapse>
         </div>

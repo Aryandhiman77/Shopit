@@ -34,10 +34,6 @@ const AuthProvider = ({ children }) => {
         });
         return;
       }
-      // during session revalidation
-      // if (response?.data?.otpRequired && isPasswordModelOpen) {
-      //   setIsOTPModelOpen(true);
-      // }
       if (response?.data?.isAuthenticated) {
         setUser(response.data);
         setAuthenticated(true);
@@ -101,7 +97,6 @@ const AuthProvider = ({ children }) => {
   // };
 
   const handleOtpVerification = async ({ email, otp }, navigate = true) => {
-    console.log(navigate);
     setLoading(true);
     try {
       const response = await fetchData({

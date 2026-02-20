@@ -110,11 +110,6 @@ const menuConfig = [
     icon: <IoSettingsOutline className="text-xl" />,
     path: "/settings",
   },
-  {
-    title: "Logout",
-    icon: <IoLogOutOutline className="text-xl" />,
-    path: "/logout",
-  },
 ];
 
 const SideBar = () => {

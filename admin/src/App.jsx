@@ -28,7 +28,14 @@ import Orders from "./Pages/AllOrders";
 import AuthProvider from "./Context/Auth/AuthProvider";
 import OTPVerification from "./Pages/OTPVerification";
 import { Toaster } from "react-hot-toast";
+<<<<<<< Updated upstream
 import UpdateCategoryModal from "./Components/Reusables/Elements/Modal";
+=======
+import CategoryProvider from "./Context/Category/CategoryProvider";
+import UserProvider from "./Context/Users/UserProvider";
+import ProductsProvider from "./Context/Products/ProductsProvider";
+
+>>>>>>> Stashed changes
 const App = () => {
   return (
     <BrowserRouter>
@@ -47,7 +54,14 @@ const App = () => {
               <Route element={<ProtectedRoute />}>
                 <Route element={<Layout />}>
                   <Route path="/" element={<Dashboard />} />
-                  <Route path="/products" element={<Products />} />
+                  <Route
+                    path="/products"
+                    element={
+                      <ProductsProvider>
+                        <Products />
+                      </ProductsProvider>
+                    }
+                  />
                   <Route path="/products/add" element={<AddProduct />} />
                   <Route path="/categories" element={<CategoryList />} />
                   <Route path="/categories/add" element={<AddCategory />} />
@@ -60,7 +74,14 @@ const App = () => {
                     element={<AddLeafCategory />}
                   />
                   <Route path="/orders" element={<Orders />} />
-                  <Route path="/users" element={<Users />} />
+                  <Route
+                    path="/users"
+                    element={
+                      <UserProvider>
+                        <Users />
+                      </UserProvider>
+                    }
+                  />
                   <Route path="/settings" element={<StoreSettings />} />
                 </Route>
               </Route>

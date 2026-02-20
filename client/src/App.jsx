@@ -23,7 +23,7 @@ import VerificationGuard from "./pages/ForgotPassword/Verification/VerificationG
 import ResetPasswordGuard from "./pages/ForgotPassword/ResetPass/resetGuard";
 import ProtectedRoutes from "./components/protectedRoutes";
 import PublicRoutes from "./components/publicComponents";
-import Loading from "./context/loading";
+import Loading from "./components/loadingWrapper";
 
 const App = () => {
   return (

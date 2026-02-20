@@ -54,7 +54,7 @@ const App = () => {
                     element={<Products />}
                   />
 
-                  {/* <Route path="*" element={<Navigate to="/page-not-found" />} /> */}
+                  <Route path="*" element={<Navigate to="/page-not-found" />} />
                 </Route>
               </Route>
             </Routes>

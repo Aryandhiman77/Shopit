@@ -17,7 +17,7 @@ import useAxios from "../../../utility/RequestAPI";
 
 const NavigationBar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const { getOrderedCategories, categories, loading } = useData();
+  const { getOrderedCategories, categories, isLoading } = useData();
   useEffect(() => {
     getOrderedCategories();
   }, []);
@@ -37,12 +37,12 @@ const NavigationBar = () => {
           )}
         </Button>
       </div>
-      <div className="col_2 w-[60%] mx-auto text-gray-500 z-10 relative">
+      <div className="col_2 w-[60vw] mx-auto text-gray-500 z-10 relative">
         <ul className="flex items-center gap-x-4 font-[500] level_1_cat text-black">
           <li className="relative !p-2 ">
             <Link to={"/"}>Home</Link>
           </li>
-          {loading.allCategories ? (
+          {isLoading("orderedCategories") ? (
             <>
               <li className="relative !p-2">
                 <SkeletonText width="80px" />
@@ -58,7 +58,7 @@ const NavigationBar = () => {
               </li>
             </>
           ) : (
-            categories?.map((cat, i) => (
+            categories.slice(0, 6)?.map((cat, i) => (
               <li
                 className="relative !p-2 hover:font-[600]"
                 key={`${i}_level_1_cat`}
@@ -70,6 +70,9 @@ const NavigationBar = () => {
               </li>
             ))
           )}
+          <li className="relative !p-2 ">
+            <div >more</div>
+          </li>
         </ul>
       </div>
       <div className="info flex items-center gap-x-2 w-[17%] text-gray-500 font-[400]">
@@ -84,7 +87,7 @@ const NavigationBar = () => {
         <DrawerList
           setDrawerOpen={setDrawerOpen}
           categories={categories}
-          loading={loading?.allCategories}
+          loading={isLoading("orderedCategories")}
         />
       </DrawerNavigation>
     </div>
