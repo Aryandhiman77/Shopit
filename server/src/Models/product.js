@@ -63,14 +63,12 @@ const productSchema = new mongoose.Schema(
     shortDescription: { type: String, maxlength: 300 },
     description: { type: String },
 
-    categories: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Category",
-        required: true,
-        index: true,
-      },
-    ],
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+      index: true,
+    },
 
     tags: [{ type: String, index: true }],
 
@@ -138,8 +136,8 @@ productSchema.pre("save", async function (next) {
     return next();
   }
 
-  const brand = await mongoose.models.Brand.findById(this.brand);
-  if (!brand) return next(new Error("Brand not found"));
+  const category = await mongoose.models.Category.findById(this.category);
+  if (!category) return next(new Error("Category not found"));
 
   // PRODUCT SLUG
   const baseSlug = slugify(this.title, { lower: true, strict: true });
@@ -158,21 +156,21 @@ productSchema.pre("save", async function (next) {
   this.slug = slug;
 
   // PRODUCT SKU
-  const brandCode = brand.slug.toUpperCase().slice(0, 4);
-  this.sku = `${brandCode}-${Date.now()}`;
+  const categoryCode = category.slug.toUpperCase().slice(0, 4);
+  this.sku = `${categoryCode}-${Date.now()}`;
 
   // VARIANTS
-  // if (this.variants?.length) {
-  //   this.hasVariants = true;
+  if (this.variants?.length) {
+    this.hasVariants = true;
 
-  //   this.variants = this.variants.map((v, i) => ({
-  //     ...v,
-  //     slug: `${slug}-${slugify(v.title, { lower: true })}`,
-  //     sku: `${this.sku}-V${i + 1}`,
-  //   }));
-  // } else {
-  //   this.hasVariants = false;
-  // }
+    this.variants = this.variants.map((v, i) => ({
+      ...v,
+      slug: `${slug}-${slugify(v.title, { lower: true })}`,
+      sku: `${this.sku}-V${i + 1}`,
+    }));
+  } else {
+    this.hasVariants = false;
+  }
 
   next();
 });

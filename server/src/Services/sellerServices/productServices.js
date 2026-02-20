@@ -31,7 +31,7 @@ export const createProductService = async (
     title,
     shortDescription,
     description,
-    categories,
+    category,
     tags,
     base_price,
     base_mrp,
@@ -44,7 +44,7 @@ export const createProductService = async (
     title,
     shortDescription,
     description, //(optional)
-    categories,
+    category,
     tags,
     status: "draft",
     seller: creater_user_id,
