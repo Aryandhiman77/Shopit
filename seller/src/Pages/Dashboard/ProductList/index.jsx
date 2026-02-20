@@ -1,5 +1,5 @@
-import ProductRow from "../Table/ProductRow";
-import Table from "../Table";
+import ProductRow from "../../../components/Table/ProductRow";
+import Table from "../../../components/Table";
 import useData from "../../../hooks/useData";
 const ProductList = () => {
   const productTableHeadings = [

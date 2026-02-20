@@ -88,6 +88,11 @@ const menuConfig = [
     path: "/brands",
     dropdown: [
       {
+        title: "Create Brand",
+        icon: <IoList className="text-lg" />,
+        path: "/create-brand-request",
+      },
+      {
         title: "Brands Requests",
         icon: <IoList className="text-lg" />,
         path: "/brand-requests",

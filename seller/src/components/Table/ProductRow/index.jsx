@@ -3,9 +3,8 @@ import React, { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
-import CollapsablePanel from "../../../../components/Reusables/CollapsablePanel";
 import Table from "../index";
-import ProgressBar from "../../../../components/Reusables/Elements/ProgressBar";
+import ProgressBar from "../../Reusables/Elements/ProgressBar";
 
 const ProductRow = ({ product }) => {
   const [itemsHidden, setItemsHidden] = useState(true);

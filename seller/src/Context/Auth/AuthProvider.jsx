@@ -1,29 +1,34 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import AuthContext from "./AuthContext";
-import useAxios from "../../hooks/useAxios";
+import { fetchData } from "../../utilities/RequestAPI";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const AuthProvider = ({ children }) => {
   const [isAuthenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState(null);
-  const [tempCred, setTempCred] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [formErrors, setFormErrors] = useState(null);
+  const [isPasswordModelOpen, setIsPasswordModelOpen] = useState(false);
+  const [isOTPModelOpen, setIsOTPModelOpen] = useState(false);
   const navigate = useNavigate();
-  const { formErrors, loading, fetchData } = useAxios();
 
   const handleLogin = async (details) => {
-    setTempCred(details?.email);
+    setLoading(true);
     try {
       const response = await fetchData({
         url: "/auth/login",
         method: "POST",
-        payload: details,
+        payload: { ...details, role: "seller" },
       });
+      if (response?.formErrors) {
+        setFormErrors(response.formErrors);
+      }
       if (response?.success) {
         toast.success(response?.message);
       }
       if (response?.data?.otpRequired) {
-        navigate("/seller/otp-verification", {
+        navigate("/otp-verification", {
           state: { email: details.email, password: details.password },
           replace: true,
         });
@@ -36,10 +41,61 @@ const AuthProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
-
-  const handleOtpVerification = async ({ email, otp }) => {
+  const handleRegistration = async (details) => {
+    setLoading(true);
+    try {
+      const response = await fetchData({
+        url: "/auth/register",
+        method: "POST",
+        payload: { ...details, role: "seller" },
+      });
+      if (response?.success) {
+        toast.success(response?.message);
+      }
+      if (response?.data?.otpRequired) {
+        navigate("/otp-verification", {
+          state: { email: details.email, password: details.password },
+          replace: true,
+        });
+        return;
+      }
+      if (response?.data?.isAuthenticated) {
+        setUser(response.data);
+        setAuthenticated(true);
+        localStorage.setItem("user", JSON.stringify(response.data));
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleSessionReValidation = async (details) => {
+    setLoading(true);
+    try {
+      const response = await fetchData({
+        url: "/auth/login",
+        method: "POST",
+        payload: { ...details, role: "admin" },
+      });
+      if (response?.formErrors) {
+        setFormErrors(response.formErrors);
+      }
+      if (response?.data?.otpRequired) {
+        setIsOTPModelOpen(true);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleOtpVerification = async ({ email, otp }, navigate = true) => {
+    setLoading(true);
     try {
       const response = await fetchData({
         url: "/auth/verify-otp",
@@ -47,39 +103,84 @@ const AuthProvider = ({ children }) => {
         payload: { email: email, otp },
       });
       if (response?.success && response?.data?.isAuthenticated) {
+        if (!navigate) {
+          return true;
+        }
         setUser(response.data);
-        toast.success(response?.message);
         if (!JSON.parse(localStorage.getItem("user"))) {
           setAuthenticated(true);
           localStorage.setItem("user", JSON.stringify(response.data));
-          toast.success("Login successful.");
+          setLoading(false);
+
+          navigate("/", { replace: true });
         }
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleLogout = async () => {
-    const response = await fetchData({
-      url: "/auth/logout",
-      method: "PATCH",
-    });
-    if (response?.success) {
-      localStorage.removeItem("user");
-      setUser(null);
-      setAuthenticated(false);
-      toast.success(response?.message);
+    setLoading(true);
+    try {
+      const response = await fetchData({
+        url: "/auth/logout",
+        method: "PATCH",
+      });
+      if (
+        response?.error?.response?.data?.message.includes("Already logged out.")
+      ) {
+        navigate("/login", { replace: true });
+      }
+      if (response?.success) {
+        localStorage.removeItem("user");
+        setUser(null);
+        setAuthenticated(false);
+        setLoading(false);
+        toast.success(response?.message);
+      }
+      return true;
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
     }
-    return true;
   };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setUser(user);
-      setAuthenticated(true);
+    const askToRevalidateLogin = () => {
+      setIsPasswordModelOpen(true);
+    };
+    // received from request api
+    window.addEventListener("ASK_LOGIN", askToRevalidateLogin);
+
+    return () => {
+      window.removeEventListener("ASK_LOGIN", askToRevalidateLogin);
+    };
+  }, []);
+
+  useEffect(() => {
+    setLoading(true);
+    const storedUser = localStorage.getItem("user");
+    if (!storedUser) {
+      setLoading(false);
+      return;
     }
+    (async () => {
+      const res = await fetchData({ url: "/auth/getme", method: "GET" });
+      if (res.success) {
+        setUser(res.data);
+        setAuthenticated(true);
+        setLoading(false);
+        navigate("/", { replace: true });
+        localStorage.setItem("user", JSON.stringify(res.data));
+      } else {
+        handleLogout();
+      }
+      setLoading(false);
+    })();
   }, []);
   return (
     <AuthContext.Provider
@@ -91,6 +192,12 @@ const AuthProvider = ({ children }) => {
         handleOtpVerification,
         user,
         handleLogout,
+        handleRegistration,
+        isOTPModelOpen,
+        setIsOTPModelOpen,
+        isPasswordModelOpen,
+        setIsPasswordModelOpen,
+        handleSessionReValidation,
       }}
     >
       {children}

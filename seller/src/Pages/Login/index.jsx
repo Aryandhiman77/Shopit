@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import MButton from "../../components/Reusables/Elements/MButton";
 import CustomButton from "../../components/Reusables/Elements/CustomBtn";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [passHidden, setPassHidden] = useState(true);
@@ -19,6 +20,7 @@ export default function Login() {
   } = useForm({ resolver: yupResolver(LoginSchema) });
 
   const { handleLogin, loading, formErrors } = useAuth();
+  
 
   const onSubmit = (data) => {
     handleLogin({
@@ -94,27 +96,15 @@ export default function Login() {
 
           {/* Forgot password */}
           <div className="flex justify-end">
-            <a
-              href="/seller/forgot-password"
+            <Link
+              to="/seller/forgot-password"
               className="text-sm text-blue-600 hover:underline"
             >
               Forgot password?
-            </a>
+            </Link>
           </div>
 
           {/* Submit */}
-          {/* <button
-            type="submit"
-           
-          >
-            Login
-          </button> */}
-          {/* <MButton
-            type={"submit"}
-            loading={loading}
-            className="w-full rounded-lg bg-blue-600! py-2 text-white! font-semibold hover:bg-blue-700! flex items-center!"
-            title="Login"
-          /> */}
           <CustomButton
             title={"Login"}
             loading={loading}

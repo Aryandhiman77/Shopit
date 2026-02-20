@@ -11,6 +11,10 @@ import OTPVerification from "./Pages/OTPVerification";
 import Layout from "./Pages/Dashboard/Layout/index";
 import Products from "./Pages/Products";
 import ChartDataProvider from "./Context/Charts/ChartsDataProvider";
+import CategoryList from "./Pages/Categories/CategoryList";
+import AddCategory from "./Pages/Categories/AddCategory";
+import AddSubCategory from "./Pages/Categories/AddSubCategory";
+import AddLeafCategory from "./Pages/Categories/AddLeafCategory";
 const App = () => {
   return (
     <BrowserRouter>
@@ -30,7 +34,7 @@ const App = () => {
                 <Route path={"/seller/register"} element={<Register />} />
                 <Route path={"/seller/login"} element={<Login />} />
                 <Route
-                  path={"/seller/otp-verification"}
+                  path={"/otp-verification"}
                   element={<OTPVerification />}
                 />
               </Route>
@@ -44,7 +48,13 @@ const App = () => {
                     element={<Dashboard />}
                   />
                   <Route exact={true} path="/products" element={<Products />} />
-                  <Route path="*" element={<Navigate to="/page-not-found" />} />
+                  <Route
+                    exact={true}
+                    path="/create-brand-request"
+                    element={<Products />}
+                  />
+
+                  {/* <Route path="*" element={<Navigate to="/page-not-found" />} /> */}
                 </Route>
               </Route>
             </Routes>
