@@ -29,17 +29,12 @@ api.interceptors.response.use(
         await api.patch("/auth/refresh-access");
         return api(originalRequest);
       } catch (err) {
-<<<<<<< Updated upstream
         // dispatch event for force logout when cannot refresh access
-        console.log(window.location.pathname.includes("/login"));
-        if (!window.location.pathname.includes("/login")) {
-          window.dispatchEvent(new Event("ASK_LOGIN"));
-=======
+        window.dispatchEvent(new Event("ASK_LOGIN"));
         if (window.location.pathname === "/login") {
           window.dispatchEvent(new Event("FORCE-LOGOUT"));
         } else {
           window.dispatchEvent(new Event("ASK_LOGIN")); // for protected routes.
->>>>>>> Stashed changes
         }
 
         return Promise.reject(err);

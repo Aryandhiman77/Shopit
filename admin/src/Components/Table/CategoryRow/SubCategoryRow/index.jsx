@@ -9,7 +9,7 @@ import {
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { getFixedDateAndTimeString } from "../../../../utilities/getDateAndTime";
 import InnerSubCategoryRow from "../InnerSubCategoryRow";
-import useData from "../../../hooks/useData";
+import useCategory from "../../../hooks/useCategory";
 import CustomToggle from "../../../Reusables/Elements/CustomToggle";
 const SubCategoryRow = ({
   subCategory,
@@ -19,7 +19,7 @@ const SubCategoryRow = ({
 }) => {
   const [isSubItemsHidden, setIsSubItemsHidden] = useState(true);
   const { updateCategoryStatus, isLoading, handleFullScreenConfirmation } =
-    useData();
+    useCategory();
 
   const handleStatusChange = (val) => {
     {

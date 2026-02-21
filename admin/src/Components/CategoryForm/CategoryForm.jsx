@@ -11,13 +11,11 @@ import Box from "../Reusables/Elements/Box";
 import Table from "../Table";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import MenuItem from "@mui/material/MenuItem";
-import Spinner from "../Reusables/Elements/Loader/Spinner";
-import useData from "../hooks/useData";
-import CustomToggle from "../Reusables/Elements/CustomToggle";
 import FormError from "../Reusables/FormError";
 import ImageDropBox from "../Reusables/ImageDropBox";
 import { useNavigate } from "react-router-dom";
 import Autocomplete from "@mui/material/Autocomplete";
+import useCategory from "../hooks/useCategory";
 
 const CategoryForm = ({
   mode = "add",
@@ -43,7 +41,7 @@ const CategoryForm = ({
     level2Categories,
     level1Categories,
     updateCategory,
-  } = useData();
+  } = useCategory();
   const categoryLevelStatus = watch("level");
   const [isActive, setIsActive] = useState(
     mode === "edit" ? updationCategory.isActive : false,

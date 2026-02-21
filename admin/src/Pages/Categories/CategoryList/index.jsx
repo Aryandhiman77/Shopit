@@ -5,7 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { PiExport } from "react-icons/pi";
 import Search from "../../../Components/Reusables/Search";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
-import useData from "../../../Components/hooks/useData";
+import useCategory from "../../../Components/hooks/useCategory";
 import Box from "../../../Components/Reusables/Elements/Box";
 import { Divider } from "@mui/material";
 import CustomButton from "../../../Components/Reusables/Elements/CustomBtn";
@@ -25,7 +25,7 @@ const CategoryList = () => {
     isLoading,
     getCategory,
     category,
-  } = useData();
+  } = useCategory();
   const [open, setOpen] = useState(false);
   const handleEdit = (id) => {
     if (!id) return;

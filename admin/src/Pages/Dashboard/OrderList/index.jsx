@@ -1,6 +1,5 @@
 import React from "react";
 import OrderRow from "../../../Components/Table/OrdersRow";
-import useData from "../../../Components/hooks/useData";
 import Table from "../../../Components/Table";
 
 const OrderList = () => {
@@ -16,7 +15,8 @@ const OrderList = () => {
     "Modified at",
     "Operations",
   ];
-  const { orders } = useData();
+  // const { orders } = useData();
+  const orders = [];
   return (
     <Table attributes={orderTableHeadings}>
       {orders?.map((order, i) => (

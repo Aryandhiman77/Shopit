@@ -17,10 +17,10 @@ import LinesChart from "../../Components/Reusables/Charts/LinesChart";
 import { GoDotFill } from "react-icons/go";
 import ProductList from "./ProductList";
 import OrderList from "./OrderList";
-import useData from "../../Components/hooks/useData";
+import useCategory from "../../Components/hooks/useCategory";
 
 const Dashboard = () => {
-  const { lineChartData } = useData();
+  const { lineChartData } = useCategory();
 
   return (
     <div className="p-4 my-1 flex flex-col gap-y-5 w-full">

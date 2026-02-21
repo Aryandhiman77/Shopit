@@ -5,8 +5,10 @@ import { fetchData } from "../../utilities/RequestAPI";
 const ProductsProvider = ({ children }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
-  const getProducts = async (limit, page) => {
-    const queryString = limit && page ? `limit=${limit}&page=${page}` : "";
+  const getProducts = async ({ limit, page, status = "all" }) => {
+    setLoading(true);
+    const queryString =
+      limit && page ? `limit=${limit}&page=${page}&status=${status}` : "";
     const response = await fetchData({
       url: `/admin/products?${queryString}`,
       method: "GET",
@@ -14,6 +16,7 @@ const ProductsProvider = ({ children }) => {
     if (response?.success) {
       setProducts(response.data);
     }
+    setLoading(false);
   };
   return (
     <ProductContext.Provider value={{ products, loading, getProducts }}>

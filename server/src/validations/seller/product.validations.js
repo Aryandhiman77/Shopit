@@ -47,7 +47,7 @@ const variantItemSchema = Joi.array()
           "object.base": "Variant attributes must be an object.",
           "any.required": "Variant attributes are required.",
         }),
-    }).unknown(false)
+    }).unknown(false),
   )
   .messages({
     "array.base": "Variants must be an array.",
@@ -91,20 +91,28 @@ export const createProductBasicSchema = Joi.object({
     "any.required": "Description is required.",
   }),
 
-  category: Joi.string()
+  categories: Joi.array()
     .required()
-    .external(async (value) => {
-      const category = await Categories.findOne({ slug: value });
-      if (!category) {
-        throw new Joi.ValidationError("Invalid category.", [
-          { message: "Selected category does not exist.", path: ["category"] },
+    .items(Joi.string())
+    .external(async (values) => {
+      // array of ids
+      const category = await Categories.find({
+        _id: { $in: values },
+      })
+        .select("_id")
+        .lean();
+      if (category.length !== values?.length) {
+        throw new Joi.ValidationError("Invalid categories exists.", [
+          {
+            message: "Selected category does not exist.",
+            path: ["category"],
+          },
         ]);
       }
-      return category._id;
+      return values;
     })
     .messages({
-      "any.required": "Category is required.",
-      "string.empty": "Category is required.",
+      "any.required": "Categories is required.",
     }),
 
   tags: Joi.array().items(Joi.string()).max(50).messages({

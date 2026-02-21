@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
 import { TextField } from "@mui/material";
 import DropDownField from "../../../Components/Reusables/DropDownField";
@@ -7,35 +7,74 @@ import ImageDropBox from "../../../Components/Reusables/ImageDropBox";
 import CustomToggle from "../../../Components/Reusables/Elements/CustomToggle";
 import Box from "../../../Components/Reusables/Elements/Box";
 import { Link } from "react-router-dom";
-import { PiPlus, PiPlusBold } from "react-icons/pi";
+import SelectableInput from "../../../Components/Reusables/SelectableInput";
+import useCategory from "../../../Components/hooks/useCategory";
+import CustomStepper from "../../../Components/Reusables/Stepper";
 
 const AddProduct = () => {
   const [thumbnail, setThumbnail] = useState([]);
   const [gallery, setGallery] = useState([]);
+  const {
+    getCategoriesByLevel,
+    isLoading,
+    level1Categories,
+    level2Categories,
+    level3Categories,
+  } = useCategory();
+
+  //-------------------------- category options------------------------------
+  const optionsLevel1Categories = level1Categories.map((item) => ({
+    label: item.name,
+    value: item._id,
+  }));
+  const optionsLevel2Categories = level2Categories.map((item) => ({
+    label: item.name,
+    value: item._id,
+  }));
+  const optionsLevel3Categories = level3Categories.map((item) => ({
+    label: item.name,
+    value: item._id,
+  }));
+  //-------------------------- category options------------------------------
+
+  useEffect(() => {
+    getCategoriesByLevel(1);
+    getCategoriesByLevel(2);
+    getCategoriesByLevel(3);
+  }, []);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-[700] text-black">Add Product</h1>
           <BreadCrumb />
         </div>
       </div>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-medium text-gray-600">Add Product</h1>
+        <div>
+          <p className="text- font-medium text-gray-600">
+            Status :{" "}
+            <span
+              className={`p-2 bg-yellow-300 border border-yellow-500 text-black rounded-sm`}
+            >
+              Draft
+            </span>
+          </p>
+        </div>
+      </div>
+      <CustomStepper
+        steps={["Basic information", "Description", "Images", "Price", "Tags"]}
+        activeStep={2}
+      />
       <form action="">
         <div className="flex flex-col gap-4">
           <div className="heading-1">Summary</div>
           <Box className={"flex flex-col gap-4 bg-white"}>
             <div className="flex flex-row gap-10">
               <TextField
-                className="w-1/2"
+                className="w-full"
                 label="Product Title"
-                variant="outlined"
-                required={true}
-                size="small"
-                type={"text"}
-              />
-              <TextField
-                className="w-1/2"
-                label="Product SKU"
                 variant="outlined"
                 required={true}
                 size="small"
@@ -43,9 +82,33 @@ const AddProduct = () => {
               />
             </div>
             <div className="flex flex-row gap-10">
-              <DropDownField title={"Category (Level-1)"} items={["sdf"]} />
-              <DropDownField title={"Category (Level-2)"} items={["sdf"]} />
-              <DropDownField title={"Category (Level-3)"} items={["sdf"]} />
+              <SelectableInput
+                name={"Categories"}
+                label={"Main-Categories"}
+                options={
+                  !isLoading("level1categories") && optionsLevel1Categories
+                }
+                getValue={(value) => console.log(value)}
+                loading={isLoading("level1categories")}
+              />
+              <SelectableInput
+                name={"Sub-Categories"}
+                label={"Sub-Categories"}
+                options={
+                  !isLoading("level2categories") && optionsLevel2Categories
+                }
+                getValue={(value) => console.log(value)}
+                loading={isLoading("level2categories")}
+              />
+              <SelectableInput
+                name={"Leaf-Categories"}
+                label={"Leaf-Categories"}
+                options={
+                  !isLoading("level3categories") && optionsLevel3Categories
+                }
+                getValue={(value) => console.log(value)}
+                loading={isLoading("level3categories")}
+              />
             </div>
             <textarea
               id="message"
@@ -222,6 +285,7 @@ const AddProduct = () => {
               required={true}
               size="small"
               type={"number"}
+              // onChange={tagValue}
             />
             <div>
               <Link className="custom-btn custom-shadow !bg-blue-500 !text-white text-sm">
@@ -383,13 +447,15 @@ const AddProduct = () => {
               </div>
             </div>
           </Box> */}
-          <div className="flex gap-3 justify-end">
-            <Link className="custom-btn !bg-black !text-white !font-[500] text-sm">
-              Save as Draft
-            </Link>
-            <Link className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm">
-              Create Product
-            </Link>
+          <div className="fixed bottom-0 right-0 bg-[#e6e6e6] w-[100%] border-t-1 border-t-[#d5d5d5] z-98">
+            <div className="flex gap-3 justify-end p-4 rounded-sm">
+              <Link className="custom-btn bg-transparent! border border-gray-400! !font-[500] text-sm">
+                Save Draft
+              </Link>
+              <Link className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm">
+                Create Product
+              </Link>
+            </div>
           </div>
         </div>
       </form>

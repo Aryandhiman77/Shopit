@@ -148,6 +148,7 @@ const AuthProvider = ({ children }) => {
       console.log(error);
     } finally {
       setLoading(false);
+      localStorage.removeItem("user");
     }
   };
 

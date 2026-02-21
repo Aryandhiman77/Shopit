@@ -1,12 +1,8 @@
 import ProductRow from "../../../Components/Table/ProductRow";
 import Table from "../../../Components/Table";
-<<<<<<< Updated upstream
-import useData from "../../../Components/hooks/useData";
-=======
 import useCategory from "../../../Components/hooks/useCategory";
 import useProducts from "../../../Components/hooks/useProducts";
 import { useEffect } from "react";
->>>>>>> Stashed changes
 
 const ProductList = ({ products }) => {
   const productTableHeadings = [

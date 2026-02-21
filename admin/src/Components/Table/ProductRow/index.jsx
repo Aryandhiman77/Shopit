@@ -43,17 +43,9 @@ const ProductRow = ({ product, index }) => {
           </div>
         </td>
         <td className="px-6 py-4 whitespace-nowrap">
-          {product?.categories?.level1.name}
+          {product?.categories?.map((item) => item.name).join(", ")}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          {product?.categories?.level2.name}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          {product?.categories?.level3.name}
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap">
-          {product?.seller?.name}
-        </td>
+        <td className="px-6 py-4 whitespace-nowrap">{product?.seller?.name}</td>
 
         {/* <td className="px-6 py-4 whitespace-nowrap">
           <div className="flex flex-col items-center">

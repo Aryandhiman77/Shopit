@@ -1,13 +1,7 @@
 import React, { useEffect } from "react";
 import ProductList from "../../Dashboard/ProductList";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
-import {
-  PiExport,
-  PiExportDuotone,
-  PiPlus,
-  PiPlusDuotone,
-} from "react-icons/pi";
-import { Link } from "react-router-dom";
+import { PiExport } from "react-icons/pi";
 import Search from "../../../Components/Reusables/Search";
 import useProducts from "../../../Components/hooks/useProducts";
 import Box from "../../../Components/Reusables/Elements/Box";

@@ -1,14 +1,14 @@
 // src/Context/Data/DataContext.js
 import { createContext, useContext, useState } from "react";
 
-import { DataContext } from "./DataContext";
+import CategoryContext from "./CategoryContext";
 import { fetchData } from "../../utilities/RequestAPI";
 import ConvertToFormData from "../../utilities/ConvertToFormData";
 import toast from "react-hot-toast";
 import CustomToast from "../../Components/Reusables/CustomToast";
 
 // ✅ Provider Component
-export const DataProvider = ({ children }) => {
+const CategoryProvider = ({ children }) => {
   const [orders, setOrders] = useState([
     {
       orderId: "#32422432",
@@ -283,7 +283,7 @@ export const DataProvider = ({ children }) => {
     }
   };
   return (
-    <DataContext.Provider
+    <CategoryContext.Provider
       value={{
         orders,
         products,
@@ -304,9 +304,9 @@ export const DataProvider = ({ children }) => {
       }}
     >
       {children}
-    </DataContext.Provider>
+    </CategoryContext.Provider>
   );
 };
 
 // ✅ Hook
-export default DataProvider;
+export default CategoryProvider;

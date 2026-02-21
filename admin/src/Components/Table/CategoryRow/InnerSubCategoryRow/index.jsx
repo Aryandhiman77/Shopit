@@ -9,8 +9,8 @@ import {
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import { getFixedDateAndTimeString } from "../../../../utilities/getDateAndTime";
-import useData from "../../../hooks/useData";
 import CustomToggle from "../../../Reusables/Elements/CustomToggle";
+import useCategory from "../../../hooks/useCategory";
 const InnerSubCategoryRow = ({
   innerSubcategory,
   indexParent,
@@ -18,7 +18,7 @@ const InnerSubCategoryRow = ({
   indexInnerSubCat,
   handleEdit,
 }) => {
-  const { updateCategoryStatus, isLoading } = useData();
+  const { updateCategoryStatus, isLoading } = useCategory();
   return (
     <>
       <tr className="border-2 bg-[#f4dba8] dark:bg-gray-700 hover:dark:bg-gray-600 ">

@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 import { ThemeProvider } from "./Context/Theme/themeProvider";
 import Layout from "./Components/Reusables/Layout";
-import { DataProvider } from "./Context/Data/DataProvider";
 import Login from "./Pages/Auth/Login";
 import Signup from "./Pages/Auth/Signup";
 import ProtectedRoute from "./Components/Reusables/Routes/ProtectedRoute";
@@ -28,20 +27,17 @@ import Orders from "./Pages/AllOrders";
 import AuthProvider from "./Context/Auth/AuthProvider";
 import OTPVerification from "./Pages/OTPVerification";
 import { Toaster } from "react-hot-toast";
-<<<<<<< Updated upstream
-import UpdateCategoryModal from "./Components/Reusables/Elements/Modal";
-=======
+import ChartDataProvider from "./Context/Charts/ChartDataProvider";
 import CategoryProvider from "./Context/Category/CategoryProvider";
 import UserProvider from "./Context/Users/UserProvider";
 import ProductsProvider from "./Context/Products/ProductsProvider";
 
->>>>>>> Stashed changes
 const App = () => {
   return (
     <BrowserRouter>
       <ThemeProvider>
         <AuthProvider>
-          <DataProvider>
+          <CategoryProvider>
             <Toaster />
             <Routes>
               <Route element={<PublicRoute />}>
@@ -52,6 +48,7 @@ const App = () => {
               </Route>
 
               <Route element={<ProtectedRoute />}>
+                {/* <Route element={<ChartDataProvider />}> */}
                 <Route element={<Layout />}>
                   <Route path="/" element={<Dashboard />} />
                   <Route
@@ -65,14 +62,6 @@ const App = () => {
                   <Route path="/products/add" element={<AddProduct />} />
                   <Route path="/categories" element={<CategoryList />} />
                   <Route path="/categories/add" element={<AddCategory />} />
-                  <Route
-                    path="/categories/add-subcategory"
-                    element={<AddSubCategory />}
-                  />
-                  <Route
-                    path="/categories/add-leafcategory"
-                    element={<AddLeafCategory />}
-                  />
                   <Route path="/orders" element={<Orders />} />
                   <Route
                     path="/users"
@@ -84,12 +73,13 @@ const App = () => {
                   />
                   <Route path="/settings" element={<StoreSettings />} />
                 </Route>
+                {/* </Route> */}
               </Route>
 
               {/* FALLBACK ROUTE */}
               <Route path="*" element={<Navigate to="/page-not-found" />} />
             </Routes>
-          </DataProvider>
+          </CategoryProvider>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>
