@@ -10,38 +10,61 @@ import { Link } from "react-router-dom";
 import SelectableInput from "../../../Components/Reusables/SelectableInput";
 import useCategory from "../../../Components/hooks/useCategory";
 import CustomStepper from "../../../Components/Reusables/Stepper";
-
+import BasicProductInfo from "./Steps/BasicProductInfo";
+import Description from "./Steps/Description";
+import Images from "./Steps/Images";
+import AddTags from "./Steps/AddTags";
+import Inventory from "./Steps/Inventory";
+const steps = [
+  {
+    label: "Basic Info",
+    progress: 0,
+    component: <BasicProductInfo />,
+  },
+  {
+    label: "Description",
+    progress: 0,
+    component: <Description />,
+  },
+  {
+    label: "Images",
+    progress: 0,
+    component: <Images />,
+  },
+  {
+    label: "Inventory",
+    progress: 0,
+    component: <Inventory />,
+  },
+  {
+    label: "Tags",
+    progress: 0,
+    component: <AddTags />,
+  },
+  {
+    label: "Published",
+    progress: 0,
+    component: "publishing product....",
+  },
+];
 const AddProduct = () => {
-  const [thumbnail, setThumbnail] = useState([]);
-  const [gallery, setGallery] = useState([]);
-  const {
-    getCategoriesByLevel,
-    isLoading,
-    level1Categories,
-    level2Categories,
-    level3Categories,
-  } = useCategory();
-
-  //-------------------------- category options------------------------------
-  const optionsLevel1Categories = level1Categories.map((item) => ({
-    label: item.name,
-    value: item._id,
-  }));
-  const optionsLevel2Categories = level2Categories.map((item) => ({
-    label: item.name,
-    value: item._id,
-  }));
-  const optionsLevel3Categories = level3Categories.map((item) => ({
-    label: item.name,
-    value: item._id,
-  }));
-  //-------------------------- category options------------------------------
-
-  useEffect(() => {
-    getCategoriesByLevel(1);
-    getCategoriesByLevel(2);
-    getCategoriesByLevel(3);
-  }, []);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [productData, setProductData] = useState({});
+  const changeStep = () => {
+    if (steps.length > currentStep) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+  const gotoPrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
+  const createProduct = () => {
+    if (steps[currentStep - 1].progress === 100) {
+      changeStep();
+    }
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -63,178 +86,24 @@ const AddProduct = () => {
           </p>
         </div>
       </div>
-      <CustomStepper
-        steps={["Basic information", "Description", "Images", "Price", "Tags"]}
-        activeStep={2}
-      />
-      <form action="">
-        <div className="flex flex-col gap-4">
-          <div className="heading-1">Summary</div>
-          <Box className={"flex flex-col gap-4 bg-white"}>
-            <div className="flex flex-row gap-10">
-              <TextField
-                className="w-full"
-                label="Product Title"
-                variant="outlined"
-                required={true}
-                size="small"
-                type={"text"}
-              />
-            </div>
-            <div className="flex flex-row gap-10">
-              <SelectableInput
-                name={"Categories"}
-                label={"Main-Categories"}
-                options={
-                  !isLoading("level1categories") && optionsLevel1Categories
-                }
-                getValue={(value) => console.log(value)}
-                loading={isLoading("level1categories")}
-              />
-              <SelectableInput
-                name={"Sub-Categories"}
-                label={"Sub-Categories"}
-                options={
-                  !isLoading("level2categories") && optionsLevel2Categories
-                }
-                getValue={(value) => console.log(value)}
-                loading={isLoading("level2categories")}
-              />
-              <SelectableInput
-                name={"Leaf-Categories"}
-                label={"Leaf-Categories"}
-                options={
-                  !isLoading("level3categories") && optionsLevel3Categories
-                }
-                getValue={(value) => console.log(value)}
-                loading={isLoading("level3categories")}
-              />
-            </div>
-            <textarea
-              id="message"
-              rows="2"
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Write brief description about product in 200 ..."
-              maxLength={200}
-            ></textarea>
-          </Box>
-
-          <div>
-            <h1 className="heading-1 px-1 py-3">Product description</h1>
-            <TinyEditor />
-          </div>
-          <div className="w-full">
-            <h1 className="heading-1 px-1 py-2">Product Images</h1>
-            <h3 className="px-1 py-3 text-sm font-[500]">Product Thumbnail</h3>
-            <ImageDropBox maxFiles={1} setImages={setThumbnail} />
-            <h3 className="px-1 py-3 text-sm font-[500]">Product Gallery</h3>
-            <ImageDropBox maxFiles={10} setImages={setGallery} />
-          </div>
-          <Box className={"bg-white"}>
-            <h1 className="heading-1 py-4">Price</h1>
-            <div className="flex flex-row gap-10">
-              <TextField
-                className="w-1/2"
-                label="MRP"
-                variant="outlined"
-                required={true}
-                size="small"
-                type={"number"}
-              />
-              <TextField
-                className="w-1/2"
-                label="Discount in percentage (%)"
-                variant="outlined"
-                required={true}
-                size="small"
-                type={"number"}
-              />
-              <TextField
-                className="w-1/2"
-                label="Sale Price (tax incl.)"
-                variant="outlined"
-                required={true}
-                size="small"
-                type={"number"}
-              />
-            </div>
-          </Box>
-          <Box className={"!bg-white"}>
-            <h1 className="heading-1 py-4">Inventory Tracking</h1>
-            <div className="pb-4 flex flex-col gap-2">
-              <div className="flex ">
-                <div className="flex items-center h-5">
-                  <input
-                    id="inventory-1"
-                    aria-describedby="helper-radio-text"
-                    name="inventory"
-                    type="radio"
-                    value=""
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                </div>
-                <div className="ms-2 text-sm">
-                  <label
-                    htmlFor="inventory-1"
-                    className="font-medium text-gray-900 dark:text-gray-300"
-                  >
-                    Track inventory for this product.
-                  </label>
-                  <p
-                    id="helper-radio-text"
-                    className="text-xs font-normal text-gray-500 dark:text-gray-300"
-                  >
-                    Stock will be limited.
-                  </p>
-                </div>
-              </div>
-              <div className="flex">
-                <div className="flex items-center h-5">
-                  <input
-                    id="inventory-2"
-                    name="inventory"
-                    aria-describedby="helper-radio-text"
-                    type="radio"
-                    value=""
-                    className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                  />
-                </div>
-                <div className="ms-2 text-sm">
-                  <label
-                    htmlFor="inventory-2"
-                    className="font-medium text-gray-900 dark:text-gray-300"
-                  >
-                    Do not track inventory for this product.
-                  </label>
-                  <p
-                    id="helper-radio-text"
-                    className="text-xs font-normal text-gray-500 dark:text-gray-300"
-                  >
-                    Stock will be unlimited.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col gap-4 w-1/2">
-              <TextField
-                className="w-full"
-                label="Current Stock Level"
-                variant="outlined"
-                required={true}
-                size="small"
-                type={"number"}
-              />
-              <TextField
-                className="w-full"
-                label="Low Stock Alert"
-                variant="outlined"
-                required={true}
-                size="small"
-                type={"number"}
-              />
-            </div>
-          </Box>
-          <div className="flex flex-row gap-10 items-center my-4">
+      <div className="py-7">
+        <CustomStepper steps={steps} activeStep={currentStep} />
+      </div>
+      {/* <form action=""> */}
+      <div className="flex flex-col gap-4 h-[85vh]">
+        {/* {steps[currentStep - 1].component} */}
+        {currentStep === 1 && (
+          <BasicProductInfo
+            setProductData={setProductData}
+            productData={productData}
+            getProgress={(value) => (steps[currentStep - 1].progress = value)}
+          />
+        )}
+        {currentStep === 2 && <Description />}
+        {currentStep === 3 && <Images />}
+        {currentStep === 4 && <Inventory />}
+        {currentStep === 5 && <AddTags />}
+        {/* <div className="flex flex-row gap-10 items-center my-4">
             <Box className={"bg-white"}>
               <h1 className="heading-1 py-2">Product settings</h1>
               <div className="flex my-4 gap-2 justify-between ">
@@ -250,8 +119,8 @@ const AddProduct = () => {
                 <CustomToggle defaultChecked={true} />
               </div>
             </Box>
-          </div>
-          <Box className={"flex  items-center gap-10  bg-white"}>
+          </div> */}
+        {/* <Box className={"flex  items-center gap-10  bg-white"}>
             <div className="flex my-4 gap-2 ">
               <p className="font-[500]"> Free Shipping ?</p>
               <CustomToggle />
@@ -264,8 +133,8 @@ const AddProduct = () => {
               size="small"
               type={"number"}
             />
-          </Box>
-          {/* <Box className={"flex  items-center gap-10  bg-white"}>
+          </Box> */}
+        {/* <Box className={"flex  items-center gap-10  bg-white"}>
                 <h1 className="heading-1">Search Engine Optimization</h1>    ONLY SHOWN IN EDITING
                   <TextField
                   className="w-1/2"
@@ -276,24 +145,8 @@ const AddProduct = () => {
                   type={"number"}
                 />
             </Box> */}
-          <Box className={"flex flex-col gap-4  bg-white"}>
-            <h1 className="heading-1">Product Tags</h1>
-            <TextField
-              className="w-1/2"
-              label="Product Slug"
-              variant="outlined"
-              required={true}
-              size="small"
-              type={"number"}
-              // onChange={tagValue}
-            />
-            <div>
-              <Link className="custom-btn custom-shadow !bg-blue-500 !text-white text-sm">
-                Add Tag
-              </Link>
-            </div>
-          </Box>
-          {/* <Box className={"bg-white flex flex-col gap-4"}>
+
+        {/* <Box className={"bg-white flex flex-col gap-4"}>
             <div className="flex items-center justify-between">
               <h1 className="heading-1">Product Variant</h1>
               <Link className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm flex items-center gap-1">
@@ -447,18 +300,30 @@ const AddProduct = () => {
               </div>
             </div>
           </Box> */}
-          <div className="fixed bottom-0 right-0 bg-[#e6e6e6] w-[100%] border-t-1 border-t-[#d5d5d5] z-98">
-            <div className="flex gap-3 justify-end p-4 rounded-sm">
-              <Link className="custom-btn bg-transparent! border border-gray-400! !font-[500] text-sm">
+        <div className="fixed bottom-0 right-0 bg-[#e6e6e6] w-[100%] border-t-1 border-t-[#d5d5d5] z-98">
+          <div className="flex gap-3 justify-end p-4 rounded-sm">
+            {/* <Link className="custom-btn bg-transparent! border border-gray-400! !font-[500] text-sm">
                 Save Draft
-              </Link>
-              <Link className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm">
-                Create Product
-              </Link>
-            </div>
+              </Link> */}
+            <button
+              type="submit"
+              disabled={currentStep === 1}
+              onClick={gotoPrevious}
+              className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm disabled:opacity-50"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              onClick={createProduct}
+              className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm"
+            >
+              Create Product
+            </button>
           </div>
         </div>
-      </form>
+      </div>
+      {/* </form> */}
     </div>
   );
 };

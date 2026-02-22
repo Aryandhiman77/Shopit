@@ -8,16 +8,22 @@ const SelectableInput = ({
   required,
   loading = false,
   options = [],
+  multiple = true,
   getValue = () => {},
 }) => {
   const setValue = (selectedOpts) => {
-    const values = selectedOpts.map((item) => item.value);
+    if (!multiple) {
+      getValue(selectedOpts.value);
+      return;
+    }
+    const values =
+      Array.isArray(selectedOpts) && selectedOpts.map((item) => item.value);
     getValue(values);
   };
   return (
     <>
       <Autocomplete
-        multiple
+        multiple={multiple}
         className="w-full bg-white"
         name={name}
         variant="outlined"
@@ -27,7 +33,9 @@ const SelectableInput = ({
         loadingText={"loading..."}
         renderInput={(params) => <TextField {...params} label={label} />}
         size="small"
-        onChange={(_, selectedOpts) => setValue(selectedOpts)}
+        onChange={(_, selectedOpts) =>
+          setValue(selectedOpts ? selectedOpts : "")
+        }
       />
     </>
   );

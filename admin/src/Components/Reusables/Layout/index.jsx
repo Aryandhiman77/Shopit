@@ -44,7 +44,7 @@ const Layout = () => {
             sidebarOpened={sideBarOpened}
             setSidebarOpened={setSideBarOpened}
           />
-          <div className="z-40 relative w-full bg-[#f1f1f1] darkmode p-4">
+          <div className="z-40 relative w-full bg-[#F4F7FC] darkmode p-4">
             <Outlet />
           </div>
         </div>

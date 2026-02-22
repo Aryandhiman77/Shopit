@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import ProductContext from "./ProductContext";
 import { fetchData } from "../../utilities/RequestAPI";
+import { Outlet } from "react-router-dom";
 
-const ProductsProvider = ({ children }) => {
+const ProductsProvider = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const getProducts = async ({ limit, page, status = "all" }) => {
     setLoading(true);
     const queryString =
@@ -20,7 +22,7 @@ const ProductsProvider = ({ children }) => {
   };
   return (
     <ProductContext.Provider value={{ products, loading, getProducts }}>
-      {children}
+      <Outlet />
     </ProductContext.Provider>
   );
 };
