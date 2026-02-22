@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getBrands,
   getCategories,
   getOrderedCategories,
 } from "../../Controllers/AdminSeller/category.controller.js";
@@ -12,6 +13,7 @@ adminSellerRoutes
   .use(tokenVerification)
   .use(requestEitherAdminSeller())
   .get("/categories/:level", getCategories)
-  .get("/categories", getOrderedCategories);
+  .get("/categories", getOrderedCategories)
+  .get("/brands", getBrands);
 
 export default adminSellerRoutes;

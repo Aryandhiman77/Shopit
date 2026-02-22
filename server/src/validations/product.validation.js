@@ -28,7 +28,7 @@ const variantItemSchema = Joi.array()
         "number.empty": "Stock quantity cannot be empty.",
       }),
       attributes: Joi.array().items(Joi.object()),
-    }).unknown(false)
+    }).unknown(false),
   )
   .messages({
     "array.base": "Variants must be an array of objects.",
@@ -59,7 +59,7 @@ export const createProductSchema = Joi.object({
       "any.required": "Short-description is required.",
       "string.empty": "Short-description cannot be empty.",
     }),
-  description: Joi.string().lowercase().min(50).max(1500).required().messages({
+  description: Joi.string().lowercase().min(50).max(1500).messages({
     "string.min": "Description must be at least 50 characters long.",
     "string.max": "Description must be less than 1500 characters.",
     "any.required": "Description is required.",
@@ -106,7 +106,7 @@ export const createProductSchema = Joi.object({
     "any.required": "Stock quantity is required.",
     "number.empty": "Stock quantity cannot be empty.",
   }),
-  variants: variantItemSchema,
+  // variants: variantItemSchema,
   attributes: Joi.array().items(Joi.object()),
 })
   .external(async (value) => {
@@ -120,7 +120,7 @@ export const createProductSchema = Joi.object({
     const categoryAttributes = category.attributes || [];
     for (const att of categoryAttributes) {
       const productAtt = productAttributes.find(
-        (pa) => pa?.name?.toLowerCase() === att.name.toLowerCase()
+        (pa) => pa?.name?.toLowerCase() === att.name.toLowerCase(),
       );
 
       if (
@@ -148,7 +148,7 @@ export const createProductSchema = Joi.object({
                 type: "any.valid",
                 context: { label: "attributes", value },
               },
-            ]
+            ],
           );
         }
       }
@@ -170,7 +170,7 @@ export const createProductSchema = Joi.object({
       for (const variant of value.variants) {
         for (const att of category.attributes) {
           const varAtt = variant.attributes?.find(
-            (va) => va?.name?.toLowerCase() === att.name.toLowerCase()
+            (va) => va?.name?.toLowerCase() === att.name.toLowerCase(),
           );
 
           if (att.required || (att.required === false && varAtt?.name)) {
@@ -195,7 +195,7 @@ export const createProductSchema = Joi.object({
                     type: "any.valid",
                     context: { label: "variants", value },
                   },
-                ]
+                ],
               );
             }
           }
@@ -211,7 +211,7 @@ export const createProductSchema = Joi.object({
                     type: "any.valid",
                     context: { label: "variants", value },
                   },
-                ]
+                ],
               );
             }
           }

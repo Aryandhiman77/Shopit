@@ -1,6 +1,9 @@
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
-import { getCategoryService } from "../../Services/AdminSeller/AdminSeller.services.js";
+import {
+  getBrandListing,
+  getCategoryService,
+} from "../../Services/AdminSeller/AdminSeller.services.js";
 import { getStructuredCategories } from "../../Services/public/categoyServices.js";
 
 export const getCategories = AsyncWrapper(async (req, res) => {
@@ -17,4 +20,9 @@ export const getOrderedCategories = AsyncWrapper(async (req, res) => {
   return res
     .status(200)
     .json(new ApiResponse(200, categories, "Categories found."));
+});
+
+export const getBrands = AsyncWrapper(async (req, res) => {
+  const brands = await getBrandListing();
+  return res.status(200).json(new ApiResponse(200, brands, "Brands found."));
 });
