@@ -8,7 +8,7 @@ const Modal = ({
   children,
   title,
   className = "",
-  fullScreen = true,
+  fixedFullScreen = true,
   header = true,
 }) => {
   useEffect(() => {
@@ -27,7 +27,7 @@ const Modal = ({
   return ReactDOM.createPortal(
     <div
       className={`fixed inset-0 z-100 bg-white ${
-        fullScreen ? "h-screen w-screen" : ""
+        fixedFullScreen ? "h-full w-screen" : ""
       } ${className}`}
     >
       {/* Header */}
@@ -42,7 +42,7 @@ const Modal = ({
 
       {/* Content */}
       <div
-        className={`overflow-y-auto ${!fullScreen && "h-[calc(100vh-64px)]"}`}
+        className={`overflow-y-auto ${!fixedFullScreen && "h-[calc(100vh-64px)]"}`}
       >
         {children}
       </div>

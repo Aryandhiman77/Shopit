@@ -62,7 +62,6 @@ const SessionRevalidationModel = ({ isOpen, setOpened }) => {
     <>
       <Modal
         open={isPasswordModelOpen}
-        fullScreen={true}
         header={false}
         className="bg-[rgba(0,0,0,0.4)]! flex justify-center items-center"
       >

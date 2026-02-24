@@ -133,14 +133,19 @@ const CategoryList = () => {
           )}
         </Box>
       </div>
-      <Modal title={"Update Category"} open={open} setOpen={setOpen}>
+      <Modal
+        title={"Update Category"}
+        open={open}
+        setOpen={setOpen}
+        fixedFullScreen={false}
+      >
         {isLoading("get-category") ? (
           <div className="flex justify-center items-center">
             <p>Loading Category...</p>
             <Spinner />
           </div>
         ) : (
-          <div className=" p-5">
+          <div className="p-5">
             <CategoryForm
               mode="edit"
               setEditModal={setOpen}
