@@ -27,9 +27,9 @@ const SelectableInput = ({
         className="w-full bg-white"
         name={name}
         variant="outlined"
-        required={required}
         options={options.length ? [...options] : null}
         loading={loading}
+        isOptionEqualToValue={(option, value) => option.value === value.value}
         loadingText={"loading..."}
         renderInput={(params) => <TextField {...params} label={label} />}
         size="small"

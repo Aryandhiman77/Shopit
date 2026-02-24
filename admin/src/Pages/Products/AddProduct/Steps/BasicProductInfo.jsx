@@ -10,9 +10,9 @@ import { basicProductInfo } from "../validation";
 import FormError from "../../../../Components/Reusables/FormError";
 
 const BasicProductInfo = ({
-  getProgress = () => {},
   setProductData,
   productData,
+  setCurrentProgress,
 }) => {
   const {
     setValue,
@@ -25,7 +25,6 @@ const BasicProductInfo = ({
     resolver: yupResolver(basicProductInfo),
   });
 
-  const [progress, setProgress] = useState(0);
   const {
     getCategoriesByLevel,
     isLoading,
@@ -65,13 +64,14 @@ const BasicProductInfo = ({
         ((watch("base_mrp") - watch("base_price")) / watch("base_mrp")) * 100,
     ).toFixed(1);
   }
+  // const watchAndSetProgress = (name) => {};
   const onSubmit = (data) => {
     const allCats = [data.categories, data.subCategories, data.leafCategories];
     delete data.categories;
     delete data.subCategories;
     delete data.leafCategories;
     setProductData({ ...productData, ...data, categories: allCats });
-    getProgress(100);
+    setCurrentProgress(100);
   };
   useEffect(() => {
     getCategoriesByLevel(1);
@@ -109,9 +109,10 @@ const BasicProductInfo = ({
                 name={"Brand"}
                 label={"Brand"}
                 options={!loading && optionsBrands}
-                getValue={(value) =>
-                  setValue("brand", value, { shouldValidate: true })
-                }
+                getValue={(value) => {
+                  setValue("brand", value, { shouldValidate: true });
+                  // watchAndSetProgress("brand");
+                }}
                 loading={loading}
               />
               <FormError className={"h-auto!"} error={errors.brand?.message} />

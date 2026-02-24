@@ -15,6 +15,7 @@ import Description from "./Steps/Description";
 import Images from "./Steps/Images";
 import AddTags from "./Steps/AddTags";
 import Inventory from "./Steps/Inventory";
+import toast from "react-hot-toast";
 const steps = [
   {
     label: "Basic Info",
@@ -49,9 +50,10 @@ const steps = [
 ];
 const AddProduct = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [currentProgress, setCurrentProgress] = useState(0);
   const [productData, setProductData] = useState({});
-  const changeStep = () => {
-    if (steps.length > currentStep) {
+  const nextStep = () => {
+    if (steps.length > currentStep && steps[currentStep - 1].progress === 100) {
       setCurrentStep((prev) => prev + 1);
     }
   };
@@ -60,11 +62,16 @@ const AddProduct = () => {
       setCurrentStep((prev) => prev - 1);
     }
   };
-  const createProduct = () => {
-    if (steps[currentStep - 1].progress === 100) {
-      changeStep();
+
+  // useEffect(() => {
+  //   steps[currentStep - 1].progress = currentProgress;
+  // }, [currentProgress]);
+
+  useEffect(() => {
+    if (currentProgress === 100) {
+      setCurrentProgress(0);
     }
-  };
+  }, [currentStep]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -94,9 +101,11 @@ const AddProduct = () => {
         {/* {steps[currentStep - 1].component} */}
         {currentStep === 1 && (
           <BasicProductInfo
+            setCurrentProgress={setCurrentProgress}
             setProductData={setProductData}
             productData={productData}
-            getProgress={(value) => (steps[currentStep - 1].progress = value)}
+            createProductHandler={nextStep}
+            // getProgress={(value) => (steps[currentStep - 1].progress = value)}
           />
         )}
         {currentStep === 2 && <Description />}
@@ -306,7 +315,7 @@ const AddProduct = () => {
                 Save Draft
               </Link> */}
             <button
-              type="submit"
+              // type="submit"
               disabled={currentStep === 1}
               onClick={gotoPrevious}
               className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm disabled:opacity-50"
@@ -315,7 +324,7 @@ const AddProduct = () => {
             </button>
             <button
               type="button"
-              onClick={createProduct}
+              onClick={nextStep}
               className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm"
             >
               Create Product
