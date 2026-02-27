@@ -11,9 +11,6 @@ export const getCategoryService = async (level) => {
   const categories = await Categories.find({ level }).select(
     "name slug createdAt updatedAt isActive image.url childCategories",
   );
-  if (categories.length <= 0) {
-    throw new ApiError(404, "Categories not found.");
-  }
   return categories;
 };
 

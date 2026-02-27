@@ -199,5 +199,8 @@ export const updateProductStatusService = async (productId, status) => {
   if (!product) {
     throw new ApiError(404, "Product not found");
   }
+  if (status === "active" && !product.thumbnail.public_id) {
+    throw new ApiError(404, "Add thumbnail image.");
+  }
   return product;
 };
