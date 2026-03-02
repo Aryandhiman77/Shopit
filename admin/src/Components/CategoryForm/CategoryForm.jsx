@@ -48,6 +48,7 @@ const CategoryForm = ({
   );
   const [images, setImages] = useState([]);
   const [resetDropBox, setResetDropBox] = useState(false);
+  const [options, setOptions] = useState([]);
   const [attributes, setAttributes] = useState(
     updationCategory?.attributes || [],
   );
@@ -107,17 +108,33 @@ const CategoryForm = ({
       navigate("/categories");
     }
   };
-  let options =
-    updateCategory?.level === 3 ? level2Categories : level1Categories;
-  options = options.map((opt) => ({ label: opt.name, value: opt._id }));
 
-  // const value = options.filter((item) => updateCategory._id === item._id);
+  // const setOptions = (categories, level) => {
+  //   const level = level;
+  //   let opts = level === 3 ? level2Categories : level1Categories;
+  //   opts = opts?.map((opt) => ({ label: opt.name, value: opt._id }));
+  //   setOptions(opts);
+
+  // };
+
+  // useEffect(() => {
+  //   let options =
+  //     updationCategory?.level === 3 ? level2Categories : level1Categories;
+  //     options = options?.map((opt) => ({ label: opt.name, value: opt._id }));
+  //     setOptions(options)
+  // }, []);
+  // let options =
+  //   updationCategory?.level === 3 ? level2Categories : level1Categories;
+
+  // console.log(options);
+
   useEffect(() => {
     if (mode !== "edit" && updationCategory.level > 1) return;
     (async () => {
       if (updationCategory?.level === 2) {
         await getCategoriesByLevel(1);
-      } else if (updationCategory?.level === 3) {
+      }
+      if (updationCategory?.level === 3) {
         await getCategoriesByLevel(2);
       }
       setValue("level", updationCategory.level);
@@ -146,7 +163,9 @@ const CategoryForm = ({
                   name="level"
                   label="Select Level"
                   defaultValue={
-                    updationCategory?.level ? updationCategory.level : 1
+                    updationCategory?.level && updationCategory?.level <= 3
+                      ? updationCategory.level
+                      : 1
                   }
                   variant="outlined"
                   required

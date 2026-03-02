@@ -1,46 +1,55 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
-import { TextField } from "@mui/material";
-import DropDownField from "../../../Components/Reusables/DropDownField";
-import TinyEditor from "../../../Components/Reusables/TinyEditor";
-import ImageDropBox from "../../../Components/Reusables/ImageDropBox";
-import CustomToggle from "../../../Components/Reusables/Elements/CustomToggle";
-import Box from "../../../Components/Reusables/Elements/Box";
-import { Link } from "react-router-dom";
-import SelectableInput from "../../../Components/Reusables/SelectableInput";
-import useCategory from "../../../Components/hooks/useCategory";
 import CustomStepper from "../../../Components/Reusables/Stepper";
 import BasicProductInfo from "./Steps/BasicProductInfo";
 import Description from "./Steps/Description";
 import Images from "./Steps/Images";
 import AddTags from "./Steps/AddTags";
 import Inventory from "./Steps/Inventory";
-import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import {
+  basicProductInfo,
+  richDescriptionSchema,
+  tagsSchema,
+} from "./validation";
+import Box from "../../../Components/Reusables/Elements/Box";
+import CustomToggle from "../../../Components/Reusables/Elements/CustomToggle";
+import useProducts from "../../../Components/hooks/useProducts";
+import CustomBtn from "../../../Components/Reusables/Elements/CustomBtn";
 const steps = [
   {
     label: "Basic Info",
     progress: 0,
     component: <BasicProductInfo />,
+    schema: basicProductInfo,
+    skippable: false,
   },
   {
     label: "Description",
     progress: 0,
     component: <Description />,
+    schema: richDescriptionSchema,
+    skippable: true,
   },
   {
     label: "Images",
     progress: 0,
     component: <Images />,
+    schema: {},
+    skippable: true,
   },
-  {
-    label: "Inventory",
-    progress: 0,
-    component: <Inventory />,
-  },
+  // {
+  //   label: "Inventory",
+  //   progress: 0,
+  //   component: <Inventory />,
+  // },
   {
     label: "Tags",
     progress: 0,
     component: <AddTags />,
+    schema: tagsSchema,
+    skippable: true,
   },
   {
     label: "Published",
@@ -50,28 +59,71 @@ const steps = [
 ];
 const AddProduct = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const {
+    setValue,
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(steps[currentStep - 1].schema),
+  });
+
   const [currentProgress, setCurrentProgress] = useState(0);
-  const [productData, setProductData] = useState({});
-  const nextStep = () => {
-    if (steps.length > currentStep && steps[currentStep - 1].progress === 100) {
-      setCurrentStep((prev) => prev + 1);
-    }
-  };
+  const [data, setData] = useState({});
+  const { createProduct, loading } = useProducts();
+
   const gotoPrevious = () => {
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
     }
   };
 
-  // useEffect(() => {
-  //   steps[currentStep - 1].progress = currentProgress;
-  // }, [currentProgress]);
-
-  useEffect(() => {
-    if (currentProgress === 100) {
-      setCurrentProgress(0);
+  const onSubmit = (entry) => {
+    if (currentStep === 1) {
+      let allCats = [];
+      if (entry.categories?.length) {
+        allCats = [...allCats, ...entry.categories];
+      }
+      if (entry.subCategories?.length) {
+        allCats = [...allCats, ...entry.subCategories];
+      }
+      if (entry.leafCategories?.length) {
+        allCats = [...allCats, ...entry.leafCategories];
+      }
+      delete entry.categories;
+      delete entry.subCategories;
+      delete entry.leafCategories;
+      setData({ ...entry, categories: allCats });
+      createProduct({ ...entry, categories: allCats });
+      setCurrentStep((prev) => prev + 1);
     }
-  }, [currentStep]);
+    if (currentStep === 2) {
+      setData({ ...data, entry });
+      setCurrentStep((prev) => prev + 1);
+    }
+    if (currentStep === 3) {
+      setData({ ...data, entry });
+      setCurrentStep((prev) => prev + 1);
+    }
+    if (currentStep === 4) {
+      setData({ ...data, entry });
+      // publishProduct()
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+  const nextStep = () => {
+    handleSubmit(onSubmit)();
+    if (steps[currentStep - 1].skippable) {
+      setCurrentStep((prev) => prev + 1);
+    }
+  };
+  const nextStepButtonTitle =
+    currentStep === 1
+      ? "Create Product"
+      : currentStep !== steps[steps?.length - 1]
+        ? "Next"
+        : "Save Product";
 
   return (
     <div className="flex flex-col gap-4">
@@ -93,42 +145,29 @@ const AddProduct = () => {
           </p>
         </div>
       </div>
-      <div className="py-7">
+      <div className="py-7 px-2">
         <CustomStepper steps={steps} activeStep={currentStep} />
       </div>
       {/* <form action=""> */}
-      <div className="flex flex-col gap-4 h-[85vh]">
+      <form action="">
         {/* {steps[currentStep - 1].component} */}
         {currentStep === 1 && (
-          <BasicProductInfo
-            setCurrentProgress={setCurrentProgress}
-            setProductData={setProductData}
-            productData={productData}
-            createProductHandler={nextStep}
-            // getProgress={(value) => (steps[currentStep - 1].progress = value)}
-          />
+          <>
+            <BasicProductInfo
+              register={register}
+              data={data}
+              setData={setData}
+              errors={errors}
+              setValue={setValue}
+              watch={watch}
+            />
+          </>
         )}
         {currentStep === 2 && <Description />}
         {currentStep === 3 && <Images />}
         {currentStep === 4 && <Inventory />}
         {currentStep === 5 && <AddTags />}
-        {/* <div className="flex flex-row gap-10 items-center my-4">
-            <Box className={"bg-white"}>
-              <h1 className="heading-1 py-2">Product settings</h1>
-              <div className="flex my-4 gap-2 justify-between ">
-                <p className="font-[500]"> In Stock ?</p>
-                <CustomToggle />
-              </div>
-              <div className="flex my-4 gap-2 justify-between ">
-                <p className="font-[500]"> Is Featured ?</p>
-                <CustomToggle />
-              </div>
-              <div className="flex my-4 gap-2 justify-between">
-                <p className="font-[500]"> Is Trending ?</p>
-                <CustomToggle defaultChecked={true} />
-              </div>
-            </Box>
-          </div> */}
+
         {/* <Box className={"flex  items-center gap-10  bg-white"}>
             <div className="flex my-4 gap-2 ">
               <p className="font-[500]"> Free Shipping ?</p>
@@ -314,24 +353,27 @@ const AddProduct = () => {
             {/* <Link className="custom-btn bg-transparent! border border-gray-400! !font-[500] text-sm">
                 Save Draft
               </Link> */}
-            <button
-              // type="submit"
+            <CustomBtn
               disabled={currentStep === 1}
-              onClick={gotoPrevious}
-              className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm disabled:opacity-50"
-            >
-              Previous
-            </button>
-            <button
               type="button"
+              title={"Previous"}
+              onClick={gotoPrevious}
+              className=" !bg-blue-500 !text-white !font-[500] text-sm rounded-lg!"
+              textPadding={1}
+              loading={loading}
+            />
+            <CustomBtn
+              type="button"
+              disabled={loading}
+              loading={loading}
+              title={nextStepButtonTitle}
               onClick={nextStep}
-              className="custom-btn !bg-blue-500 !text-white !font-[500] text-sm"
-            >
-              Create Product
-            </button>
+              className=" !bg-blue-500 !text-white !font-[500] text-sm rounded-lg!"
+              textPadding={1}
+            />
           </div>
         </div>
-      </div>
+      </form>
       {/* </form> */}
     </div>
   );

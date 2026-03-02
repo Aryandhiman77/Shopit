@@ -82,7 +82,6 @@ const CategoryProvider = ({ children }) => {
   const [level3Categories, setLevel3Categories] = useState([]);
   const [orderedCategories, setOrderedCategories] = useState([]);
   const [category, setCategory] = useState();
-  const [addedCategory, setAddedCategory] = useState({});
   const [formErrors, setFormErrors] = useState(null);
   const [errors, setErrors] = useState({ categories: null, products: null });
   const [loading, setLoading] = useState({});
@@ -114,7 +113,7 @@ const CategoryProvider = ({ children }) => {
   const getAllOrderedCategories = async () => {
     startLoading(`ordered-categories`);
     const response = await fetchData({
-      url: `/common/categories`,
+      url: `/management/categories`,
       method: "GET",
     });
     if (response?.success) {
@@ -132,7 +131,7 @@ const CategoryProvider = ({ children }) => {
     if (!level || level > 3) return;
     startLoading(`level${level}categories`);
     const response = await fetchData({
-      url: `/common/categories/${level}`,
+      url: `/management/categories/${level}`,
       method: "GET",
     });
     if (response?.success) {

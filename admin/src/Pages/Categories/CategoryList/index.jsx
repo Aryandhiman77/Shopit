@@ -140,8 +140,8 @@ const CategoryList = () => {
         fixedFullScreen={false}
       >
         {isLoading("get-category") ? (
-          <div className="flex justify-center items-center">
-            <p>Loading Category...</p>
+          <div className="flex justify-center items-center h-full">
+            <p className="font-medium">Loading Category Data...</p>
             <Spinner />
           </div>
         ) : (

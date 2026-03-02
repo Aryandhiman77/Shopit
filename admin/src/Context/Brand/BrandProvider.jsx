@@ -9,7 +9,7 @@ const BrandProvider = () => {
   const getBrandsListing = async () => {
     setLoading(true);
     const response = await fetchData({
-      url: "/common/brands",
+      url: "/management/brands",
     });
     if (response?.success) {
       setBrands(response?.data);

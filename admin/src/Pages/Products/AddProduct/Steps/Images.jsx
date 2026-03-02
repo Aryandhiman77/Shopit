@@ -5,7 +5,7 @@ const Images = () => {
   const [thumbnail, setThumbnail] = useState([]);
   const [gallery, setGallery] = useState([]);
   return (
-    <div className="w-full">
+    <div className="w-full mb-25!">
       <h1 className="heading-1 px-1 py-2">Product Images</h1>
       <h3 className="px-1 py-3 text-sm font-[500]">Product Thumbnail</h3>
       <ImageDropBox maxFiles={1} setImages={setThumbnail} />

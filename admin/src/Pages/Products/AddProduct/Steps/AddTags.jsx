@@ -3,7 +3,7 @@ import Box from "../../../../Components/Reusables/Elements/Box";
 
 const AddTags = () => {
   return (
-    <Box className={"flex flex-col gap-4  bg-white"}>
+    <Box className={"flex flex-col gap-4  bg-white mb-25!"}>
       <h1 className="heading-1">Product Tags</h1>
       <TextField
         className="w-1/2"

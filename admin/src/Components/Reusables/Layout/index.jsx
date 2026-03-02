@@ -11,7 +11,7 @@ import SessionRevalidationModel from "../../Modals/sessionRevalidationModel";
 
 const Layout = () => {
   const [sideBarOpened, setSideBarOpened] = useState(true);
-  
+
   //redirect provider after refresh
   const location = useLocation();
   const navigate = useNavigate();

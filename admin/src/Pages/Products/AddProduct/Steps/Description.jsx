@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import TinyEditor from "../../../../Components/Reusables/TinyEditor";
 
-const Description = () => {
+const Description = ({}) => {
   return (
-    <div>
-      <h1 className="heading-1 px-1 py-3">Product description</h1>
+    <div className="mb-25!">
+      <div className="font-medium text-gray-500 text-lg pb-4">Rich Description</div>
       <TinyEditor />
     </div>
   );

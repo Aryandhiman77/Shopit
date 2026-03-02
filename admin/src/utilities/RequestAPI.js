@@ -30,8 +30,11 @@ api.interceptors.response.use(
         return api(originalRequest);
       } catch (err) {
         // dispatch event for force logout when cannot refresh access
-        window.dispatchEvent(new Event("ASK_LOGIN"));
-        if (window.location.pathname === "/login") {
+        // window.dispatchEvent(new Event("ASK_LOGIN"));
+        if (
+          window.location.pathname === "/login" &&
+          !err.message.includes("Cannot reach servers")
+        ) {
           window.dispatchEvent(new Event("FORCE-LOGOUT"));
         } else {
           window.dispatchEvent(new Event("ASK_LOGIN")); // for protected routes.
@@ -91,14 +94,13 @@ export const fetchData = async ({
       return { error: err };
     }
     const message =
-      err.response?.data?.message || err.message || "Something went wrong";
+      err.response?.data?.message || err.message || "Something went wrong.";
     toast.error(message);
     return { error: err };
-    // throw err;
   }
 };
 
-// ================================== status handling ======================================
+// ============================== status handling ==============================
 let toastId = null;
 window.addEventListener("offline", () => {
   toastId = toast.error("You are currently offline.", { duration: Infinity });

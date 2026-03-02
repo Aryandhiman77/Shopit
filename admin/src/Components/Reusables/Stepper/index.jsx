@@ -21,7 +21,7 @@ const CustomStepper = ({ steps = [], activeStep = 1 }) => {
             <li
               className={`p-1 text-[12px] rounded-md ${completedSteps.includes(i + 1) ? (currentActiveIndex === i + 1 ? "border-2 border-blue-600 bg-blue-500! font-medium " : "bg-green-600") : "border-2 border-red-700  bg-red-600"}  text-white w-25`}
             >
-              <div className="flex items-center gap-2 justify-center">
+              <div className="flex items-center gap-2 justify-center select-none">
                 {step.progress === 100 && <FaCheck />}
                 {step.label}
               </div>

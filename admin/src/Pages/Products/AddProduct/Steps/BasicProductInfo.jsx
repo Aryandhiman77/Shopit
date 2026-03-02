@@ -1,30 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import SelectableInput from "../../../../Components/Reusables/SelectableInput";
-import { TextField } from "@mui/material";
+import { Divider, TextareaAutosize, TextField } from "@mui/material";
 import useCategory from "../../../../Components/hooks/useCategory";
 import useBrands from "../../../../Components/hooks/useBrands";
 import Box from "../../../../Components/Reusables/Elements/Box";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { basicProductInfo } from "../validation";
 import FormError from "../../../../Components/Reusables/FormError";
+import CustomToggle from "../../../../Components/Reusables/Elements/CustomToggle";
 
 const BasicProductInfo = ({
-  setProductData,
-  productData,
-  setCurrentProgress,
+  defaultData,
+  register,
+  errors,
+  setValue,
+  watch,
 }) => {
-  const {
-    setValue,
-    reset,
-    handleSubmit,
-    register,
-    watch,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(basicProductInfo),
-  });
-
   const {
     getCategoriesByLevel,
     isLoading,
@@ -56,23 +45,33 @@ const BasicProductInfo = ({
     value: item._id,
   }));
 
-  //-------------------------- Brand options------------------------------
+  // discount logic
   let discount = 0;
   if (watch("base_mrp") && watch("base_price")) {
     discount = Number(
-      100 -
-        ((watch("base_mrp") - watch("base_price")) / watch("base_mrp")) * 100,
+      ((watch("base_mrp") - watch("base_price")) / watch("base_mrp")) * 100,
     ).toFixed(1);
+    discount = 100 - discount;
   }
-  // const watchAndSetProgress = (name) => {};
-  const onSubmit = (data) => {
-    const allCats = [data.categories, data.subCategories, data.leafCategories];
-    delete data.categories;
-    delete data.subCategories;
-    delete data.leafCategories;
-    setProductData({ ...productData, ...data, categories: allCats });
-    setCurrentProgress(100);
-  };
+
+  // progress bar calculation
+  // const values = watch();
+  // const valuesObj = ["title", "brand", "categories", "base_mrp", "base_price"];
+  // const totalFields = valuesObj.length;
+
+  // const filledFields = valuesObj.filter((key) => {
+  //   const value = values[key];
+  //   if (value !== undefined || value !== "" || value !== null) {
+  //     return value;
+  //   }
+  // }).length;
+  // const progressChunk = Math.round((filledFields / totalFields) * 100);
+  // console.log(progressChunk);
+
+  // useEffect(() => {
+  //   setCurrentProgress(progressChunk);
+  // }, [progressChunk]);
+
   useEffect(() => {
     getCategoriesByLevel(1);
     getCategoriesByLevel(2);
@@ -81,38 +80,37 @@ const BasicProductInfo = ({
   }, []);
   return (
     <>
-      <div className="heading-1">Summary</div>
-      <Box className={"bg-white"}>
-        <form
-          action=""
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 "
-        >
+      <Box className={"bg-white mb-25"}>
+        <div className="font-medium text-gray-500 text-lg pb-4">Summary</div>
+        <div className="flex flex-col gap-4 ">
           <div className="flex flex-row gap-10">
             <div className="w-1/2">
               <TextField
+                error={errors.title?.message}
                 className="w-full"
                 label="Product Title"
                 variant="outlined"
-                // required={true}
+                required={true}
+                {...register("title")}
                 size="small"
                 type={"text"}
-                onChange={(e) =>
-                  setValue("title", e.target.value, { shouldValidate: true })
-                }
+                // onChange={(e) =>
+                //   setValue("title", e.target.value, { shouldValidate: true })
+                // }
               />
               <FormError className={"h-auto!"} error={errors.title?.message} />
             </div>
             <div className="w-1/2">
               <SelectableInput
+                error={errors.brand?.message}
                 multiple={false}
-                name={"Brand"}
+                name={"brand"}
+                required={true}
                 label={"Brand"}
                 options={!loading && optionsBrands}
-                getValue={(value) => {
-                  setValue("brand", value, { shouldValidate: true });
-                  // watchAndSetProgress("brand");
-                }}
+                getValue={(value) =>
+                  setValue("brand", value, { shouldValidate: true })
+                }
                 loading={loading}
               />
               <FormError className={"h-auto!"} error={errors.brand?.message} />
@@ -120,6 +118,8 @@ const BasicProductInfo = ({
           </div>
           <div className="flex flex-row gap-10">
             <SelectableInput
+              // onClick={!level1Categories?.length && getCategoriesByLevel(1)}
+              error={errors.categories?.message}
               name={"categories"}
               label={"Main-Categories"}
               options={
@@ -131,6 +131,8 @@ const BasicProductInfo = ({
               loading={isLoading("level1categories")}
             />
             <SelectableInput
+              // onClick={!level2Categories?.length && getCategoriesByLevel(2)}
+              error={errors.categories?.message}
               name={"subCategories"}
               label={"Sub-Categories"}
               options={
@@ -142,6 +144,8 @@ const BasicProductInfo = ({
               loading={isLoading("level2categories")}
             />
             <SelectableInput
+              // onClick={!level3Categories?.length && getCategoriesByLevel(3)}
+              error={errors.categories?.message}
               name={"leafCategories"}
               label={"Leaf-Categories"}
               options={
@@ -162,19 +166,23 @@ const BasicProductInfo = ({
             }
           />
           <>
-            <textarea
+            <TextareaAutosize
               id="message"
               name="shortDescription"
-              rows="2"
-              className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Write brief description about product in 200 ..."
-              // maxLength={200}
-              onChange={(e) =>
-                setValue("shortDescription", e.target.value, {
-                  shouldValidate: true,
-                })
+              required
+              minRows={3}
+              className={`block w-full px-2.5 pt-2.5 text-sm rounded-lg bg-gray-50 text-gray-900 border
+              focus:outline-none
+              ${
+                errors.shortDescription?.message
+                  ? "border-red-600 focus:border-red-600 focus:ring-1 focus:ring-red-600"
+                  : "border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               }
-            ></textarea>
+               dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400`}
+              placeholder="Write brief description about product in 200 characters."
+              maxLength={200}
+              {...register("shortDescription")}
+            />
             <FormError
               className={"h-auto!"}
               error={errors.shortDescription?.message}
@@ -186,16 +194,17 @@ const BasicProductInfo = ({
           <div className="flex flex-row gap-10">
             <div className="w-1/2">
               <TextField
+                error={errors.base_mrp?.message}
+                {...register("base_mrp")}
                 name="base_mrp"
                 className="w-full"
                 label="MRP"
                 variant="outlined"
-                // required={true}
                 size="small"
                 type={"number"}
-                onChange={(e) =>
-                  setValue("base_mrp", e.target.value, { shouldValidate: true })
-                }
+                // onChange={(e) =>
+                //   setValue("base_mrp", e.target.value, { shouldValidate: true })
+                // }
               />
               <FormError
                 className={"h-auto!"}
@@ -204,21 +213,28 @@ const BasicProductInfo = ({
             </div>
             <div className="w-1/2">
               <TextField
-                onChange={(e) =>
-                  setValue("base_price", e.target.value, {
-                    shouldValidate: true,
-                  })
-                }
+                {...register("base_price")}
+                error={errors.base_price?.message}
+                // onChange={(e) =>
+                //   setValue("base_price", e.target.value, {
+                //     shouldValidate: true,
+                //   })
+                // }
                 name="base_price"
                 className="w-full"
                 label="Selling Price (tax incl.)"
                 variant="outlined"
-                // required={true}
                 size="small"
                 type={"number"}
               />
               <FormError error={errors.base_price?.message} />
             </div>
+
+            {/* <div className="flex flex-col gap-10 items-center my-4"> */}
+            {/* <div className={"bg-white"}> */}
+
+            {/* </div> */}
+            {/* </div> */}
             {/* <TextField
               disabled
               className="w-1/4"
@@ -235,8 +251,17 @@ const BasicProductInfo = ({
               </div>
             )}
           </div>
-          <button type="submit">click</button>
-        </form>
+          {/* <div className="w-full flex flex-row gap-20">
+            <div className="flex my-4 gap-2 justify-between ">
+              <p className="font-[500]"> Is Featured ?</p>
+              <CustomToggle />
+            </div>
+            <div className="flex my-4 gap-2 justify-between">
+              <p className="font-[500]"> Is Trending ?</p>
+              <CustomToggle defaultChecked={true} />
+            </div>
+          </div> */}
+        </div>
       </Box>
     </>
   );

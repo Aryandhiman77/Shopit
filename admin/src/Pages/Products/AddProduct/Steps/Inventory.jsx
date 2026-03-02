@@ -4,7 +4,7 @@ import Box from "../../../../Components/Reusables/Elements/Box";
 
 const Inventory = () => {
   return (
-    <Box className={"!bg-white"}>
+    <Box className={"!bg-white mb-25!"}>
       <h1 className="heading-1 py-4">Inventory Tracking</h1>
       <div className="pb-4 flex flex-col gap-2">
         <div className="flex ">

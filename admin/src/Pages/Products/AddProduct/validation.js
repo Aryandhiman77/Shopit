@@ -9,7 +9,9 @@ export const basicProductInfo = yup
     leafCategories: yup.array(yup.string()),
     shortDescription: yup
       .string()
-      .max(200, "Descriptions must be less than 200 characters."),
+      .min(10, "Breif description must contain atleast 10 characters")
+      .required("Breif Description is required.")
+      .max(200, "Brief Descriptions must be less than 200 characters."),
     base_price: yup
       .number()
       .typeError("Selling Price must be a number.")
@@ -52,3 +54,13 @@ export const basicProductInfo = yup
       return true;
     },
   });
+
+export const richDescriptionSchema = yup.object({
+  description: yup.string().optional(),
+});
+export const inventory = yup.object({
+  stock: yup.string().optional(),
+});
+export const tagsSchema = yup.object({
+  tags: yup.array(yup.string()),
+});
