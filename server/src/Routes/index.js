@@ -11,6 +11,6 @@ router.use("/auth", authRoutes);
 router.use("/admin", adminRoutes);
 router.use("/seller", sellerRoutes);
 router.use("/", publicRoutes); // open to anyone
-router.use("/common", adminSellerRoutes);
+router.use("/management", adminSellerRoutes);
 
 export default router;

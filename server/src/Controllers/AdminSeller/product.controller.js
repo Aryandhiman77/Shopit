@@ -10,7 +10,7 @@ import {
   getAllProducts,
   getProducts,
   updateProductStatusService,
-} from "../../Services/sellerServices/productServices.js";
+} from "../../Services/adminServices/productServices.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
 
 export const createProductController = AsyncWrapper(async (req, res) => {

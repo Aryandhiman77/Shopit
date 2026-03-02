@@ -1,5 +1,5 @@
 import express from "express";
-import { upload } from "../../Middlewares/multer.js";
+import { upload } from "../../../Middlewares/multer.js";
 import {
   createProductController,
   deleteGalleryImagesController,
@@ -9,21 +9,17 @@ import {
   productThumbnailController,
   updateProductStatus,
   getSellerProducts,
-} from "../../Controllers/AdminSeller/product.controller.js";
-import validate from "../../Middlewares/validate.js";
+} from "../../../Controllers/AdminSeller/product.controller.js";
+import validate from "../../../Middlewares/validate.js";
 import {
   createProductAttributesSchema,
   createProductBasicSchema,
   updateProductStatusSchema,
-} from "../../validations/AdminSeller/product.validations.js";
+} from "../../../validations/AdminSeller/product.validations.js";
 const productRoutes = express.Router();
 
 productRoutes
-  .post(
-    "/create-product",
-    validate(createProductBasicSchema),
-    createProductController,
-  )
+  .post("/create", validate(createProductBasicSchema), createProductController)
   .get("/drafts", getDraftProducts)
   .get("/", getSellerProducts)
   .patch(

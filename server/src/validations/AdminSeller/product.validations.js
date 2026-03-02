@@ -66,7 +66,7 @@ export const createProductBasicSchema = Joi.object({
   brand: Joi.string()
     .required()
     .external(async (value) => {
-      const brand = await Brand.findOne({ slug: value });
+      const brand = await Brand.findOne({ _id: value });
       if (!brand) {
         throw new Joi.ValidationError("Invalid category.", [
           { message: "Selected Brand does not exist.", path: ["brand"] },
@@ -85,11 +85,11 @@ export const createProductBasicSchema = Joi.object({
     "any.required": "Short description is required.",
   }),
 
-  description: Joi.string().min(50).max(1500).required().messages({
-    "string.min": "Description must be at least 50 characters long.",
-    "string.max": "Description must be less than 1500 characters.",
-    "any.required": "Description is required.",
-  }),
+  // description: Joi.string().min(50).max(1500).required().messages({
+  //   "string.min": "Description must be at least 50 characters long.",
+  //   "string.max": "Description must be less than 1500 characters.",
+  //   "any.required": "Description is required.",
+  // }),
 
   categories: Joi.array()
     .required()
@@ -136,15 +136,14 @@ export const createProductBasicSchema = Joi.object({
       "number.max": "Base MRP must be less than ₹999999.",
       "any.required": "Base MRP is required.",
     }),
-  stock: Joi.number().min(0).max(999999).required().messages({
-    "number.base": "Stock quantity must be a number.",
-    "number.min": "Stock quantity must be greater than or equal to zero.",
-    "number.max": "Stock quantity must be less than 999999.",
-    "any.required": "Stock quantity is required.",
-  }),
-})
-  .unknown(false)
-  .messages({ "object.unknown": "Extra fields are not allowed." });
+  // stock: Joi.number().min(0).max(999999).required().messages({
+  //   "number.base": "Stock quantity must be a number.",
+  //   "number.min": "Stock quantity must be greater than or equal to zero.",
+  //   "number.max": "Stock quantity must be less than 999999.",
+  //   "any.required": "Stock quantity is required.",
+  // }),
+}).unknown(false);
+// .messages({ "object.unknown": "Extra fields are not allowed." });
 
 export const createProductAttributesSchema = Joi.object({
   productId: Joi.string().required().messages({

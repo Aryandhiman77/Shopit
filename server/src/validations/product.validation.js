@@ -59,12 +59,12 @@ export const createProductSchema = Joi.object({
       "any.required": "Short-description is required.",
       "string.empty": "Short-description cannot be empty.",
     }),
-  description: Joi.string().lowercase().min(50).max(1500).messages({
-    "string.min": "Description must be at least 50 characters long.",
-    "string.max": "Description must be less than 1500 characters.",
-    "any.required": "Description is required.",
-    "string.empty": "Description cannot be empty.",
-  }),
+  // description: Joi.string().lowercase().min(50).max(1500).messages({
+  //   "string.min": "Description must be at least 50 characters long.",
+  //   "string.max": "Description must be less than 1500 characters.",
+  //   "any.required": "Description is required.",
+  //   "string.empty": "Description cannot be empty.",
+  // }),
   category: Joi.string()
     .required()
     .external(async (value) => {
@@ -101,11 +101,11 @@ export const createProductSchema = Joi.object({
     "number.base": "MRP must be a number.",
     "number.empty": "MRP cannot be empty.",
   }),
-  stock: Joi.number().max(999999).required().messages({
-    "number.max": "Stock quantity must be less than 999999 items.",
-    "any.required": "Stock quantity is required.",
-    "number.empty": "Stock quantity cannot be empty.",
-  }),
+  // stock: Joi.number().max(999999).required().messages({
+  //   "number.max": "Stock quantity must be less than 999999 items.",
+  //   "any.required": "Stock quantity is required.",
+  //   "number.empty": "Stock quantity cannot be empty.",
+  // }),
   // variants: variantItemSchema,
   attributes: Joi.array().items(Joi.object()),
 })
