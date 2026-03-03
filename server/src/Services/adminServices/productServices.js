@@ -42,21 +42,27 @@ export const createProductService = async (
   const product = await Product.create({
     title,
     shortDescription,
-    // description, //(optional)
     categories,
     tags,
     status: "draft",
     seller: creater_user_id,
     price: base_price,
     mrp: base_mrp,
-    // stock,
     brand,
   });
 
   if (!product) {
     throw new ApiError(404, "Categories not found.");
   }
-  return product;
+  const sendProduct = {
+    title: product.title,
+    shortDescription: product.shortDescription,
+    status: product.status,
+    _id: product._id,
+    mrp: product.mrp,
+    price: product.price,
+  };
+  return sendProduct;
 };
 
 export const getProducts = async ({ filter }, sellerId) => {
@@ -72,7 +78,7 @@ export const addThumbnailService = async (productId, thumbnail) => {
     throw new ApiError(404, "Product not found.");
   }
   if (!thumbnail) {
-    throw new ApiError(400, "Please add a thumbnail.");
+    throw new ApiError(400, "Please add a thumbnail.", ["Add a thumbnail."]);
   }
   const uploaded = await uploadWithRetry(thumbnail.path);
   if (!uploaded) throw new ApiError(400, "Cannot upload thumbnail.");
@@ -86,7 +92,7 @@ export const addThumbnailService = async (productId, thumbnail) => {
   }
 
   await unlinkFiles(thumbnail);
-  return true;
+  return saved.thumbnail.url;
 };
 
 export const addGalleryImagesService = async (productId, gallery) => {
@@ -119,7 +125,11 @@ export const addGalleryImagesService = async (productId, gallery) => {
     product.gallery.push(...formattedImages);
     await product.save();
 
-    return product.gallery;
+    return product.gallery.map(
+      (item) =>
+        (item.url !== "" || item.url !== undefined || item.url !== null) &&
+        item.url,
+    );
   } catch (error) {
     // rollback cloudinary uploads if DB fails
     if (uploadedImages.length) {

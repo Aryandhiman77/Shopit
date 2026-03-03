@@ -38,10 +38,6 @@ productRoutes
   )
   .patch(
     "/:productId/attributes",
-    (req, res, next) => {
-      req.body.productId = req.params.productId;
-      next();
-    },
     validate(createProductAttributesSchema),
     productAttributesController,
   )

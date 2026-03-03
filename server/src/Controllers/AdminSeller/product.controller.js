@@ -32,10 +32,10 @@ export const productThumbnailController = AsyncWrapper(
   async (req, res, next) => {
     const { productId } = req.params;
     try {
-      await addThumbnailService(productId, req.file);
+      const thumbnail = await addThumbnailService(productId, req.file);
       res
         .status(200)
-        .json(new ApiResponse(200, null, "Thumbnail added successfully."));
+        .json(new ApiResponse(200, thumbnail, "Thumbnail added successfully."));
     } catch (error) {
       console.log(req.file);
       await unlinkFiles(req.file?.path);
