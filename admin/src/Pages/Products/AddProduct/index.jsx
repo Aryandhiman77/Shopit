@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useInsertionEffect, useState } from "react";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
 import CustomStepper from "../../../Components/Reusables/Stepper";
 import BasicProductInfo from "./Steps/BasicProductInfo";
@@ -10,121 +10,162 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   basicProductInfo,
-  richDescriptionSchema,
-  tagsSchema,
+  imagesSchema,
+  richDescriptionValidation,
+  tagsValidations,
 } from "./validation";
 import Box from "../../../Components/Reusables/Elements/Box";
 import CustomToggle from "../../../Components/Reusables/Elements/CustomToggle";
 import useProducts from "../../../Components/hooks/useProducts";
 import CustomBtn from "../../../Components/Reusables/Elements/CustomBtn";
+import { MdError } from "react-icons/md";
+import FormError from "../../../Components/Reusables/FormError";
 const steps = [
   {
-    label: "Basic Info",
+    label: "Basic Information",
     progress: 0,
-    component: <BasicProductInfo />,
     schema: basicProductInfo,
+    skippable: false,
+  },
+  {
+    label: "Images",
+    progress: 0,
+    schema: imagesSchema,
     skippable: false,
   },
   {
     label: "Description",
     progress: 0,
-    component: <Description />,
-    schema: richDescriptionSchema,
-    skippable: true,
+    schema: richDescriptionValidation,
+    skippable: false,
   },
   {
-    label: "Images",
+    label: "Add Tags",
     progress: 0,
-    component: <Images />,
-    schema: {},
-    skippable: true,
+    schema: tagsValidations,
+    skippable: false,
   },
+
   // {
-  //   label: "Inventory",
+  //   label: "Published",
   //   progress: 0,
-  //   component: <Inventory />,
+  //   skippable: true,
   // },
-  {
-    label: "Tags",
-    progress: 0,
-    component: <AddTags />,
-    schema: tagsSchema,
-    skippable: true,
-  },
-  {
-    label: "Published",
-    progress: 0,
-    component: "publishing product....",
-  },
 ];
+// {
+//   label: "Inventory",
+//   progress: 0,
+//   component: <Inventory />,
+// },
 const AddProduct = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const [data, setData] = useState(
+    JSON.parse(localStorage.getItem("draftProduct")) || {},
+  );
   const {
     setValue,
     register,
     handleSubmit,
     watch,
+    reset,
+    clearErrors,
     formState: { errors },
   } = useForm({
-    resolver: yupResolver(steps[currentStep - 1].schema),
+    resolver: yupResolver(steps[currentStep]?.schema),
+    defaultValues: data,
   });
 
   const [currentProgress, setCurrentProgress] = useState(0);
-  const [data, setData] = useState({});
-  const { createProduct, loading } = useProducts();
+
+  const {
+    createProduct,
+    loading,
+    product,
+    uploadThumbnail,
+    uploadGallery,
+    formErrors,
+    resetFormErrors,
+  } = useProducts();
 
   const gotoPrevious = () => {
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
     }
   };
-
-  const onSubmit = (entry) => {
+  const onSubmit = async (entry) => {
+    console.log("submitting", entry);
+    if (currentStep === 0) {
+      setData({ ...entry });
+      const saveCategories = entry.categories?.map((item) => item.value);
+      await createProduct({
+        ...entry,
+        brand: entry.brand.value,
+        categories: saveCategories,
+      });
+      setCurrentStep((prev) => prev + 1);
+    }
     if (currentStep === 1) {
-      let allCats = [];
-      if (entry.categories?.length) {
-        allCats = [...allCats, ...entry.categories];
-      }
-      if (entry.subCategories?.length) {
-        allCats = [...allCats, ...entry.subCategories];
-      }
-      if (entry.leafCategories?.length) {
-        allCats = [...allCats, ...entry.leafCategories];
-      }
-      delete entry.categories;
-      delete entry.subCategories;
-      delete entry.leafCategories;
-      setData({ ...entry, categories: allCats });
-      createProduct({ ...entry, categories: allCats });
+      setData({ ...data, ...entry });
       setCurrentStep((prev) => prev + 1);
     }
     if (currentStep === 2) {
-      setData({ ...data, entry });
+      setData({ ...data, ...entry });
       setCurrentStep((prev) => prev + 1);
     }
     if (currentStep === 3) {
-      setData({ ...data, entry });
-      setCurrentStep((prev) => prev + 1);
-    }
-    if (currentStep === 4) {
-      setData({ ...data, entry });
+      setData({ ...data, ...entry });
       // publishProduct()
-      setCurrentStep((prev) => prev + 1);
+      // setCurrentStep((prev) => prev + 1);
     }
+    steps[currentStep].progress = 100;
   };
   const nextStep = () => {
     handleSubmit(onSubmit)();
-    if (steps[currentStep - 1].skippable) {
+    if (steps[currentStep]?.skippable) {
       setCurrentStep((prev) => prev + 1);
     }
   };
-  const nextStepButtonTitle =
-    currentStep === 1
-      ? "Create Product"
-      : currentStep !== steps[steps?.length - 1]
-        ? "Next"
-        : "Save Product";
 
+  const syncProductDataWithLocalStorage = () => {
+    console.log(data);
+    let draftProduct = JSON.parse(localStorage.getItem("draftProduct"));
+    if (draftProduct) {
+      localStorage.setItem("draftProduct", JSON.stringify(data));
+    } else {
+      draftProduct = { ...draftProduct, ...data };
+      localStorage.setItem("draftProduct", JSON.stringify(draftProduct));
+    }
+    console.log(data);
+  };
+
+  const nextButtonTitle = () => {
+    if (isFirstStep()) {
+      return "Create Product";
+    } else if (isLastStep()) {
+      return "Publish Product";
+    } else {
+      return "Save & Next";
+    }
+  };
+  const isFirstStep = () => {
+    if (currentStep === 0) {
+      return true;
+    }
+    return false;
+  };
+  const isLastStep = () => {
+    if (currentStep === steps.length - 1) {
+      return true;
+    }
+    return false;
+  };
+  useEffect(() => {
+    syncProductDataWithLocalStorage();
+  }, [data]);
+  useEffect(() => {
+    reset(data);
+    clearErrors();
+  }, [currentStep]);
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -133,41 +174,71 @@ const AddProduct = () => {
         </div>
       </div>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-medium text-gray-600">Add Product</h1>
-        <div>
-          <p className="text- font-medium text-gray-600">
-            Status :{" "}
-            <span
-              className={`p-2 bg-yellow-300 border border-yellow-500 text-black rounded-sm`}
-            >
-              Draft
-            </span>
-          </p>
-        </div>
+        {product?.status && (
+          <div>
+            <p className="text- font-medium text-gray-600">
+              Status :{" "}
+              <span
+                className={`p-2 bg-yellow-300 border border-yellow-500 text-black rounded-sm capitalize`}
+              >
+                {product.status}
+              </span>
+            </p>
+          </div>
+        )}
       </div>
-      <div className="py-7 px-2">
+      <div className="py-2 px-2">
         <CustomStepper steps={steps} activeStep={currentStep} />
       </div>
       {/* <form action=""> */}
-      <form action="">
+      <form method="POST">
         {/* {steps[currentStep - 1].component} */}
-        {currentStep === 1 && (
+        {Array.from(formErrors).length !== 0 && (
+          <Box className={"bg-red-200 space-y-1 my-2"}>
+            <div className="flex items-center gap-2">
+              <MdError size={30} className="text-red-600" />
+              <p>Check the following Errors !</p>
+            </div>
+            {formErrors?.map((err, i) => (
+              <div key={`error-${i}`}>
+                <div className="flex items-center gap-4">
+                  <FormError error={err} />
+                </div>
+              </div>
+            ))}
+          </Box>
+        )}
+
+        {currentStep === 0 && (
           <>
             <BasicProductInfo
+              defaultData={data}
               register={register}
-              data={data}
-              setData={setData}
               errors={errors}
               setValue={setValue}
               watch={watch}
             />
           </>
         )}
-        {currentStep === 2 && <Description />}
-        {currentStep === 3 && <Images />}
-        {currentStep === 4 && <Inventory />}
-        {currentStep === 5 && <AddTags />}
-
+        {currentStep === 1 && (
+          <Images
+            productId={product?._id}
+            errors={errors}
+            setValue={setValue}
+          />
+        )}
+        {currentStep === 2 && (
+          <Description defaultData={data} setValue={setValue} errors={errors} />
+        )}
+        {/* {currentStep === 4 && <Inventory />} */}
+        {currentStep === 3 && (
+          <AddTags
+            defaultData={data}
+            register={register}
+            errors={errors}
+            setValue={setValue}
+          />
+        )}
         {/* <Box className={"flex  items-center gap-10  bg-white"}>
             <div className="flex my-4 gap-2 ">
               <p className="font-[500]"> Free Shipping ?</p>
@@ -193,7 +264,6 @@ const AddProduct = () => {
                   type={"number"}
                 />
             </Box> */}
-
         {/* <Box className={"bg-white flex flex-col gap-4"}>
             <div className="flex items-center justify-between">
               <h1 className="heading-1">Product Variant</h1>
@@ -356,17 +426,39 @@ const AddProduct = () => {
             <CustomBtn
               disabled={currentStep === 1}
               type="button"
+              title={"Reset"}
+              onClick={() => {
+                reset();
+                setData({});
+              }}
+              className=" !bg-blue-500 !text-white !font-[500] text-sm rounded-lg!"
+              textPadding={1}
+            />
+            <CustomBtn
+              disabled={currentStep === 1}
+              type="button"
               title={"Previous"}
               onClick={gotoPrevious}
               className=" !bg-blue-500 !text-white !font-[500] text-sm rounded-lg!"
               textPadding={1}
               loading={loading}
             />
+            {steps[currentStep - 1]?.skippable && (
+              <CustomBtn
+                disabled={currentStep === 1}
+                type="button"
+                title={"Skip"}
+                onClick={nextStep}
+                className=" !bg-blue-500 !text-white !font-[500] text-sm rounded-lg!"
+                textPadding={1}
+                loading={loading}
+              />
+            )}
             <CustomBtn
               type="button"
               disabled={loading}
               loading={loading}
-              title={nextStepButtonTitle}
+              title={nextButtonTitle()}
               onClick={nextStep}
               className=" !bg-blue-500 !text-white !font-[500] text-sm rounded-lg!"
               textPadding={1}

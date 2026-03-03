@@ -1,6 +1,6 @@
 import { Tooltip } from "@mui/joy";
 import React, { useEffect, useState } from "react";
-import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { IoIosArrowDown, IoIosArrowUp, IoIosWarning } from "react-icons/io";
 import { IoEyeOutline } from "react-icons/io5";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import CollapsablePanel from "../../Reusables/CollapsablePanel";
@@ -29,11 +29,20 @@ const ProductRow = ({ product, index }) => {
 
         <td className="px-6 py-4 ">
           <div className="flex w-45 items-center">
-            <img
-              src={product?.thumbnail?.url}
-              className="w-20 h-20 rounded-xl object-cover"
-              alt=""
-            />
+            {product?.thumbnail?.url ? (
+              <img
+                src={product?.thumbnail?.url}
+                className="w-20 h-20 rounded-xl object-cover"
+                alt=""
+              />
+            ) : (
+              <div className="w-20 h-20 rounded-xl flex justify-center items-center">
+                <div className="text-center">
+                  <IoIosWarning color="red" size={40} />
+                  <p className="text-[10px] text-red-600">No image</p>
+                </div>
+              </div>
+            )}
             <div className="p-2">
               <p className="text-[12px] font-[600]">{product?.title}</p>
               <p className="text-[12px] font-[500] text-black">

@@ -105,7 +105,7 @@ const ImageDropBox = ({
         accept="image/*"
         multiple={maxFiles > 1}
         hidden
-        id="dropzone-file"
+        id={`dropzone-file-${maxFiles}`}
         onChange={handleFileChange}
       />
 
@@ -132,7 +132,7 @@ const ImageDropBox = ({
               <img
                 src={item.url}
                 alt=""
-                className="w-full h-full object-cover rounded border"
+                className="w-full h-full object-contain rounded border"
               />
               <button
                 onClick={() => removeImage(index)}
@@ -147,7 +147,7 @@ const ImageDropBox = ({
 
       {previews.length < maxFiles && (
         <label
-          htmlFor="dropzone-file"
+          htmlFor={`dropzone-file-${maxFiles}`}
           className="w-24 h-24 flex items-center justify-center border rounded cursor-pointer text-gray-400 hover:bg-gray-100"
         >
           <p className="text-sm">Add {maxFiles === 1 ? "Image" : "Images"}</p>

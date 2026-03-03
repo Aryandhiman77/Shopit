@@ -18,10 +18,11 @@ import "tinymce/plugins/wordcount";
 // Optional: skin (UI CSS)
 import "tinymce/skins/ui/oxide/skin.css";
 
-const TinyEditor = ({ value, setValue }) => {
+const TinyEditor = ({ value, setValue, defaultValue }) => {
   return (
     <Editor
       value={value}
+      initialValue={defaultValue}
       onEditorChange={(content) => setValue(content)}
       init={{
         license_key: "gpl",

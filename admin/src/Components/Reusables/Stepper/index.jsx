@@ -6,7 +6,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import { PiWarning } from "react-icons/pi";
 import { ErrorIcon } from "react-hot-toast";
 
-const CustomStepper = ({ steps = [], activeStep = 1 }) => {
+const CustomStepper = ({ steps = [], activeStep = 0 }) => {
   const completedSteps = steps?.map((_, i) => {
     if (activeStep >= i) {
       return i;
@@ -19,7 +19,7 @@ const CustomStepper = ({ steps = [], activeStep = 1 }) => {
         {steps?.map((step, i) => (
           <React.Fragment key={`product-progress-${i}`}>
             <li
-              className={`p-1 text-[12px] rounded-md ${completedSteps.includes(i + 1) ? (currentActiveIndex === i + 1 ? "border-2 border-blue-600 bg-blue-500! font-medium " : "bg-green-600") : "border-2 border-red-700  bg-red-600"}  text-white w-25`}
+              className={`p-1 text-[12px] rounded-md ${completedSteps.includes(i) ? (currentActiveIndex === i ? "border-2 border-blue-600 bg-blue-500! font-medium " : "bg-green-600") : "border-2 border-red-700  bg-red-600"}  text-white  w-39`}
             >
               <div className="flex items-center gap-2 justify-center select-none">
                 {step.progress === 100 && <FaCheck />}
@@ -31,7 +31,7 @@ const CustomStepper = ({ steps = [], activeStep = 1 }) => {
                 </div>
               )} */}
             </li>
-            {steps.length !== i + 1 && (
+            {steps.length - 1 !== i && (
               <>
                 <ProgressBar
                   height={2}

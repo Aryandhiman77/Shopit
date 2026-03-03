@@ -36,6 +36,12 @@ const BasicProductInfo = ({
     label: item.name,
     value: item._id,
   }));
+  const categoryOptions = [
+    ...(optionsLevel1Categories || []),
+    ...(optionsLevel2Categories || []),
+    ...(optionsLevel3Categories || []),
+  ];
+  console.log(categoryOptions);
 
   //-------------------------- category options------------------------------
 
@@ -102,15 +108,16 @@ const BasicProductInfo = ({
             </div>
             <div className="w-1/2">
               <SelectableInput
+                defaultValue={defaultData.brand || ""}
                 error={errors.brand?.message}
                 multiple={false}
                 name={"brand"}
                 required={true}
                 label={"Brand"}
                 options={!loading && optionsBrands}
-                getValue={(value) =>
-                  setValue("brand", value, { shouldValidate: true })
-                }
+                getValue={(value) => {
+                  setValue("brand", value, { shouldValidate: true });
+                }}
                 loading={loading}
               />
               <FormError className={"h-auto!"} error={errors.brand?.message} />
@@ -118,43 +125,20 @@ const BasicProductInfo = ({
           </div>
           <div className="flex flex-row gap-10">
             <SelectableInput
-              // onClick={!level1Categories?.length && getCategoriesByLevel(1)}
+              defaultValue={defaultData?.categories}
               error={errors.categories?.message}
               name={"categories"}
-              label={"Main-Categories"}
+              label={"Categories"}
               options={
-                !isLoading("level1categories") && optionsLevel1Categories
+                !isLoading("level1categories") &&
+                !isLoading("level2categories") &&
+                !isLoading("level3categories") &&
+                categoryOptions
               }
               getValue={(value) =>
                 setValue("categories", value, { shouldValidate: true })
               }
               loading={isLoading("level1categories")}
-            />
-            <SelectableInput
-              // onClick={!level2Categories?.length && getCategoriesByLevel(2)}
-              error={errors.categories?.message}
-              name={"subCategories"}
-              label={"Sub-Categories"}
-              options={
-                !isLoading("level2categories") && optionsLevel2Categories
-              }
-              getValue={(value) =>
-                setValue("subCategories", value, { shouldValidate: true })
-              }
-              loading={isLoading("level2categories")}
-            />
-            <SelectableInput
-              // onClick={!level3Categories?.length && getCategoriesByLevel(3)}
-              error={errors.categories?.message}
-              name={"leafCategories"}
-              label={"Leaf-Categories"}
-              options={
-                !isLoading("level3categories") && optionsLevel3Categories
-              }
-              getValue={(value) =>
-                setValue("leafCategories", value, { shouldValidate: true })
-              }
-              loading={isLoading("level3categories")}
             />
           </div>
           <FormError

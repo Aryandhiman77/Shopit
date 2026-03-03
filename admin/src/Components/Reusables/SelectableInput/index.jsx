@@ -6,6 +6,7 @@ const SelectableInput = ({
   name,
   label,
   defaultValue,
+  defaultSelected,
   required,
   loading = false,
   options = [],
@@ -15,12 +16,13 @@ const SelectableInput = ({
   error,
 }) => {
   const setValue = (selectedOpts) => {
+    console.log(selectedOpts);
     if (!multiple) {
-      getValue(selectedOpts.value);
+      getValue(selectedOpts);
       return;
     }
     const values =
-      Array.isArray(selectedOpts) && selectedOpts.map((item) => item.value);
+      Array.isArray(selectedOpts) && selectedOpts.map((item) => item);
     getValue(values);
   };
 
@@ -49,7 +51,7 @@ const SelectableInput = ({
         )}
         size="small"
         onChange={(_, selectedOpts) =>
-          setValue(selectedOpts ? selectedOpts : "")
+          setValue(selectedOpts ? selectedOpts : { label: "", value: "" })
         }
       />
     </>
