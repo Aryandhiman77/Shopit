@@ -59,6 +59,7 @@ const ImageDropBox = ({
   /* ================= REMOVE IMAGE ================= */
 
   const removeImage = (index) => {
+    console.log(index);
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
@@ -118,6 +119,7 @@ const ImageDropBox = ({
             className="w-full h-full object-contain rounded"
           />
           <button
+            type="button"
             onClick={() => removeImage(0)}
             className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-500 hover:text-white z-10"
           >
@@ -135,6 +137,7 @@ const ImageDropBox = ({
                 className="w-full h-full object-contain rounded border"
               />
               <button
+                type="button"
                 onClick={() => removeImage(index)}
                 className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow hover:bg-red-500 hover:text-white"
               >

@@ -43,10 +43,15 @@ const Images = ({
   };
 
   useEffect(() => {
-    localStorage.setItem("thunb", thumbnail);
     setValue("thumbnail", thumbnail, { shouldValidate: true });
+    let uploaded = { ...isUploaded, thumbnail: false };
+    setIsUploaded(uploaded);
+  }, [thumbnail]);
+  useEffect(() => {
     setValue("gallery", gallery, { shouldValidate: true });
-  }, [thumbnail, gallery]);
+    let uploaded = { ...isUploaded, gallery: false };
+    setIsUploaded(uploaded);
+  }, [gallery]);
 
   return (
     <Box className="w-full mb-25! bg-white!">
@@ -60,7 +65,6 @@ const Images = ({
         {Object.keys(thumbnail).length > 0 && !isUploaded.thumbnail && (
           <div className="flex items-center gap-4">
             <CustomButton
-              loading={loading}
               disabled={loading}
               title={"Upload"}
               onClick={handleThumbnailUpload}
@@ -83,13 +87,13 @@ const Images = ({
           loading={loading}
           disabled={loading}
           title={"Upload"}
-          onClick={() => console.log("uplodingThumbnail")}
+          onClick={handleGalleryUpload}
           className={"rounded-xl! px-4! text-[12px]! my-2!"}
           textPadding={1}
         />
       )}
       <FormError error={errors?.gallery?.message} />
-      {isUploaded.thumbnail && (
+      {isUploaded.gallery && (
         <div className="text-green-600 flex items-center gap-2">
           <FaCheckCircle />
           <p>Uploaded</p>
@@ -99,7 +103,7 @@ const Images = ({
         header={false}
         open={loading}
         fixedFullScreen={true}
-        className="bg-[rgba(255,255,255,0.4)]! transition-all duration-200"
+        className="bg-[rgba(255,255,255,0.6)]! transition-all duration-200"
       >
         <div className="h-[100vh] flex justify-center items-center">
           <Spinner size={40} />

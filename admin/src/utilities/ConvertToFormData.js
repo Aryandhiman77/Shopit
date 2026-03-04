@@ -1,10 +1,18 @@
-import React from "react";
-
 const ConvertToFormData = (details) => {
   const formData = new FormData();
+
   Object.entries(details).forEach(([key, value]) => {
-    formData.append(key, value);
+    if (Array.isArray(value)) {
+      value.forEach((item, index) => {
+        if (item instanceof File) {
+          formData.append(key, item);
+        }
+      });
+    } else {
+      formData.append(key, value);
+    }
   });
+
   return formData;
 };
 

@@ -30,7 +30,6 @@ const CategoryForm = ({
     setValue,
     reset,
     watch,
-    getValues,
     control,
     formState: { errors },
   } = useForm({ resolver: yupResolver(categoryValidationSchema) });
@@ -44,6 +43,7 @@ const CategoryForm = ({
     level1Categories,
     updateCategory,
     formErrors,
+    resetFormErrors,
   } = useCategory();
   const categoryLevelStatus = watch("level");
   const [isActive, setIsActive] = useState(
@@ -91,20 +91,29 @@ const CategoryForm = ({
       if (images.length > 0) {
         details = { ...details, image: images[0] };
       }
-      let stringifiedAtts = JSON.stringify(attributes);
-      if (attributes.length > 0) {
-        details = { ...details, attributes: stringifiedAtts };
+      const stringifiedAtts = JSON.stringify(attributes || []);
+      details = { ...details, attributes: stringifiedAtts };
+
+      if (data.parent.value) {
+        details = { ...details, parent: data.parent.value };
+      } else {
+        delete details.parent;
       }
+      console.log(details);
       handleUpdateCategory(details);
       return;
     }
     if (images.length === 0) {
       return toast.error("Image is required.");
     }
-    let details = { ...data, image: images[0], parent: data.parent.value };
+    let details = { ...data, image: images[0] };
+    if (data.parent.value !== undefined) {
+      details = { ...details, parent: data.parent.value };
+    }
+    const stringifiedAtts = JSON.stringify(attributes?.length || []);
+    details = { ...details, attributes: stringifiedAtts };
     if (attributes.length > 0) {
-      const stringifiedAtt = JSON.stringify(attributes);
-      details = { ...details, attributes: stringifiedAtt };
+      details = { ...details, attributes };
     }
     if (await addCategory(details)) {
       resetFormStates();
@@ -140,6 +149,11 @@ const CategoryForm = ({
   }, [watch("level")]);
 
   useEffect(() => {
+    return () => {
+      resetFormErrors();
+    };
+  }, []);
+  useEffect(() => {
     if (mode !== "edit" && updationCategory.level > 1) return;
     getCategoriesAndSetOptions(updationCategory.level === 3 ? 2 : 1);
     setValue("level", updationCategory.level);
@@ -149,7 +163,6 @@ const CategoryForm = ({
     setAttributes(updationCategory.attributes || []);
     return;
   }, [mode]);
-
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -201,8 +214,12 @@ const CategoryForm = ({
                         value: updationCategory.parentCategory,
                       }
                     }
-                    required={updationCategory?.level > 1}
-                    getValue={(value) => setValue("parent", value)}
+                    required={watch("level") > 1 || updationCategory?.level > 1}
+                    getValue={(value) => {
+                      if (watch("level") > 1) {
+                        setValue("parent", value);
+                      }
+                    }}
                   />
                   <FormError error={errors.parent?.message} />
                 </>

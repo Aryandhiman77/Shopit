@@ -3,6 +3,7 @@ import ProductContext from "./ProductContext";
 import { fetchData } from "../../utilities/RequestAPI";
 import { Outlet } from "react-router-dom";
 import toast from "react-hot-toast";
+import ConvertToFormData from "../../utilities/ConvertToFormData";
 
 const PRODUCT_API = "/management/product";
 
@@ -49,10 +50,11 @@ const ProductsProvider = () => {
 
   const uploadThumbnail = async (id, thumbnail) => {
     setLoading(true);
+    const formdata = ConvertToFormData({ thumbnail });
     const response = await fetchData({
       url: `${PRODUCT_API}/${id}/thumbnail`,
       method: "PATCH",
-      payload: thumbnail,
+      payload: formdata,
       isFormData: true,
     });
     console.log(response);
@@ -69,11 +71,12 @@ const ProductsProvider = () => {
     setLoading(false);
   };
   const uploadGallery = async (id, gallery) => {
+    const formdata = ConvertToFormData({ gallery });
     setLoading(true);
     const response = await fetchData({
       url: `${PRODUCT_API}/${id}/gallery`,
       method: "PATCH",
-      payload: gallery,
+      payload: formdata,
       isFormData: true,
     });
     if (response?.success) {

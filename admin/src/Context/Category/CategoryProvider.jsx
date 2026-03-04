@@ -1,11 +1,12 @@
 // src/Context/Data/DataContext.js
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 import CategoryContext from "./CategoryContext";
 import { fetchData } from "../../utilities/RequestAPI";
 import ConvertToFormData from "../../utilities/ConvertToFormData";
 import toast from "react-hot-toast";
 import CustomToast from "../../Components/Reusables/CustomToast";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 
 // ✅ Provider Component
 const CategoryProvider = ({ children }) => {
@@ -235,10 +236,12 @@ const CategoryProvider = ({ children }) => {
     }
   };
   const updateCategoryImage = async (image, id) => {
+    const formData = ConvertToFormData({ image });
+
     const response = await fetchData({
       url: `/admin/categories/update/${id}/image`,
       method: "PATCH",
-      payload: image,
+      payload: formData,
       isFormData: true,
     });
 
@@ -257,7 +260,9 @@ const CategoryProvider = ({ children }) => {
       if (!update) {
         console.log("problem updating image...");
         stopLoading(`update-category`);
+        return;
       }
+      delete details.image;
     }
     const response = await fetchData({
       url: `/admin/categories/update/${id}`,
@@ -282,6 +287,11 @@ const CategoryProvider = ({ children }) => {
       stopLoading(`update-category`);
     }
   };
+  const resetFormErrors = () => {
+    console.log("resetFormErrors");
+    setFormErrors([]);
+  };
+
   return (
     <CategoryContext.Provider
       value={{
@@ -302,6 +312,7 @@ const CategoryProvider = ({ children }) => {
         category,
         updateCategoryStatus,
         formErrors,
+        resetFormErrors,
       }}
     >
       {children}

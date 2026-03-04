@@ -28,7 +28,7 @@ const categoryValidationSchema = yup
       if (level === 1) {
         return true;
       }
-      if (level > 1 && parent !== "") {
+      if (level > 1 && (parent !== "" || parent !== "undefined")) {
         return true;
       }
       return false;

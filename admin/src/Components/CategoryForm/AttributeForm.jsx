@@ -38,7 +38,6 @@ const AttributeForm = ({
 
   const addOptions = () => {
     setOptions([...options, optionInput]);
-    console.log(options);
     if (optionInput.length > 0) {
       setOptionInput("");
     }
