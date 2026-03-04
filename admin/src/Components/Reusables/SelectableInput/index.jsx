@@ -6,7 +6,6 @@ const SelectableInput = ({
   name,
   label,
   defaultValue,
-  defaultSelected,
   required,
   loading = false,
   options = [],

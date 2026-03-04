@@ -143,6 +143,7 @@ const CategoryProvider = ({ children }) => {
         setLevel3Categories(response.data);
       }
       stopLoading(`level${level}categories`);
+      return response.data;
     }
     if (response?.error) {
       setErrors(response.error);
@@ -300,6 +301,7 @@ const CategoryProvider = ({ children }) => {
         getCategory,
         category,
         updateCategoryStatus,
+        formErrors,
       }}
     >
       {children}

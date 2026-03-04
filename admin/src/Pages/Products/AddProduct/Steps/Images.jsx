@@ -57,15 +57,17 @@ const Images = ({
       <div className="w-50!">
         <ImageDropBox maxFiles={1} setImages={setThumbnail} />
         <FormError error={errors?.thumbnail?.message} />
-        {Object.keys(thumbnail).length > 0 && !isUploaded && (
-          <CustomButton
-            loading={loading}
-            disabled={loading}
-            title={"Upload"}
-            onClick={handleThumbnailUpload}
-            className={"rounded-xl! px-4! text-[12px]! my-2!"}
-            textPadding={1}
-          />
+        {Object.keys(thumbnail).length > 0 && !isUploaded.thumbnail && (
+          <div className="flex items-center gap-4">
+            <CustomButton
+              loading={loading}
+              disabled={loading}
+              title={"Upload"}
+              onClick={handleThumbnailUpload}
+              className={"rounded-xl! px-4! text-[12px]! my-2!"}
+              textPadding={1}
+            />
+          </div>
         )}
         {isUploaded.thumbnail && (
           <div className="text-green-600 flex items-center gap-2">
@@ -76,7 +78,7 @@ const Images = ({
       </div>
       <h3 className="px-1 py-3 text-sm font-[500]">Product Gallery</h3>
       <ImageDropBox maxFiles={10} setImages={setGallery} />
-      {gallery.length > 0 && (
+      {gallery.length > 0 && !isUploaded.gallery && (
         <CustomButton
           loading={loading}
           disabled={loading}

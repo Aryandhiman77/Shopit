@@ -20,6 +20,7 @@ import useProducts from "../../../Components/hooks/useProducts";
 import CustomBtn from "../../../Components/Reusables/Elements/CustomBtn";
 import { MdError } from "react-icons/md";
 import FormError from "../../../Components/Reusables/FormError";
+import BackendErrors from "../../../Components/Reusables/Elements/BackendErrors";
 const steps = [
   {
     label: "Basic Information",
@@ -193,21 +194,7 @@ const AddProduct = () => {
       {/* <form action=""> */}
       <form method="POST">
         {/* {steps[currentStep - 1].component} */}
-        {Array.from(formErrors).length !== 0 && (
-          <Box className={"bg-red-200 space-y-1 my-2"}>
-            <div className="flex items-center gap-2">
-              <MdError size={30} className="text-red-600" />
-              <p>Check the following Errors !</p>
-            </div>
-            {formErrors?.map((err, i) => (
-              <div key={`error-${i}`}>
-                <div className="flex items-center gap-4">
-                  <FormError error={err} />
-                </div>
-              </div>
-            ))}
-          </Box>
-        )}
+        <BackendErrors formErrors={formErrors} />
 
         {currentStep === 0 && (
           <>

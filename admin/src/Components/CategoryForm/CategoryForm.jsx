@@ -16,6 +16,8 @@ import ImageDropBox from "../Reusables/ImageDropBox";
 import { useNavigate } from "react-router-dom";
 import Autocomplete from "@mui/material/Autocomplete";
 import useCategory from "../hooks/useCategory";
+import BackendErrors from "../Reusables/Elements/BackendErrors";
+import SelectableInput from "../Reusables/SelectableInput";
 
 const CategoryForm = ({
   mode = "add",
@@ -41,6 +43,7 @@ const CategoryForm = ({
     level2Categories,
     level1Categories,
     updateCategory,
+    formErrors,
   } = useCategory();
   const categoryLevelStatus = watch("level");
   const [isActive, setIsActive] = useState(
@@ -84,7 +87,7 @@ const CategoryForm = ({
   const onSubmit = async (data) => {
     if (mode === "edit") {
       const updationId = updationCategory._id;
-      let details = { ...data, id: updationId };
+      let details = { ...data, id: updationId, parent: data.parent.value };
       if (images.length > 0) {
         details = { ...details, image: images[0] };
       }
@@ -98,7 +101,7 @@ const CategoryForm = ({
     if (images.length === 0) {
       return toast.error("Image is required.");
     }
-    let details = { ...data, image: images[0] };
+    let details = { ...data, image: images[0], parent: data.parent.value };
     if (attributes.length > 0) {
       const stringifiedAtt = JSON.stringify(attributes);
       details = { ...details, attributes: stringifiedAtt };
@@ -109,46 +112,48 @@ const CategoryForm = ({
     }
   };
 
-  // const setOptions = (categories, level) => {
-  //   const level = level;
-  //   let opts = level === 3 ? level2Categories : level1Categories;
-  //   opts = opts?.map((opt) => ({ label: opt.name, value: opt._id }));
-  //   setOptions(opts);
+  const parentOptions = (categories) => {
+    let opts = categories;
+    opts = opts?.map((opt) => ({ label: opt.name, value: opt._id }));
+    console.log(opts);
+    setOptions(opts);
+  };
+  const getCategoriesAndSetOptions = async (level) => {
+    if (level === 2 && level2Categories.length) {
+      parentOptions(level2Categories);
+      return;
+    } else if (level === 1 && level1Categories.length) {
+      parentOptions(level1Categories);
+      return;
+    }
+    const categories = await getCategoriesByLevel(level);
+    if (categories) {
+      parentOptions(categories);
+    }
+  };
 
-  // };
-
-  // useEffect(() => {
-  //   let options =
-  //     updationCategory?.level === 3 ? level2Categories : level1Categories;
-  //     options = options?.map((opt) => ({ label: opt.name, value: opt._id }));
-  //     setOptions(options)
-  // }, []);
-  // let options =
-  //   updationCategory?.level === 3 ? level2Categories : level1Categories;
-
-  // console.log(options);
+  useEffect(() => {
+    const level = watch("level");
+    if (level > 1) {
+      getCategoriesAndSetOptions(level === 3 ? 2 : 1);
+    }
+  }, [watch("level")]);
 
   useEffect(() => {
     if (mode !== "edit" && updationCategory.level > 1) return;
-    (async () => {
-      if (updationCategory?.level === 2) {
-        await getCategoriesByLevel(1);
-      }
-      if (updationCategory?.level === 3) {
-        await getCategoriesByLevel(2);
-      }
-      setValue("level", updationCategory.level);
-      setValue("name", updationCategory.name);
-      setValue("description", updationCategory.description);
-      setIsActive(updationCategory.isActive);
-      setAttributes(updationCategory.attributes || []);
-      return;
-    })();
+    getCategoriesAndSetOptions(updationCategory.level === 3 ? 2 : 1);
+    setValue("level", updationCategory.level);
+    setValue("name", updationCategory.name);
+    setValue("description", updationCategory.description);
+    setIsActive(updationCategory.isActive);
+    setAttributes(updationCategory.attributes || []);
+    return;
   }, [mode]);
 
   return (
     <>
       <div className="flex flex-col gap-4">
+        <BackendErrors formErrors={formErrors} />
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 w-full "
@@ -169,17 +174,6 @@ const CategoryForm = ({
                   }
                   variant="outlined"
                   required
-                  onChange={(e) => {
-                    setValue("level", e.target.value);
-                    if (e.target.value === 2 && !level1Categories.length) {
-                      getCategoriesByLevel(1);
-                    } else if (
-                      e.target.value === 3 &&
-                      !level2Categories.length
-                    ) {
-                      getCategoriesByLevel(2);
-                    }
-                  }}
                   size="small"
                 >
                   <MenuItem key={1} value={1}>
@@ -196,30 +190,19 @@ const CategoryForm = ({
               </>
               {categoryLevelStatus > 1 && (
                 <>
-                  <Controller
-                    name="parent"
-                    control={control}
-                    defaultValue={updationCategory?.parentCategory || ""}
-                    render={({ field }) => (
-                      <Autocomplete
-                        options={options}
-                        value={
-                          options.find((opt) => opt.value === field.value) ||
-                          null
-                        }
-                        onChange={(_, val) =>
-                          field.onChange(val ? val.value : "")
-                        }
-                        isOptionEqualToValue={(opt, val) =>
-                          opt.value === val.value
-                        }
-                        getOptionLabel={(option) => option?.label ?? ""}
-                        className="w-full"
-                        renderInput={(params) => (
-                          <TextField {...params} label="Select parent" />
-                        )}
-                      />
-                    )}
+                  <SelectableInput
+                    multiple={false}
+                    name={"parent"}
+                    label={"Parent Category"}
+                    options={options}
+                    defaultValue={
+                      updationCategory?.parentCategory && {
+                        label: updationCategory.name,
+                        value: updationCategory.parentCategory,
+                      }
+                    }
+                    required={updationCategory?.level > 1}
+                    getValue={(value) => setValue("parent", value)}
                   />
                   <FormError error={errors.parent?.message} />
                 </>
@@ -332,9 +315,9 @@ const CategoryForm = ({
                     >
                       {att.required ? "Yes" : "No (Recommended)"}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap border-r-1 text-wrap">
+                    <td className="px-6 py-4 whitespace-nowrap border-r-1 text-wrap capitalize">
                       {att.options?.length > 0 ? (
-                        att.options.toString()
+                        att.options?.map((item) => item).join(", ")
                       ) : (
                         <div className="text-center"> - </div>
                       )}

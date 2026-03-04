@@ -46,6 +46,7 @@ const ProductsProvider = () => {
     }
     setLoading(false);
   };
+
   const uploadThumbnail = async (id, thumbnail) => {
     setLoading(true);
     const response = await fetchData({
@@ -54,6 +55,7 @@ const ProductsProvider = () => {
       payload: thumbnail,
       isFormData: true,
     });
+    console.log(response);
     if (response?.success) {
       toast.success(response?.data?.message);
       setProductData(response?.data);
