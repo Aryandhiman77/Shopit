@@ -62,6 +62,7 @@ const ProductsProvider = () => {
       toast.success(response?.data?.message);
       setProductData(response?.data);
       setLoading(false);
+      console.log(response.data);
       return response.data;
     }
     if (response?.formErrors) {

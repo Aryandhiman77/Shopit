@@ -13,6 +13,8 @@ const Images = ({
   errors,
   productId = "69a5d4566921dcce78e89cfd",
 }) => {
+  const thumb = JSON.parse(localStorage.getItem("draftProduct")).thumbnail;
+  const gall = JSON.parse(localStorage.getItem("draftProduct")).gallery;
   const [thumbnail, setThumbnail] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [isUploaded, setIsUploaded] = useState({
@@ -21,34 +23,44 @@ const Images = ({
   });
   const { uploadThumbnail, uploadGallery, loading } = useProducts();
 
-  const handleThumbnailUpload = async () => {
-    if (!productId) {
-      toast.error("No product found.");
-    }
-    const uploaded = await uploadThumbnail(productId, thumbnail[0]);
-    if (uploaded) {
-      let uploaded = { ...isUploaded, thumbnail: true };
-      setIsUploaded(uploaded);
-    }
+  const setImageDataToLocalStorage = (key, uploaded) => {
+    let productData = JSON.parse(localStorage.getItem("draftProduct"));
+    productData = { ...productData, [key]: uploaded };
+    console.log(productData);
+    localStorage.setItem("draftProduct", JSON.stringify(productData));
   };
-  const handleGalleryUpload = async () => {
+
+  const handleUpload = async (name) => {
+    let uploaded;
     if (!productId) {
       toast.error("No product found.");
     }
-    const uploaded = await uploadGallery(productId, gallery);
-    if (uploaded) {
-      let uploaded = { ...isUploaded, gallery: true };
-      setIsUploaded(uploaded);
+    if (name === "thumbnail") {
+      uploaded = await uploadThumbnail(productId, thumbnail[0]);
+      if (uploaded) {
+        let modifiedField = { ...isUploaded, thumbnail: true };
+        setIsUploaded(modifiedField);
+        setImageDataToLocalStorage(name, uploaded);
+        setValue("thumbnail", uploaded, { shouldValidate: true });
+      }
+    }
+    if (name === "gallery") {
+      uploaded = await uploadGallery(productId, gallery);
+      if (uploaded) {
+        let modifiedField = { ...isUploaded, gallery: true };
+        setIsUploaded(modifiedField);
+        setImageDataToLocalStorage(name, uploaded);
+        setValue("gallery", gallery, { shouldValidate: true });
+      }
     }
   };
 
   useEffect(() => {
-    setValue("thumbnail", thumbnail, { shouldValidate: true });
     let uploaded = { ...isUploaded, thumbnail: false };
     setIsUploaded(uploaded);
   }, [thumbnail]);
+
   useEffect(() => {
-    setValue("gallery", gallery, { shouldValidate: true });
     let uploaded = { ...isUploaded, gallery: false };
     setIsUploaded(uploaded);
   }, [gallery]);
@@ -60,14 +72,18 @@ const Images = ({
       </div>
       <h3 className="px-1 py-3 text-sm font-[500]">Product Thumbnail</h3>
       <div className="w-50!">
-        <ImageDropBox maxFiles={1} setImages={setThumbnail} />
+        <ImageDropBox
+          maxFiles={1}
+          setImages={setThumbnail}
+          initialImages={[thumb]}
+        />
         <FormError error={errors?.thumbnail?.message} />
-        {Object.keys(thumbnail).length > 0 && !isUploaded.thumbnail && (
+        {Object.keys(thumbnail).length > 0 && (
           <div className="flex items-center gap-4">
             <CustomButton
               disabled={loading}
               title={"Upload"}
-              onClick={handleThumbnailUpload}
+              onClick={() => handleUpload("thumbnail")}
               className={"rounded-xl! px-4! text-[12px]! my-2!"}
               textPadding={1}
             />
@@ -81,13 +97,12 @@ const Images = ({
         )}
       </div>
       <h3 className="px-1 py-3 text-sm font-[500]">Product Gallery</h3>
-      <ImageDropBox maxFiles={10} setImages={setGallery} />
+      <ImageDropBox maxFiles={10} setImages={setGallery} initialImages={gall} />
       {gallery.length > 0 && !isUploaded.gallery && (
         <CustomButton
-          loading={loading}
           disabled={loading}
           title={"Upload"}
-          onClick={handleGalleryUpload}
+          onClick={() => handleUpload("gallery")}
           className={"rounded-xl! px-4! text-[12px]! my-2!"}
           textPadding={1}
         />
