@@ -60,7 +60,7 @@ const productSchema = new mongoose.Schema(
       index: true,
     },
 
-    shortDescription: { type: String, maxlength: 300 },
+    shortDescription: { type: String, maxlength: 400 },
     description: { type: String },
 
     categories: [

@@ -9,12 +9,13 @@ const validate = (schema) => {
       req.data = validatedData;
       next();
     } catch (error) {
+      console.log(error);
       res.status(400).json(
         new ApiError(
           400,
           "Validation failed.",
-          error.details.map((err) => err.message)
-        )
+          error.details.map((err) => err.message),
+        ),
       );
     }
   };

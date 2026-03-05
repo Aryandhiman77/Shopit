@@ -1,44 +1,44 @@
 import Joi from "joi";
 import Categories from "../Models/category.js";
 
-const variantItemSchema = Joi.array()
-  .items(
-    Joi.object({
-      titile: Joi.string().lowercase().min(5).max(80).required().messages({
-        "string.min": "Product title be at least 3 characters long.",
-        "string.max": "Product title be less than 80 characters.",
-        "any.required": "Product title is required.",
-        "string.empty": "Product title cannot be empty.",
-      }),
-      price: Joi.number().max(999999).required().messages({
-        "number.max": "Price must be less than ₹999999.",
-        "any.required": "Price is required.",
-        "number.base": "Price must be a number.",
-        "number.empty": "Price cannot be empty.",
-      }),
-      mrp: Joi.number().max(999999).required().messages({
-        "number.max": "MRP must be less than ₹999999.",
-        "any.required": "MRP is required.",
-        "number.base": "MRP must be a number.",
-        "number.empty": "MRP cannot be empty.",
-      }),
-      stock: Joi.number().max(999999).required().messages({
-        "number.max": "Stock quantity must be less than 999999 items.",
-        "any.required": "Stock quantity is required.",
-        "number.empty": "Stock quantity cannot be empty.",
-      }),
-      attributes: Joi.array().items(Joi.object()),
-    }).unknown(false),
-  )
-  .messages({
-    "array.base": "Variants must be an array of objects.",
-    "array.includes": "Each Variants must be a valid object.",
-  });
+// const variantItemSchema = Joi.array()
+//   .items(
+//     Joi.object({
+//       titile: Joi.string().lowercase().min(5).max(80).required().messages({
+//         "string.min": "Product title be at least 3 characters long.",
+//         "string.max": "Product title be less than 80 characters.",
+//         "any.required": "Product title is required.",
+//         "string.empty": "Product title cannot be empty.",
+//       }),
+//       price: Joi.number().max(999999).required().messages({
+//         "number.max": "Price must be less than ₹999999.",
+//         "any.required": "Price is required.",
+//         "number.base": "Price must be a number.",
+//         "number.empty": "Price cannot be empty.",
+//       }),
+//       mrp: Joi.number().max(999999).required().messages({
+//         "number.max": "MRP must be less than ₹999999.",
+//         "any.required": "MRP is required.",
+//         "number.base": "MRP must be a number.",
+//         "number.empty": "MRP cannot be empty.",
+//       }),
+//       stock: Joi.number().max(999999).required().messages({
+//         "number.max": "Stock quantity must be less than 999999 items.",
+//         "any.required": "Stock quantity is required.",
+//         "number.empty": "Stock quantity cannot be empty.",
+//       }),
+//       attributes: Joi.array().items(Joi.object()),
+//     }).unknown(false),
+//   )
+//   .messages({
+//     "array.base": "Variants must be an array of objects.",
+//     "array.includes": "Each Variants must be a valid object.",
+//   });
 
 export const createProductSchema = Joi.object({
-  title: Joi.string().lowercase().min(5).max(80).required().messages({
+  title: Joi.string().lowercase().min(5).max(150).required().messages({
     "string.min": "Product title be at least 3 characters long.",
-    "string.max": "Product title be less than 80 characters.",
+    "string.max": "Product title be less than 150 characters.",
     "any.required": "Product title is required.",
     "string.empty": "Product title cannot be empty.",
   }),

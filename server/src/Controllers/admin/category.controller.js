@@ -32,6 +32,7 @@ export const createCategory = AsyncWrapper(async (req, res, next) => {
 
 export const updateCategory = AsyncWrapper(async (req, res) => {
   const { catId } = req.params;
+  console.log(req.data);
   const { category } = await updateCategoryService({ ...req.data, catId });
   return res
     .status(200)

@@ -96,6 +96,7 @@ export const addThumbnailService = async (productId, thumbnail) => {
 };
 
 export const addGalleryImagesService = async (productId, gallery) => {
+  console.log(gallery);
   if (!gallery || gallery.length === 0) {
     throw new ApiError(400, "Please add a gallery.");
   }
@@ -147,7 +148,7 @@ export const addProductAttributes = async ({ productId, attributes }) => {
   const product = await Product.findByIdAndUpdate(
     productId,
     { $set: { attributes } },
-    { new: true, runValidators: true }, // new : true returns updated document
+    { new: true, runValidators: true },
   );
   if (!product) {
     throw new ApiError(400, "Cannot add attributes.");
@@ -233,4 +234,41 @@ export const getProductsService = async ({ limit = 20, page = 1 }) => {
     .populate({ path: "seller", select: "name" })
     .populate({ path: "categories", select: "name" });
   return products;
+};
+
+export const updateProductService = async (
+  productId,
+  {
+    title,
+    shortDescription,
+    categories,
+    tags,
+    base_price,
+    base_mrp,
+    stock,
+    brand,
+    description,
+  },
+) => {
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new ApiError(400, "Product not found.", ["Product not found."]);
+  }
+  if (title) product.title = title;
+  if (shortDescription) product.shortDescription = shortDescription;
+  if (description) product.description = description;
+  if (categories) product.categories = categories;
+  if (base_price) product.price = base_price;
+  if (base_mrp) product.mrp = base_mrp;
+  if (tags) product.tags = tags;
+  if (stock) product.stock = brand;
+  if (brand) product.brand = brand;
+
+  const saved = await product.save();
+  if (!saved) {
+    throw new ApiError(400, "Product updation failed.", [
+      "Product updation failed.",
+    ]);
+  }
+  return saved;
 };

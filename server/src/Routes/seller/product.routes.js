@@ -9,6 +9,7 @@ import {
   productThumbnailController,
   updateProductStatus,
   getSellerProducts,
+  updateProduct,
 } from "../../Controllers/AdminSeller/product.controller.js";
 import validate from "../../Middlewares/validate.js";
 import {
@@ -31,6 +32,7 @@ productRoutes
     upload.single("thumbnail"),
     productThumbnailController,
   )
+  .patch("/:productId/update", (req, res) => res.send(req.body), updateProduct)
   .patch(
     "/:productId/gallery",
     upload.array("gallery", 10),

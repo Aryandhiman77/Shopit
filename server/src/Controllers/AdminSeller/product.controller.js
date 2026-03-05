@@ -9,6 +9,7 @@ import {
   deleteGalleryImages,
   getAllProducts,
   getProducts,
+  updateProductService,
   updateProductStatusService,
 } from "../../Services/adminServices/productServices.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
@@ -46,11 +47,14 @@ export const productThumbnailController = AsyncWrapper(
 
 export const productGalleryController = AsyncWrapper(async (req, res, next) => {
   const { productId } = req.params;
+  console.log(req.files);
   try {
-    await addGalleryImagesService(productId, req.files);
+    const gallery = await addGalleryImagesService(productId, req.files);
     res
       .status(200)
-      .json(new ApiResponse(200, null, "Gallery images added successfully."));
+      .json(
+        new ApiResponse(200, gallery, "Gallery images added successfully."),
+      );
   } catch (error) {
     await unlinkFiles(req.files);
     next(error);
@@ -85,8 +89,14 @@ export const updateProductStatus = async (req, res) => {
 
   const product = await updateProductStatusService(productId, status);
 
-  res.status(200).json({
-    message: "Product status updated",
-    product,
-  });
+  res
+    .status(200)
+    .json(new ApiResponse(200, product, "Product status updated."));
+};
+export const updateProduct = async (req, res) => {
+  const { productId } = req.params;
+
+  const product = await updateProductService(productId, req.body);
+
+  res.status(200).json(new ApiResponse(200, product, "Product updated."));
 };

@@ -56,9 +56,9 @@ const variantItemSchema = Joi.array()
 /* ---------------- PRODUCT SCHEMA ---------------- */
 
 export const createProductBasicSchema = Joi.object({
-  title: Joi.string().lowercase().min(5).max(80).required().messages({
+  title: Joi.string().lowercase().min(5).max(150).required().messages({
     "string.min": "Product title must be at least 5 characters long.",
-    "string.max": "Product title must be less than 80 characters.",
+    "string.max": "Product title must be less than 150 characters.",
     "any.required": "Product title is required.",
     "string.empty": "Product title cannot be empty.",
   }),
@@ -79,9 +79,9 @@ export const createProductBasicSchema = Joi.object({
       "string.empty": "Brand is required.",
     }),
 
-  shortDescription: Joi.string().min(20).max(300).required().messages({
+  shortDescription: Joi.string().min(20).max(400).required().messages({
     "string.min": "Short description must be at least 20 characters long.",
-    "string.max": "Short description must be less than 300 characters.",
+    "string.max": "Short description must be less than 400 characters.",
     "any.required": "Short description is required.",
   }),
 
@@ -144,6 +144,84 @@ export const createProductBasicSchema = Joi.object({
   // }),
 }).unknown(false);
 // .messages({ "object.unknown": "Extra fields are not allowed." });
+
+export const updateProductInfoSchema = Joi.object({
+  title: Joi.string().lowercase().min(5).max(400).optional().messages({
+    "string.min": "Product title must be at least 5 characters long.",
+    "string.max": "Product title must be less than 400 characters.",
+    "string.empty": "Product title cannot be empty.",
+  }),
+
+  brand: Joi.string()
+    .optional()
+    .external(async (value) => {
+      if (!value) return value;
+      const brand = await Brand.findById(value).lean();
+
+      if (!brand) {
+        throw new Error("Selected brand does not exist.");
+      }
+
+      return brand._id;
+    }),
+
+  shortDescription: Joi.string().min(20).max(400).optional().messages({
+    "string.min": "Short description must be at least 20 characters long.",
+    "string.max": "Short description must be less than 400 characters.",
+  }),
+
+  description: Joi.string().min(50).optional().messages({
+    "string.min": "Description must be at least 50 characters long.",
+    "string.max": "Description must be less than 1500 characters.",
+  }),
+
+  categories: Joi.array()
+    .items(Joi.string())
+    .optional()
+    .external(async (values) => {
+      if (!values) return values;
+      const categories = await Categories.find({
+        _id: { $in: values },
+      })
+        .select("_id")
+        .lean();
+
+      if (categories.length !== values?.length) {
+        throw new Error("Selected category does not exist.");
+      }
+
+      return values;
+    }),
+
+  tags: Joi.array().items(Joi.string()).max(50).optional().messages({
+    "array.max": "You can add up to 50 tags only.",
+  }),
+
+  base_price: Joi.number().min(0).max(999999).optional().messages({
+    "number.base": "Base price must be a number.",
+    "number.min": "Base price cannot be negative.",
+    "number.max": "Base price must be less than ₹999999.",
+  }),
+
+  base_mrp: Joi.number()
+    .max(999999)
+    .optional()
+    .when("base_price", {
+      is: Joi.exist(),
+      then: Joi.number().min(Joi.ref("base_price")),
+    })
+    .messages({
+      "number.base": "Base MRP must be a number.",
+      "number.min": "Base MRP must be greater than or equal to price.",
+      "number.max": "Base MRP must be less than ₹999999.",
+    }),
+
+  stock: Joi.number().min(0).max(999999).optional().messages({
+    "number.base": "Stock quantity must be a number.",
+    "number.min": "Stock quantity must be greater than or equal to zero.",
+    "number.max": "Stock quantity must be less than 999999.",
+  }),
+}).unknown(false);
 
 export const createProductAttributesSchema = Joi.object({
   productId: Joi.string().required().messages({

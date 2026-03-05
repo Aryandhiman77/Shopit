@@ -28,6 +28,7 @@ categoryRoutes
   .get("/:catId", getSingleCategory)
   .patch(
     "/update/:catId",
+    jsonParser(["attributes"]),
     validate(updateCategorySchema),
     updateCategory,
   )

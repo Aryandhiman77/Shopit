@@ -85,7 +85,6 @@ export const createCategoryService = async (
 export const updateCategoryService = async ({
   catId,
   name,
-  // isActive,
   attributes,
   description,
   parent,
@@ -98,11 +97,9 @@ export const updateCategoryService = async ({
   if (!category) {
     throw new ApiError(404, "Category not found.");
   }
-
   if (name) category.name = name;
-  // if (isActive !== undefined) category.isActive = isActive;
   if (description) category.description = description;
-  if (attributes?.length > 0) category.attributes = attributes;
+  if (attributes) category.attributes = attributes;
   if (parent) {
     const newParent = await Categories.findOne({ _id: parent })
       .select("_id")

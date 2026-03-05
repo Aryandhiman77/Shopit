@@ -9,11 +9,13 @@ import {
   productThumbnailController,
   updateProductStatus,
   getSellerProducts,
+  updateProduct,
 } from "../../../Controllers/AdminSeller/product.controller.js";
 import validate from "../../../Middlewares/validate.js";
 import {
   createProductAttributesSchema,
   createProductBasicSchema,
+  updateProductInfoSchema,
   updateProductStatusSchema,
 } from "../../../validations/AdminSeller/product.validations.js";
 const productRoutes = express.Router();
@@ -27,6 +29,7 @@ productRoutes
     upload.single("thumbnail"),
     productThumbnailController,
   )
+  .patch("/:productId/update", validate(updateProductInfoSchema), updateProduct)
   .patch(
     "/:productId/gallery",
     upload.array("gallery", 10),
@@ -34,10 +37,6 @@ productRoutes
   )
   .patch(
     "/:productId/attributes",
-    (req, res, next) => {
-      req.body.productId = req.params.productId;
-      next();
-    },
     validate(createProductAttributesSchema),
     productAttributesController,
   )

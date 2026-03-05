@@ -39,7 +39,7 @@ const categorySchema = new mongoose.Schema(
           enum: ["string", "number", "boolean", "select"],
           default: "string",
         },
-        options: [String], // for dropdown
+        options: [{ type: String, default: [] }], // for dropdown
         required: { type: Boolean, default: false }, // is required or not
       },
     ],
