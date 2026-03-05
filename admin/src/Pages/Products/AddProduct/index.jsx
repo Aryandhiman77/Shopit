@@ -169,16 +169,15 @@ const AddProduct = () => {
     reset();
     setData({});
     setCurrentStep(0);
+    steps?.forEach((item) => (item.progress = 0));
   };
 
   useEffect(() => {
     syncProductDataWithLocalStorage();
-    return () => {
-      resetFormErrors();
-    };
   }, [data]);
   useEffect(() => {
     return () => {
+      resetFormErrors();
       resetFormStates();
     };
   }, []);
@@ -244,8 +243,10 @@ const AddProduct = () => {
         )}
         {currentStep === 4 && (
           <ProductAdded
-            setCurrentProgress={setCurrentProgress}
             resetForm={resetFormStates}
+            getUpdatedProgress={(progress) => {
+              steps[currentStep].progress = progress;
+            }}
           />
         )}
         {/* <Box className={"flex  items-center gap-10  bg-white"}>

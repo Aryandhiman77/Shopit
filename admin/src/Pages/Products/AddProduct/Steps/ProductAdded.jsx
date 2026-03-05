@@ -5,7 +5,7 @@ import CustomButton from "../../../../Components/Reusables/Elements/CustomBtn";
 import useProducts from "../../../../Components/hooks/useProducts";
 import { MdError, MdErrorOutline, MdUnpublished } from "react-icons/md";
 
-const ProductAdded = ({ setCurrentProgress, resetForm }) => {
+const ProductAdded = ({ resetForm, getUpdatedProgress = () => {} }) => {
   const { loading, updateProductStatus } = useProducts();
   let productId = localStorage.getItem("draftProductId");
   const [updatedProduct, setUpdatedProduct] = useState({});
@@ -13,7 +13,7 @@ const ProductAdded = ({ setCurrentProgress, resetForm }) => {
     const updated = await updateProductStatus(productId, { status: "active" });
     if (updated) {
       setUpdatedProduct(updated);
-      setCurrentProgress(100);
+      getUpdatedProgress(100);
       productId = updated._id;
     }
   };

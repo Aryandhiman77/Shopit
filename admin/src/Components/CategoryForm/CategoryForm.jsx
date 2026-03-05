@@ -18,7 +18,8 @@ import Autocomplete from "@mui/material/Autocomplete";
 import useCategory from "../hooks/useCategory";
 import BackendErrors from "../Reusables/Elements/BackendErrors";
 import SelectableInput from "../Reusables/SelectableInput";
-
+let i = 0;
+const maxCategoryRefreshes = 5;
 const CategoryForm = ({
   mode = "add",
   updationCategory = {},
@@ -99,7 +100,6 @@ const CategoryForm = ({
       } else {
         delete details.parent;
       }
-      console.log(details);
       handleUpdateCategory(details);
       return;
     }
@@ -110,7 +110,7 @@ const CategoryForm = ({
     if (data.parent.value !== undefined) {
       details = { ...details, parent: data.parent.value };
     }
-    const stringifiedAtts = JSON.stringify(attributes?.length || []);
+    const stringifiedAtts = JSON.stringify(attributes || []);
     details = { ...details, attributes: stringifiedAtts };
     if (attributes.length > 0) {
       details = { ...details, attributes };
@@ -124,17 +124,22 @@ const CategoryForm = ({
   const parentOptions = (categories) => {
     let opts = categories;
     opts = opts?.map((opt) => ({ label: opt.name, value: opt._id }));
-    console.log(opts);
     setOptions(opts);
   };
+  console.log("rerendered.");
   const getCategoriesAndSetOptions = async (level) => {
-    if (level === 2 && level2Categories.length) {
+    if (level === 2 && level2Categories.length && maxCategoryRefreshes <= i) {
       parentOptions(level2Categories);
       return;
-    } else if (level === 1 && level1Categories.length) {
+    } else if (
+      level === 1 &&
+      level1Categories.length &&
+      maxCategoryRefreshes <= i
+    ) {
       parentOptions(level1Categories);
       return;
     }
+    i++;
     const categories = await getCategoriesByLevel(level);
     if (categories) {
       parentOptions(categories);

@@ -9,10 +9,12 @@ const AddCategory = () => {
     <div className="space-y-5">
       <BreadCrumb />
       <Box className="flex flex-col gap-2 bg-white! rounded-sm!">
-        <div className="font-medium text-gray-500 text-lg pb-4">
+        <div className="font-medium text-gray-500 text-lg py-3">
           Add Category
         </div>
-        <CategoryForm mode="add" />
+        <div className="mt-5">
+          <CategoryForm mode="add" />
+        </div>
       </Box>
     </div>
   );
