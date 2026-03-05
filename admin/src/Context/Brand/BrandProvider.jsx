@@ -13,7 +13,6 @@ const BrandProvider = () => {
     });
     if (response?.success) {
       setBrands(response?.data);
-      console.log(response.data);
     }
     setLoading(false);
   };

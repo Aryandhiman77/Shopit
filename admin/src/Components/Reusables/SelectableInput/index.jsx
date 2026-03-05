@@ -1,59 +1,49 @@
-import { Autocomplete, Chip, MenuItem, TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
+import { Controller } from "react-hook-form";
 import Spinner from "../Elements/Loader/Spinner";
-import { useEffect } from "react";
 
 const SelectableInput = ({
   name,
   label,
-  defaultValue,
+  control,
   required,
   loading = false,
   options = [],
   multiple = true,
-  // onClick = () => {},
-  getValue = () => {},
   error,
 }) => {
-  const setValue = (selectedOpts) => {
-    console.log(selectedOpts);
-    if (!multiple) {
-      getValue(selectedOpts);
-      return;
-    }
-    const values =
-      Array.isArray(selectedOpts) && selectedOpts.map((item) => item);
-    getValue(values);
-  };
-
   return (
-    <>
-      <Autocomplete
-        // onClick={onClick}
-        multiple={multiple}
-        className={`w-full bg-white`}
-        name={name}
-        defaultValue={defaultValue}
-        variant="outlined"
-        options={options.length ? [...options] : []}
-        loading={loading}
-        isOptionEqualToValue={(option, value) => option.value === value.value}
-        loadingText={"loading..."}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            name={name}
-            required={required}
-            label={label}
-            error={error}
-            size="small"
-          />
-        )}
-        size="small"
-        onChange={(_, selectedOpts) =>
-          setValue(selectedOpts ? selectedOpts : { label: "", value: "" })
-        }
-      />
-    </>
+    <Controller
+      name={name}
+      control={control}
+      defaultValue={multiple ? [] : null}
+      render={({ field }) => (
+        <Autocomplete
+          {...field}
+          multiple={multiple}
+          options={options || []}
+          loading={loading}
+          value={field.value || (multiple ? [] : null)}
+          isOptionEqualToValue={(option, value) =>
+            option?.value === value?.value
+          }
+          getOptionLabel={(option) => option?.label || ""}
+          onChange={(_, data) => field.onChange(data)}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label={label}
+              required={required}
+              error={!!error}
+              helperText={error?.message}
+              size="small"
+            />
+          )}
+          size="small"
+          className="w-full bg-white"
+        />
+      )}
+    />
   );
 };
 

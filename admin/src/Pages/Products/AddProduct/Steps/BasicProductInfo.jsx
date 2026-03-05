@@ -13,6 +13,7 @@ const BasicProductInfo = ({
   errors,
   setValue,
   watch,
+  control,
 }) => {
   const {
     getCategoriesByLevel,
@@ -41,7 +42,6 @@ const BasicProductInfo = ({
     ...(optionsLevel2Categories || []),
     ...(optionsLevel3Categories || []),
   ];
-  console.log(categoryOptions);
 
   //-------------------------- category options------------------------------
 
@@ -108,11 +108,12 @@ const BasicProductInfo = ({
             </div>
             <div className="w-1/2">
               <SelectableInput
+                control={control}
                 defaultValue={defaultData.brand || ""}
                 error={errors.brand?.message}
                 multiple={false}
                 name={"brand"}
-                required={true}
+                // required={true}
                 label={"Brand"}
                 options={!loading && optionsBrands}
                 getValue={(value) => {
@@ -125,6 +126,8 @@ const BasicProductInfo = ({
           </div>
           <div className="flex flex-row gap-10">
             <SelectableInput
+              // required={true}
+              control={control}
               defaultValue={defaultData?.categories}
               error={errors.categories?.message}
               name={"categories"}
@@ -164,7 +167,7 @@ const BasicProductInfo = ({
               }
                dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400`}
               placeholder="Write brief description about product in 200 characters."
-              maxLength={200}
+              maxLength={400}
               {...register("shortDescription")}
             />
             <FormError

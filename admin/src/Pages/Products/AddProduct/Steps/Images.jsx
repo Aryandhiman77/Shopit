@@ -8,13 +8,10 @@ import Modal from "../../../../Components/Reusables/Elements/Modal";
 import Spinner from "../../../../Components/Reusables/Elements/Loader/Spinner";
 import toast from "react-hot-toast";
 import { FaCheckCircle } from "react-icons/fa";
-const Images = ({
-  setValue,
-  errors,
-  productId = "69a5d4566921dcce78e89cfd",
-}) => {
-  const thumb = JSON.parse(localStorage.getItem("draftProduct")).thumbnail;
-  const gall = JSON.parse(localStorage.getItem("draftProduct")).gallery;
+const Images = ({ setValue, errors }) => {
+  const productId = localStorage.getItem("draftProductId");
+  const thumb = JSON.parse(localStorage.getItem("draftProduct"))?.thumbnail;
+  const gall = JSON.parse(localStorage.getItem("draftProduct"))?.gallery;
   const [thumbnail, setThumbnail] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [isUploaded, setIsUploaded] = useState({
@@ -31,10 +28,10 @@ const Images = ({
   };
 
   const handleUpload = async (name) => {
-    let uploaded;
     if (!productId) {
-      toast.error("No product found.");
+      toast.error("Upload failed.");
     }
+    let uploaded;
     if (name === "thumbnail") {
       uploaded = await uploadThumbnail(productId, thumbnail[0]);
       if (uploaded) {
@@ -49,8 +46,8 @@ const Images = ({
       if (uploaded) {
         let modifiedField = { ...isUploaded, gallery: true };
         setIsUploaded(modifiedField);
-        setImageDataToLocalStorage(name, uploaded);
-        setValue("gallery", gallery, { shouldValidate: true });
+        setImageDataToLocalStorage(name, [...uploaded]);
+        setValue("gallery", [...uploaded], { shouldValidate: true });
       }
     }
   };
@@ -75,7 +72,7 @@ const Images = ({
         <ImageDropBox
           maxFiles={1}
           setImages={setThumbnail}
-          initialImages={[thumb]}
+          initialImages={thumb && [thumb]}
         />
         <FormError error={errors?.thumbnail?.message} />
         {Object.keys(thumbnail).length > 0 && (

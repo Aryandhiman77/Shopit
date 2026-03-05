@@ -39,7 +39,7 @@ const ProductsProvider = () => {
       toast.success(response?.data?.message);
       setProductData(response?.data);
       setLoading(false);
-      return response.data;
+      return response.data._id;
     }
     if (response?.formErrors) {
       setFormErrors(response.formErrors);
@@ -92,10 +92,46 @@ const ProductsProvider = () => {
     }
     setLoading(false);
   };
+
+  const updateProduct = async (id, { ...details }) => {
+    setLoading(true);
+    const response = await fetchData({
+      url: `${PRODUCT_API}/${id}/update`,
+      method: "PATCH",
+      payload: details,
+    });
+    if (response?.success) {
+      setLoading(false);
+      return response.data;
+    }
+    if (response?.formErrors) {
+      setFormErrors(response.formErrors);
+      setLoading(false);
+    }
+    setLoading(false);
+  };
+  const updateProductStatus = async (id, { ...details }) => {
+    setLoading(true);
+    const response = await fetchData({
+      url: `${PRODUCT_API}/${id}/status`,
+      method: "PATCH",
+      payload: details,
+    });
+    if (response?.success) {
+      setLoading(false);
+      return response.data;
+    }
+    if (response?.formErrors) {
+      setFormErrors(response.formErrors);
+      setLoading(false);
+    }
+    setLoading(false);
+  };
+
   const resetFormErrors = () => {
     setFormErrors([]);
   };
-
+  const getLocalProduct = () => {};
   return (
     <ProductContext.Provider
       value={{
@@ -108,6 +144,8 @@ const ProductsProvider = () => {
         uploadGallery,
         formErrors,
         resetFormErrors,
+        updateProduct,
+        updateProductStatus,
       }}
     >
       <Outlet />

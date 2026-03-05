@@ -5,11 +5,11 @@ export const basicProductInfo = yup
     title: yup.string().required("Product title is a required field."),
     brand: yup
       .object({
-        label: yup.string(),
-        value: yup.string(),
+        label: yup.string().required("Label is required."),
+        value: yup.string().required("Value is required."),
       })
-      .typeError("Brand is a required field.")
-      .required("Brand is a required field."),
+      .required("Brand is required.")
+      .typeError("Brand is required."),
     categories: yup
       .array(
         yup
@@ -24,7 +24,7 @@ export const basicProductInfo = yup
       .string()
       .min(20, "Breif description must contain atleast 20 characters")
       .required("Breif Description is required.")
-      .max(200, "Brief Descriptions must be less than 200 characters."),
+      .max(400, "Brief Descriptions must be less than 400 characters."),
     base_price: yup
       .number()
       .typeError("Selling Price must be a number.")
@@ -52,8 +52,12 @@ export const basicProductInfo = yup
   });
 
 export const imagesSchema = yup.object({
-  thumbnail: yup.string(),
-  gallery: yup.array().of(yup.string()),
+  thumbnail: yup.string().required("Thumbnail is required."),
+  gallery: yup
+    .array(yup.string())
+    .min(1, "Upload atleast one gallery image.")
+    .max(10, "Max 10 images allowed.")
+    .required("Upload atleast one gallery image."),
 });
 export const richDescriptionValidation = yup.object({
   description: yup.string().notRequired(),

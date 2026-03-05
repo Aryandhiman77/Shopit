@@ -204,6 +204,7 @@ const CategoryForm = ({
               {categoryLevelStatus > 1 && (
                 <>
                   <SelectableInput
+                    control={control}
                     multiple={false}
                     name={"parent"}
                     label={"Parent Category"}

@@ -6,7 +6,6 @@ import { useEffect } from "react";
 
 const ProductList = ({ products }) => {
   const productTableHeadings = [
-    "S.no",
     "Product ID",
     "Sku",
     "Product",

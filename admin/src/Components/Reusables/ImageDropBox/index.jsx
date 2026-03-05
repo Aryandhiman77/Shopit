@@ -6,9 +6,13 @@ const ImageDropBox = ({
   maxFiles = 5,
   resetDropBox,
   setResetDropBox,
-  initialImages = [], // 👈 STATIC URLS FROM BACKEND
+  initialImages = [],
+  rearrange = false,
 }) => {
   const dropRef = useRef(null);
+  const dragItem = useRef(null);
+
+  const [dragOverIndex, setDragOverIndex] = useState(null);
 
   const [previews, setPreviews] = useState(() =>
     initialImages.map((url) => ({
@@ -17,7 +21,7 @@ const ImageDropBox = ({
     })),
   );
 
-  /* ================= FILE HANDLING ================= */
+  /* FILE HANDLING */
 
   const handleFiles = (files) => {
     let newFiles = Array.from(files);
@@ -39,32 +43,50 @@ const ImageDropBox = ({
     handleFiles(e.target.files);
   };
 
-  /* ================= DRAG EVENTS ================= */
+  /* DRAG DROP FILES */
 
   const handleDragOver = (e) => {
     e.preventDefault();
-    dropRef.current.classList.add("border-blue-500", "bg-gray-100");
-  };
-
-  const handleDragLeave = () => {
-    dropRef.current.classList.remove("border-blue-500", "bg-gray-100");
   };
 
   const handleDrop = (e) => {
     e.preventDefault();
-    handleDragLeave();
     handleFiles(e.dataTransfer.files);
   };
 
-  /* ================= REMOVE IMAGE ================= */
+  /* REORDER */
+
+  const handleDragStart = (index) => {
+    dragItem.current = index;
+  };
+
+  const handleDragEnter = (index) => {
+    if (index !== dragItem.current) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (dragOverIndex === null) return;
+
+    const items = [...previews];
+    const dragged = items[dragItem.current];
+
+    items.splice(dragItem.current, 1);
+    items.splice(dragOverIndex, 0, dragged);
+
+    setPreviews(items);
+    dragItem.current = null;
+    setDragOverIndex(null);
+  };
+
+  /* REMOVE IMAGE */
 
   const removeImage = (index) => {
-    console.log(index);
     setPreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  /* ================= SYNC FILES TO PARENT ================= */
-  // ONLY SEND FILES (backend already has remote ones)
+  /* SYNC FILES */
 
   useEffect(() => {
     const filesOnly = previews.filter((p) => !p.isRemote).map((p) => p.file);
@@ -72,7 +94,7 @@ const ImageDropBox = ({
     setImages(filesOnly);
   }, [previews, setImages]);
 
-  /* ================= RESET ================= */
+  /* RESET */
 
   useEffect(() => {
     if (resetDropBox) {
@@ -81,7 +103,7 @@ const ImageDropBox = ({
     }
   }, [resetDropBox, setResetDropBox]);
 
-  /* ================= CLEANUP ================= */
+  /* CLEANUP */
 
   useEffect(() => {
     return () => {
@@ -91,13 +113,10 @@ const ImageDropBox = ({
     };
   }, []);
 
-  /* ================= UI ================= */
-
   return (
     <div
       ref={dropRef}
       onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
       onDrop={handleDrop}
       className="relative flex flex-wrap gap-2 w-full min-h-[200px] border-2 border-dashed rounded-lg p-3"
     >
@@ -110,51 +129,58 @@ const ImageDropBox = ({
         onChange={handleFileChange}
       />
 
-      {previews.length === 1 ? (
-        /* ===== SINGLE IMAGE FULL SIZE ===== */
-        <div className="relative w-full h-full">
+      {previews.map((item, index) => (
+        <div
+          key={index}
+          className="relative w-24 h-24"
+          draggable={rearrange}
+          onDragStart={() => handleDragStart(index)}
+          onDragEnter={() => handleDragEnter(index)}
+          onDragEnd={handleDragEnd}
+          onDragOver={(e) => e.preventDefault()}
+        >
+          {/* DROP INDICATOR */}
+          {dragOverIndex === index && (
+            <div className="absolute -left-1 top-0 h-full w-[3px] bg-blue-500 rounded"></div>
+          )}
+
           <img
-            src={previews[0].url}
-            alt="preview"
-            className="w-full h-full object-contain rounded"
+            src={item.url}
+            alt=""
+            className="w-full h-full object-contain rounded border"
           />
+
+          {index === 0 && (
+            <span className="absolute bottom-1 left-1 bg-black text-white text-xs px-1 rounded">
+              Cover
+            </span>
+          )}
+
           <button
             type="button"
-            onClick={() => removeImage(0)}
-            className="absolute top-2 right-2 bg-white rounded-full p-1 shadow hover:bg-red-500 hover:text-white z-10"
+            onClick={() => removeImage(index)}
+            className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow hover:bg-red-500 hover:text-white"
           >
-            <AiOutlineClose size={16} />
+            <AiOutlineClose size={12} />
           </button>
         </div>
-      ) : (
-        /* ===== MULTIPLE IMAGES GRID ===== */
-        <>
-          {previews.map((item, index) => (
-            <div key={index} className="relative w-24 h-24">
-              <img
-                src={item.url}
-                alt=""
-                className="w-full h-full object-contain rounded border"
-              />
-              <button
-                type="button"
-                onClick={() => removeImage(index)}
-                className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow hover:bg-red-500 hover:text-white"
-              >
-                <AiOutlineClose size={12} />
-              </button>
-            </div>
-          ))}
-        </>
-      )}
+      ))}
 
       {previews.length < maxFiles && (
         <label
           htmlFor={`dropzone-file-${maxFiles}`}
           className="w-24 h-24 flex items-center justify-center border rounded cursor-pointer text-gray-400 hover:bg-gray-100"
         >
-          <p className="text-sm">Add {maxFiles === 1 ? "Image" : "Images"}</p>
+          <p className="text-sm">Add Images</p>
         </label>
+      )}
+      {/* {
+        rearrange && <p></p>
+      } */}
+      {rearrange && (
+        <p className="absolute bottom-0 text-gray-500 font-medium text-[13px]">
+          Drag the images to rearrange.
+        </p>
       )}
     </div>
   );
