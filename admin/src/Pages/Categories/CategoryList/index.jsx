@@ -107,7 +107,7 @@ const CategoryList = () => {
           ) : orderedCategories?.length > 0 ? (
             <Table
               attributes={[
-                "S.no",
+                "Id",
                 "Image",
                 "Category Name",
                 "Sub-Cateogories",

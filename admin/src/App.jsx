@@ -32,6 +32,7 @@ import CategoryProvider from "./Context/Category/CategoryProvider";
 import UserProvider from "./Context/Users/UserProvider";
 import ProductsProvider from "./Context/Products/ProductsProvider";
 import BrandProvider from "./Context/Brand/BrandProvider";
+import PageNotFound from "./Pages/404";
 
 const App = () => {
   return (
@@ -71,12 +72,12 @@ const App = () => {
                     />
                     <Route path="/settings" element={<StoreSettings />} />
                   </Route>
+                  <Route path="*" element={<PageNotFound />} />
                 </Route>
                 {/* </Route> */}
               </Route>
 
               {/* FALLBACK ROUTE */}
-              <Route path="*" element={<Navigate to="/page-not-found" />} />
             </Routes>
           </CategoryProvider>
         </AuthProvider>

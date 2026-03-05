@@ -56,6 +56,24 @@ const menuConfig = [
     icon: <MdSupervisedUserCircle className="text-xl" />,
     path: "/users",
   },
+
+  {
+    title: "Categories",
+    icon: <TbCategory className="text-xl" />,
+    path: "/categories",
+    dropdown: [
+      {
+        title: "Categories List",
+        icon: <IoList className="text-lg" />,
+        path: "/categories",
+      },
+      {
+        title: "Add Category",
+        icon: <MdOutlineDashboard className="text-lg" />,
+        path: "/categories/add",
+      },
+    ],
+  },
   {
     title: "Products",
     icon: <RiProductHuntLine className="text-xl" />,
@@ -80,23 +98,6 @@ const menuConfig = [
         title: "Add Product",
         icon: <MdOutlineAddBox className="text-lg" />,
         path: "/products/add",
-      },
-    ],
-  },
-  {
-    title: "Categories",
-    icon: <TbCategory className="text-xl" />,
-    path: "/categories",
-    dropdown: [
-      {
-        title: "Categories List",
-        icon: <IoList className="text-lg" />,
-        path: "/categories",
-      },
-      {
-        title: "Add Category",
-        icon: <MdOutlineDashboard className="text-lg" />,
-        path: "/categories/add",
       },
     ],
   },

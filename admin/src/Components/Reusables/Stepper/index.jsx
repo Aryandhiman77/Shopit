@@ -13,6 +13,7 @@ const CustomStepper = ({ steps = [], activeStep = 0 }) => {
     }
   });
   const currentActiveIndex = completedSteps[activeStep];
+
   return (
     <>
       <ul className="list-none w-full flex items-center">

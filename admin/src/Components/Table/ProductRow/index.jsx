@@ -17,7 +17,7 @@ const ProductRow = ({ product, index }) => {
           scope="row"
           className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
         >
-          #{product?._id.slice(20)}
+          #{product?._id.slice(19)}
         </th>
         <th
           scope="row"
@@ -43,7 +43,9 @@ const ProductRow = ({ product, index }) => {
               </div>
             )}
             <div className="p-2">
-              <p className="text-[12px] font-[600]">{product?.title}</p>
+              <p className="text-[12px] font-[600] line-clamp-3">
+                {product?.title}
+              </p>
               <p className="text-[12px] font-[500] text-black">
                 {product?.brand.name}
               </p>

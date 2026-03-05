@@ -56,15 +56,15 @@ const CategoryRow = ({ category, index, handleEdit }) => {
       <tr
         className={`border ${isItemsHidden ? "border" : "border-2 border-black border-b-0 bg-amber-50"} dark:bg-gray-900 dark:border-gray-400! border-gray-500`}
       >
-        <td className="px-2 py-4 whitespace-nowrap text-center border">
-          {index + 1}
+        <td className="px-4 py-4  text-center border font-semibold text-black">
+          #{category._id.slice(19)}
         </td>
         <td className="px-6 py-4 border border-gray-400">
           <div className="w-[150px]">
             <img
               loading="lazy"
               src={category?.image?.url}
-              className="w-20 h-auto rounded-xl  object-cover"
+              className="w-13 h-13 rounded-xl  object-contain"
               alt=""
             />
           </div>

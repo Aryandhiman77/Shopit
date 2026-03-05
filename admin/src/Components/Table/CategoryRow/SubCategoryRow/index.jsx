@@ -60,14 +60,14 @@ const SubCategoryRow = ({
         </tr>
       )}
       <tr className="border-2 bg-amber-100 dark:bg-gray-800 hover:dark:bg-gray-700 ">
-        <td className="px-2 py-4 whitespace-nowrap text-center border">
-          {indexParent + 1}.{indexSubCat + 1}.
+        <td className="px-4 py-4  text-center border font-semibold text-black">
+          #{subCategory._id.slice(19)}
         </td>
         <td className="px-6 py-4">
           <div className="w-[150px]">
             <img
               src={subCategory?.image?.url}
-              className="w-20 h-auto rounded-xl  object-cover"
+              className="w-10 h-10 rounded-xl  object-contain"
               alt=""
             />
           </div>
