@@ -22,7 +22,7 @@ const BasicProductInfo = ({
     level2Categories,
     level3Categories,
   } = useCategory();
-  const { getBrandsListing, loading, brands } = useBrands();
+  const { getBrandsListing, loading, brandListing } = useBrands();
 
   //-------------------------- category options------------------------------
   const optionsLevel1Categories = level1Categories?.map((item) => ({
@@ -46,7 +46,7 @@ const BasicProductInfo = ({
   //-------------------------- category options------------------------------
 
   //-------------------------- Brand options------------------------------
-  const optionsBrands = brands?.map((item) => ({
+  const optionsBrands = brandListing?.map((item) => ({
     label: item.name,
     value: item._id,
   }));
@@ -109,7 +109,7 @@ const BasicProductInfo = ({
             <div className="w-1/2">
               <SelectableInput
                 control={control}
-                defaultValue={defaultData.brand || ""}
+                defaultValue={defaultData?.brand}
                 error={errors.brand?.message}
                 multiple={false}
                 name={"brand"}

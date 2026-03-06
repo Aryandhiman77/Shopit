@@ -20,8 +20,6 @@ import AddProduct from "./Pages/Products/AddProduct";
 import StoreSettings from "./Pages/Settings";
 import CategoryList from "./Pages/Categories/CategoryList";
 import AddCategory from "./Pages/Categories/AddCategory";
-import AddSubCategory from "./Pages/Categories/AddSubCategory";
-import AddLeafCategory from "./Pages/Categories/AddLeafCategory";
 import Users from "./Pages/Users";
 import Orders from "./Pages/AllOrders";
 import AuthProvider from "./Context/Auth/AuthProvider";
@@ -33,6 +31,7 @@ import UserProvider from "./Context/Users/UserProvider";
 import ProductsProvider from "./Context/Products/ProductsProvider";
 import BrandProvider from "./Context/Brand/BrandProvider";
 import PageNotFound from "./Pages/404";
+import BrandList from "./Pages/Brands";
 
 const App = () => {
   return (
@@ -50,10 +49,13 @@ const App = () => {
               </Route>
 
               <Route element={<ProtectedRoute />}>
-                {/* <Route element={<ChartDataProvider />}> */}
                 <Route element={<Layout />}>
                   <Route path="/" element={<Dashboard />} />
                   <Route element={<ProductsProvider />}>
+                    <Route element={<BrandProvider />}>
+                      <Route path="/brands" element={<BrandList />} />
+                      {/* <Route path="/brand/add" element={<AddProduct />} /> */}
+                    </Route>
                     <Route element={<BrandProvider />}>
                       <Route path="/products" element={<Products />} />
                       <Route path="/products/add" element={<AddProduct />} />
@@ -74,10 +76,7 @@ const App = () => {
                   </Route>
                   <Route path="*" element={<PageNotFound />} />
                 </Route>
-                {/* </Route> */}
               </Route>
-
-              {/* FALLBACK ROUTE */}
             </Routes>
           </CategoryProvider>
         </AuthProvider>

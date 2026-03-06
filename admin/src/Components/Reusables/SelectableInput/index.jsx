@@ -17,7 +17,7 @@ const SelectableInput = ({
     <Controller
       name={name}
       control={control}
-      defaultValue={multiple ? [...defaultValue] : defaultValue}
+      defaultValue={defaultValue}
       render={({ field }) => (
         <Autocomplete
           {...field}

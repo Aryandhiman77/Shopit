@@ -1,48 +1,31 @@
-import React, { useEffect, useState } from "react";
-import Table from "../../../Components/Table";
-import CategoryRow from "../../../Components/Table/CategoryRow";
-import { Link, useNavigate } from "react-router-dom";
-import { PiExport, PiPlus, PiTrash } from "react-icons/pi";
-import Search from "../../../Components/Reusables/Search";
-import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
-import useCategory from "../../../Components/hooks/useCategory";
-import Box from "../../../Components/Reusables/Elements/Box";
-import { Divider, Tooltip } from "@mui/material";
-import CustomButton from "../../../Components/Reusables/Elements/CustomBtn";
-import Spinner from "../../../Components/Reusables/Elements/Loader/Spinner";
-import UpdateCategoryModal from "../../../Components/Reusables/Elements/Modal";
-import Modal from "../../../Components/Reusables/Elements/Modal";
-import CategoryForm from "../../../Components/CategoryForm/CategoryForm";
-import DropDownField from "../../../Components/Reusables/DropDownField";
-import NoCategories from "../../../assets/noCategories.png";
-import {
-  CiImport,
-  CiExport,
-  CiTrash,
-  CiFilter,
-  CiSearch,
-} from "react-icons/ci";
-import { FaCheck, FaFilter, FaRegEdit } from "react-icons/fa";
+import React, { useEffect } from "react";
+import BreadCrumb from "../../Components/Reusables/Elements/BreadCrumb";
+import Box from "../../Components/Reusables/Elements/Box";
+import CustomButton from "../../Components/Reusables/Elements/CustomBtn";
+import Search from "../../Components/Reusables/Search";
+import DropDownField from "../../Components/Reusables/DropDownField";
+import useBrands from "../../Components/hooks/useBrands";
+import { PiExport, PiPlus } from "react-icons/pi";
+import { Tooltip } from "@mui/material";
+import { CiExport, CiTrash } from "react-icons/ci";
+import { FaRegEdit } from "react-icons/fa";
 import { RiResetLeftFill } from "react-icons/ri";
-import { BsSearch } from "react-icons/bs";
+import { Divider } from "@mui/material";
+import BrandRow from "../../Components/Table/BrandRow";
+import Spinner from "../../Components/Reusables/Elements/Loader/Spinner";
+import Table from "../../Components/Table";
+import NoBrands from "../../assets/noBrands.png";
+// import BrandForm from "../../Components/BrandForm";
 
-const CategoryList = () => {
-  const navigate = useNavigate();
-  const {
-    getAllOrderedCategories,
-    orderedCategories,
-    isLoading,
-    getCategory,
-    category,
-  } = useCategory();
-  const [open, setOpen] = useState(false);
+const BrandList = () => {
+  const { brands, getBrands, loading } = useBrands();
+
   const handleEdit = (id) => {
-    if (!id) return;
-    setOpen(true);
-    getCategory(id);
+    console.log(id);
   };
+
   useEffect(() => {
-    getAllOrderedCategories();
+    getBrands(10, 1);
   }, []);
   return (
     <>
@@ -54,7 +37,7 @@ const CategoryList = () => {
         </div>
 
         <div className="flex items-center justify-between">
-          <p className=" font-semibold text-2xl">Category</p>
+          <p className=" font-semibold text-2xl">Brands</p>
           <div className="flex gap-3 items-center">
             <CustomButton
               type={"button"}
@@ -77,7 +60,7 @@ const CategoryList = () => {
               type="button"
               className="custom-btn custom-border flex items-center gap-2 !bg-red-400 text-sm font-[500] rounded-md! hover:text-white!"
               title={
-                <Tooltip title="Delete Category">
+                <Tooltip title="Delete Brand">
                   <div className="flex gap-1 items-center">
                     <CiTrash size={20} />
                     Delete
@@ -94,7 +77,7 @@ const CategoryList = () => {
               type="button"
               className="custom-btn custom-border flex items-center gap-2 !bg-orange-400 text-sm font-[500] rounded-md! hover:text-white!"
               title={
-                <Tooltip title="Edit Multiple Categories">
+                <Tooltip title="Edit Multiple Brands">
                   <div className="flex gap-1 items-center">
                     <FaRegEdit size={20} />
                     Bulk Edit
@@ -110,10 +93,10 @@ const CategoryList = () => {
               type="button"
               className="custom-btn custom-border flex items-center gap-2 !bg-blue-500 text-sm font-[500] rounded-md! hover:text-white!"
               title={
-                <Tooltip title="Add New Category">
+                <Tooltip title="Add New Brand">
                   <div className="flex gap-1 items-center">
                     <PiPlus size={17} />
-                    Add Category
+                    Add Brand
                   </div>
                 </Tooltip>
               }
@@ -128,7 +111,7 @@ const CategoryList = () => {
             <div className="flex gap-5  w-[80vw] max-w-[90vw]">
               <div className="w-[60%] flex items-center gap-4">
                 <Search
-                  placeholder={"Search Category ..."}
+                  placeholder={"Search Brands ..."}
                   onSearch={(value) => console.log(value)}
                 />
 
@@ -160,75 +143,50 @@ const CategoryList = () => {
               </div>
             </div>
             <p className="text-gray-500 font-normal text-sm px-2 w-[10vw] max-w-[20vw] text-right text-nowrap">
-              {orderedCategories?.length ? (
-                <p>Results : {orderedCategories?.length}</p>
-              ) : (
-                ""
-              )}
+              {brands?.length ? <>Results : {brands?.length}</> : ""}
             </p>
           </div>
 
-          {/* <Divider className="mb-4!" /> */}
-          {isLoading("ordered-categories") ? (
+          {loading ? (
             <div className="flex justify-center items-center p-4">
               <Spinner size={40} />
             </div>
-          ) : orderedCategories?.length > 0 ? (
+          ) : brands?.length > 0 ? (
             <Table
               attributes={[
                 "Id",
-                "Image",
-                "Category Name",
-                "Sub-Cateogories",
+                "Logo",
+                "Brand Name",
+                "Cateogories",
                 "Status",
                 "Created At",
                 "Modified At",
                 "Operations",
               ]}
             >
-              {orderedCategories.map((cat, i) => (
-                <CategoryRow
-                  category={cat}
+              {brands.map((brand, i) => (
+                <BrandRow
+                  brand={brand}
                   handleEdit={handleEdit}
                   index={i}
-                  key={`category-${i}`}
+                  key={`Brand-${i}`}
                 />
               ))}
             </Table>
           ) : (
             <div className="text-center text-gray-500 font-semibold">
               <img
-                src={NoCategories}
-                alt="No Categories found."
+                src={NoBrands}
+                alt="No brands found."
                 className="w-100 h-auto mx-auto"
               />
             </div>
           )}
         </Box>
       </div>
-      <Modal
-        title={"Update Category"}
-        open={open}
-        setOpen={setOpen}
-        fixedFullScreen={false}
-      >
-        {isLoading("get-category") ? (
-          <div className="flex justify-center items-center h-full">
-            <p className="font-medium">Loading Category Data...</p>
-            <Spinner />
-          </div>
-        ) : (
-          <div className="p-5">
-            <CategoryForm
-              mode="edit"
-              setEditModal={setOpen}
-              updationCategory={category}
-            />
-          </div>
-        )}
-      </Modal>
+      {/* <BrandForm /> */}
     </>
   );
 };
 
-export default CategoryList;
+export default BrandList;

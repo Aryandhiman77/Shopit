@@ -58,6 +58,23 @@ const menuConfig = [
   },
 
   {
+    title: "Brand",
+    icon: <TbCategory className="text-xl" />,
+    path: "/brands",
+    dropdown: [
+      {
+        title: "Brand List",
+        icon: <IoList className="text-lg" />,
+        path: "/brands",
+      },
+      {
+        title: "Add Brand",
+        icon: <MdOutlineDashboard className="text-lg" />,
+        path: "/brand/add",
+      },
+    ],
+  },
+  {
     title: "Categories",
     icon: <TbCategory className="text-xl" />,
     path: "/categories",

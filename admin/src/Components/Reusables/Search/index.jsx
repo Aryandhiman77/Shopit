@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { PiCommandBold } from "react-icons/pi";
 
-const Search = ({ endIcon, placeholder, onSearch = () => {} }) => {
+const Search = ({ endIcon, placeholder, onSearch = (value) => {}, width }) => {
   const [search, setSearch] = useState("");
   const debounceRef = useRef(null);
 
@@ -12,7 +12,7 @@ const Search = ({ endIcon, placeholder, onSearch = () => {} }) => {
       clearTimeout(debounceRef.current);
     }
     debounceRef.current = setTimeout(() => {
-      onSearch(val);
+      onSearch(e.target.value);
     }, 500);
   };
 
@@ -21,14 +21,16 @@ const Search = ({ endIcon, placeholder, onSearch = () => {} }) => {
   }, []);
   return (
     <>
-      <div className="flex flex-row items-center custom-border rounded-lg p-2 bg-white shadow-sm">
+      <div
+        className={`flex flex-row items-center custom-border rounded-lg p-2 bg-white  w-full `}
+      >
         <IoSearchOutline />
         <input
           name="search"
           onChange={handleChange}
           type="text"
           value={search}
-          className="focus:outline-none px-2 text-sm"
+          className="focus:outline-none px-2 text-sm w-full"
           placeholder={placeholder}
         />
         {endIcon}

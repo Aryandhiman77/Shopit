@@ -8,7 +8,7 @@ import Box from "../../../Components/Reusables/Elements/Box";
 import CustomButton from "../../../Components/Reusables/Elements/CustomBtn";
 import DropDownField from "../../../Components/Reusables/DropDownField";
 import Spinner from "../../../Components/Reusables/Elements/Loader/Spinner";
-
+import NoProducts from "../../../assets/noProducts.png";
 const Products = () => {
   const { products, loading, getProducts } = useProducts();
   useEffect(() => {
@@ -79,7 +79,11 @@ const Products = () => {
           <ProductList products={products} />
         ) : (
           <div className="text-center text-gray-500 font-semibold">
-            No Products found.
+            <img
+              src={NoProducts}
+              alt="No Products found."
+              className="w-100 h-auto mx-auto"
+            />
           </div>
         )}
       </Box>
