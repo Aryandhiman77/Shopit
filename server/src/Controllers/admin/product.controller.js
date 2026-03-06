@@ -1,6 +1,6 @@
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
-import { getProductsService } from "../../Services/adminServices/productServices.js";
+import { getProductsService } from "../../Services/AdminSeller/productServices.js";
 
 export const createProduct = AsyncWrapper(async (req, res, next) => {
   //! not working

@@ -11,11 +11,12 @@ import {
   createBrand,
   deleteBrand,
   getAllBrandRequests,
-  getAllBrands,
+  getBrands,
   getSingleBrand,
   rejectSellerDocsWithMessage,
   rejectSellerRequest,
   updateBrand,
+  updateBrandLogo,
 } from "../../Controllers/admin/brand.controller.js";
 const brandRoutes = express.Router();
 
@@ -25,18 +26,13 @@ brandRoutes
     upload.single("image"),
     jsonParser(["categories"]),
     validate(createBrandSchema),
-    createBrand
+    createBrand,
   )
-  .get("/", getAllBrands)
+  .get("/", getBrands)
   .get("/get-brand/:slug", getSingleBrand)
-  .patch(
-    "/update/:slug",
-    upload.single("image"),
-    jsonParser(["categories"]),
-    validate(updateBrandSchema),
-    updateBrand
-  )
-  .delete("/delete/:slug", deleteBrand)
+  .patch("/:id/update", validate(updateBrandSchema), updateBrand)
+  .patch("/:id/logo", upload.single("logo"), updateBrandLogo)
+  .delete("/:slug/delete", deleteBrand)
   .get("/all-brand-requests", getAllBrandRequests)
   .put("/approve-seller-docs/:reqId", approveSellerDocsAndCreateBrand)
   .patch("/reject-seller-docs/:reqId", rejectSellerDocsWithMessage)

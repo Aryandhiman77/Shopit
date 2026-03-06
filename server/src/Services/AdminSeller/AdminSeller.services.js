@@ -14,7 +14,14 @@ export const getCategoryService = async (level) => {
   return categories;
 };
 
-export const getBrandListing = async () => {
+export const getBrandList = async () => {
   const brands = await Brands.find().select("_id name slug").lean();
+  return brands;
+};
+
+export const getBrands = async () => {
+  const brands = await Brands.find()
+    .populate({ path: "categories", select: "name" })
+    .lean();
   return brands;
 };

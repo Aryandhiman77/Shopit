@@ -6,7 +6,7 @@ const brandSchema = new mongoose.Schema(
     name: { type: String, required: true, unique: true, trim: true },
     slug: { type: String, unique: true },
     logo: { url: String, public_id: String },
-    description: { type: String },
+    description: { type: String, max: 400 },
 
     isActive: {
       type: Boolean,
@@ -17,7 +17,7 @@ const brandSchema = new mongoose.Schema(
 
     categories: [{ type: mongoose.Schema.Types.ObjectId, ref: "Category" }],
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Auto-generate slug

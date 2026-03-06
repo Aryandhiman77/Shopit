@@ -6,26 +6,6 @@ import {
 } from "../../Helpers/cloudinary.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
 
-const uploadProductImages = async (image, gallery) => {
-  const thumbnailUploaded = await uploadWithRetry(files.image.path);
-  if (!thumbnailUploaded) {
-    fs.unlinkSync(files.image.path);
-    throw new ApiError(400, "Technical issue, cannot upload image.");
-  }
-  const galleryData = [];
-  for (const image of gallery) {
-    const uploaded = await uploadWithRetry(image.path);
-    galleryData.concat({
-      thumbnail: uploaded.url,
-      public_id: uploaded.public_id,
-    });
-    if (!uploaded) {
-      fs.unlinkSync(image.path);
-      throw new ApiError(400, "Technical issue, cannot upload image.");
-    }
-  }
-};
-
 export const createProductService = async (
   {
     title,

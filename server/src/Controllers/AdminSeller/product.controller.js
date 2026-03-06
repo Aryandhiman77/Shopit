@@ -11,7 +11,7 @@ import {
   getProducts,
   updateProductService,
   updateProductStatusService,
-} from "../../Services/adminServices/productServices.js";
+} from "../../Services/AdminSeller/productServices.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
 
 export const createProductController = AsyncWrapper(async (req, res) => {

@@ -7,9 +7,9 @@ export const createBrandSchema = Joi.object({
     "any.required": "Brand name is required.",
     "string.empty": "Brand name cannot be empty.",
   }),
-  description: Joi.string().lowercase().min(10).max(300).messages({
+  description: Joi.string().lowercase().min(10).max(400).messages({
     "string.min": "Brand description must be at least 3 characters long.",
-    "string.max": "Brand description must be less than 200 characters.",
+    "string.max": "Brand description must be less than 400 characters.",
     "any.required": "Brand description is required.",
     "string.empty": "Brand description cannot be empty.",
   }),
@@ -57,18 +57,27 @@ export const updateBrandSchema = Joi.object({
       "string.empty": "Brand name cannot be empty.",
     })
     .optional(),
-  description: Joi.string().lowercase().min(10).max(300).messages({
-    "string.min": "Brand description must be at least 3 characters long.",
-    "string.max": "Brand description must be less than 200 characters.",
-    "any.required": "Brand description is required.",
-    "string.empty": "Brand description cannot be empty.",
-  }).optional(),
-  isActive: Joi.boolean().messages({
-    "boolean.base": "isActive must be true or false.",
-  }).optional(),
-  isVerified: Joi.boolean().messages({
-    "boolean.base": "isActive must be true or false.",
-  }).optional(),
+  description: Joi.string()
+    .lowercase()
+    .min(10)
+    .max(400)
+    .messages({
+      "string.min": "Brand description must be at least 3 characters long.",
+      "string.max": "Brand description must be less than 400 characters.",
+      "any.required": "Brand description is required.",
+      "string.empty": "Brand description cannot be empty.",
+    })
+    .optional(),
+  isActive: Joi.boolean()
+    .messages({
+      "boolean.base": "isActive must be true or false.",
+    })
+    .optional(),
+  isVerified: Joi.boolean()
+    .messages({
+      "boolean.base": "isActive must be true or false.",
+    })
+    .optional(),
   categories: Joi.array()
     .items(Joi.string())
     .external(async (value) => {
@@ -88,7 +97,8 @@ export const updateBrandSchema = Joi.object({
         categoryIds.push(category._id);
       }
       return categoryIds;
-    }).optional()
+    })
+    .optional()
     .messages({
       "any.required": "Category is required.",
       "array.base": "Category is required.",

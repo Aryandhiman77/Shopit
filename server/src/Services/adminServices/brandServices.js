@@ -10,10 +10,11 @@ import mailSender from "../../Helpers/nodeMailer.js";
 import { brandApprovedMail } from "../../Helpers/html/seller/brandApproved.js";
 import { brandRequestionRejectionMail } from "../../Helpers/html/seller/brandRejected.js";
 import mongoose from "mongoose";
+import unlinkFiles from "../../Helpers/fileUnlinker.js";
 
 export const createBrandService = async (
   { name, description, isActive, isVerified, categories },
-  file
+  file,
 ) => {
   if (!file) {
     throw new ApiError(400, "Brand image is required.");
@@ -56,58 +57,29 @@ export const createBrandService = async (
 };
 
 export const getBrandsService = async () => {
-  const brands = await Brand.find({})
-    .select("name slug createdAt updatedAt isActive image.url -_id")
-    .populate("categories", "name slug isActive isVerified image.url -_id");
-
-  if (brands.length <= 0) {
-    throw new ApiError(404, "Brands not found.");
-  }
+  const brands = await Brand.find().populate("categories", "name");
   return brands;
 };
 
 export const getSingleBrandService = async ({ slug }) => {
   const brand = await Brand.findOne({ slug })
     .select("name slug createdAt updatedAt isActive image.url -_id")
-    .populate("categories", "name slug isActive isVerified image.url -_id");
+    .populate("categories", "name slug isVerified image.url -_id");
   if (!brand) {
     throw new ApiError(404, "Brand not found.");
   }
   return brand;
 };
 
-export const updateBrandService = async (
-  { name, description, isActive, isVerified, categories, slug },
-  file
-) => {
-  const brand = await Brand.findOne({ slug });
-
-  if (!brand) {
-    if (file?.path) fs.unlinkSync(file.path);
-    throw new ApiError(404, "Brand not found.");
-  }
-
-  let uploaded;
-
-  // If file provided, upload new image
-  if (file) {
-    uploaded = await uploadWithRetry(file.path);
-    fs.unlinkSync(file.path);
-
-    if (!uploaded) {
-      throw new ApiError(400, "Technical issue, cannot upload image.");
-    }
-
-    // delete old image from Cloudinary if exists
-    if (brand.logo?.public_id) {
-      await deleteFromCloudinary(brand.logo.public_id);
-    }
-
-    brand.logo = {
-      url: uploaded.url,
-      public_id: uploaded.public_id,
-    };
-  }
+export const updateBrandService = async ({
+  name,
+  description,
+  isActive,
+  isVerified,
+  categories,
+  id,
+}) => {
+  const brand = await Brand.findById(id);
 
   if (name) brand.name = name;
   if (description) brand.description = description;
@@ -115,21 +87,38 @@ export const updateBrandService = async (
   if (isVerified !== undefined) brand.isVerified = isVerified;
   if (categories?.length > 0) brand.categories = categories;
 
-  const createdBrand = await brand.save();
-  if (!createdBrand) {
-    fs.unlinkSync(file.path);
-    throw new ApiError(500, "Technical issue, cannot save brand.");
+  const saved = await brand.save();
+  if (!saved) {
+    throw new ApiError(400, "Brand updation failed.", [
+      "Brand updation failed.",
+    ]);
   }
-  return {
-    brand: {
-      name: createdBrand.name,
-      description: createdBrand.description,
-      logo: createdBrand.logo.url,
-      slug: createdBrand.slug,
-      isActive: createdBrand.isActive,
-      isVerified: createdBrand.isVerified,
-    },
-  };
+  return brand;
+};
+
+export const updateBrandLogoService = async (id, file) => {
+  if (!file) {
+    throw new ApiError(400, "Logo updation failed.", [
+      "Please provide a logo.",
+    ]);
+  }
+  const brand = await Brand.findById(id).select("logo");
+  if (!brand) {
+    throw new ApiError(400, "Invalid Brand id.");
+  }
+  // upload to cloudinary
+  const uploaded = uploadWithRetry(file?.path);
+  if (!uploaded) {
+    throw new ApiError(400, "Logo updation failed.", ["Cannot upload logo."]);
+  }
+  brand.logo.public_id = uploaded.public_id;
+  brand.logo.url = uploaded.secure_url;
+  const saved = await Brand.save();
+  if (!saved) {
+    unlinkFiles(file);
+    throw new ApiError(400, "Logo updation failed.", ["Cannot upload logo."]);
+  }
+  return brand;
 };
 
 export const deleteBrandService = async ({ slug }) => {
@@ -138,7 +127,7 @@ export const deleteBrandService = async ({ slug }) => {
     throw new ApiError(404, "Brand not found.");
   }
   // console.log(brand.logo.public_id);
-  if (brand?.logo?.public_id) {
+  if (brand.logo?.public_id) {
     await deleteFromCloudinary(brand.logo.public_id);
   }
 
@@ -201,7 +190,7 @@ export const approveSellerDocumentsAndCreateBrand = async (reqId) => {
 export const rejectSellerDocumentWithMessage = async (
   reqId,
   rejectedDocIds,
-  rejectionNote
+  rejectionNote,
 ) => {
   const request = await BrandRequest.findOne({
     status: "processing",
@@ -221,7 +210,7 @@ export const rejectSellerDocumentWithMessage = async (
     },
     {
       arrayFilters: [{ "doc._id": { $in: rejectedDocIds } }],
-    }
+    },
   );
   if (!updated) {
     throw new ApiError(400, "Cannot update documents.");
@@ -233,7 +222,7 @@ export const rejectSellerDocumentWithMessage = async (
 
 export const rejectSellerRequestWithMessage = async (
   reqId,
-  rejectionMessage
+  rejectionMessage,
 ) => {
   const request = await BrandRequest.findOne({
     status: "processing",
