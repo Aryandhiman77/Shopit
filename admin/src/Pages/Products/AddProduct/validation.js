@@ -59,6 +59,9 @@ export const imagesSchema = yup.object({
     .max(10, "Max 10 images allowed.")
     .required("Upload atleast one gallery image."),
 });
+export const richDescriptionValidation = yup.object({
+  description: yup.string().notRequired(),
+});
 export const inventory = yup.object({
   stock: yup.string().optional(),
 });

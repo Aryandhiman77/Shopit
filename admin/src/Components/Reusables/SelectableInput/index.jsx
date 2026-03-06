@@ -10,13 +10,14 @@ const SelectableInput = ({
   loading = false,
   options = [],
   multiple = true,
+  defaultValue,
   error,
 }) => {
   return (
     <Controller
       name={name}
       control={control}
-      defaultValue={multiple ? [] : null}
+      defaultValue={multiple ? [...defaultValue] : defaultValue}
       render={({ field }) => (
         <Autocomplete
           {...field}

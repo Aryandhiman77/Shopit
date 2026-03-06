@@ -8,7 +8,12 @@ import AddTags from "./Steps/AddTags";
 import Inventory from "./Steps/Inventory";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { basicProductInfo, imagesSchema, tagsValidations } from "./validation";
+import {
+  basicProductInfo,
+  imagesSchema,
+  richDescriptionValidation,
+  tagsValidations,
+} from "./validation";
 
 import useProducts from "../../../Components/hooks/useProducts";
 import CustomBtn from "../../../Components/Reusables/Elements/CustomBtn";
@@ -29,7 +34,7 @@ const steps = [
   {
     label: "Description",
     progress: 0,
-    schema: true,
+    schema: richDescriptionValidation,
   },
   {
     label: "Add Tags",

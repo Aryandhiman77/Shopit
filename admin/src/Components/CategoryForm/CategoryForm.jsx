@@ -215,7 +215,7 @@ const CategoryForm = ({
                     label={"Parent Category"}
                     options={options}
                     defaultValue={
-                      updationCategory?.parentCategory && {
+                      updationCategory && {
                         label: updationCategory.name,
                         value: updationCategory.parentCategory,
                       }
