@@ -108,10 +108,10 @@ const CategoryRow = ({ category, index, handleEdit }) => {
             onChange={(val) => handleStatusChange(val)}
           />
         </td>
-        <td className="px-6 py-4 whitespace-nowrap  border border-gray-400">
+        <td className="px-6 py-4 whitespace-nowrap  border border-gray-400 text-[12px]">
           {getFixedDateAndTimeString(category?.createdAt)}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
+        <td className="px-6 py-4 whitespace-nowrap border border-gray-400 text-[12px]">
           {getFixedDateAndTimeString(category?.updatedAt)}
         </td>
 

@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Divider, TextField } from "@mui/material";
+import { Divider, FormControlLabel, TextField } from "@mui/material";
 import BreadCrumb from "../Reusables/Elements/BreadCrumb";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import categoryValidationSchema from "./validation";
 import toast from "react-hot-toast";
 import CustomButton from "../Reusables/Elements/CustomBtn";
-import CategoryAttributes from "./AttributeForm";
-import Box from "../Reusables/Elements/Box";
-import Table from "../Table";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
-import MenuItem from "@mui/material/MenuItem";
 import FormError from "../Reusables/FormError";
 import ImageDropBox from "../Reusables/ImageDropBox";
 import { useNavigate } from "react-router-dom";
 import useCategory from "../hooks/useCategory";
 import BackendErrors from "../Reusables/Elements/BackendErrors";
-import SelectableInput from "../Reusables/SelectableInput";
 import useBrands from "../hooks/useBrands";
+import brandValidationSchema from "./validation";
+import CustomToggle from "../Reusables/Elements/CustomToggle";
+import SelectableInput from "../Reusables/SelectableInput";
 
-const CategoryForm = ({ mode = "add", updationBrand = {}, setEditModal }) => {
+const BrandForm = ({
+  mode = "add",
+  updationBrand = {},
+  setEditModal = () => {},
+}) => {
   const {
     register,
     handleSubmit,
@@ -32,39 +32,60 @@ const CategoryForm = ({ mode = "add", updationBrand = {}, setEditModal }) => {
 
   const navigate = useNavigate();
   const {
-    addCategory,
     isLoading,
     getCategoriesByLevel,
+    level3Categories,
     level2Categories,
     level1Categories,
-    updateCategory,
-    formErrors,
-    resetFormErrors,
   } = useCategory();
 
-  const { loading } = useBrands();
+  const { loading, resetFormErrors, createBrand, formErrors } = useBrands();
 
   const [images, setImages] = useState([]);
   const [resetDropBox, setResetDropBox] = useState(false);
+  const [booleanData, setBooleanData] = useState({
+    active: updationBrand?.isActive || false,
+    verified: updationBrand?.isVerified || false,
+  });
 
   const [editIndex, setEditIndex] = useState(-1);
+  const allCategories = [
+    ...(level1Categories || []),
+    ...(level2Categories || []),
+    ...(level3Categories || []),
+  ];
+
+  const categoryOptions = allCategories?.map((cat) => ({
+    label: cat.name,
+    value: cat._id,
+  }));
 
   const resetFormStates = () => {
     reset();
     setEditIndex(-1);
     setResetDropBox(true);
     setImages([]);
+    setEditModal(false);
   };
 
   const onSubmit = async (data) => {
+    resetFormErrors();
     if (images.length === 0) {
       return toast.error("Image is required.");
     }
-    const update = await updateCategory(data);
-    if (update) {
+    const details = {
+      ...data,
+      image: images[0],
+      isActive: booleanData.active,
+      isVerified: booleanData.verified,
+      categories: JSON.stringify([...data.categories?.map((cat) => cat.value)]),
+    };
+    const created = await createBrand(details);
+    if (created) {
       resetFormStates();
-      setEditModal(false);
+      navigate("/brands");
     }
+    console.log(details);
   };
 
   useEffect(() => {
@@ -76,9 +97,6 @@ const CategoryForm = ({ mode = "add", updationBrand = {}, setEditModal }) => {
       setEditModal(false);
     };
   }, []);
-  useEffect(() => {
-    if (mode !== "edit" && updationCategory.level > 1) return;
-  }, [mode]);
   return (
     <>
       <div className="flex flex-col gap-4">
@@ -88,15 +106,16 @@ const CategoryForm = ({ mode = "add", updationBrand = {}, setEditModal }) => {
           className="flex flex-col gap-4 w-full "
         >
           <>
-            <div className="flex items-center gap-4 w-full">
+            <div className="w-full">
               <TextField
+                error={errors.name?.message}
                 className="w-full bg-white"
                 {...register("name")}
                 name="name"
                 defaultValue={mode === "edit" ? updationBrand.name : ""}
-                label="Category Name"
+                label="Brand Name"
                 variant="outlined"
-                required
+                // required
                 size="small"
               />
               <FormError error={errors.name?.message} />
@@ -117,35 +136,65 @@ const CategoryForm = ({ mode = "add", updationBrand = {}, setEditModal }) => {
             />
             <FormError error={errors.description?.message} />
           </>
-
+          <>
+            <SelectableInput
+              disableCloseOnSelect={true}
+              // required={true}
+              control={control}
+              defaultValue={updationBrand?.categories}
+              error={errors.categories?.message}
+              name={"categories"}
+              label={"Categories"}
+              options={categoryOptions}
+              getValue={(value) =>
+                setValue("categories", value, { shouldValidate: true })
+              }
+              loading={
+                isLoading("level1categories") ||
+                isLoading("level2categories") ||
+                isLoading("level3categories")
+              }
+            />
+            <FormError error={errors.categories?.message} />
+          </>
           <div className="w-[30%]">
             <ImageDropBox
+              resetDropBox={resetDropBox}
+              setResetDropBox={setResetDropBox}
               initialImages={mode === "edit" ? [updationBrand?.image?.url] : []}
               setImages={setImages}
               maxFiles={1}
             />
           </div>
-          <div>
+          <div className="w-60 space-y-5">
             <CustomToggle
-              checked={brand.isActive}
+              disableIcons={true}
+              checked={booleanData.active}
               loading={loading}
               disabled={loading}
-              //   onChange={(val) => handleStatusChange(val)}
+              onChange={(value) => {
+                setBooleanData({ ...booleanData, active: value });
+              }}
             />
             <CustomToggle
-              checked={brand.isActive}
+              activeText="Verified"
+              inActiveText="Not Verified"
+              disableIcons={true}
+              checked={booleanData.verified}
               loading={loading}
               disabled={loading}
-              //   onChange={(val) => handleStatusChange(val)}
+              onChange={(value) =>
+                setBooleanData({ ...booleanData, verified: value })
+              }
             />
           </div>
           <div className="mx-auto">
             <CustomButton
-              title={mode === "edit" ? "Save Changes" : "AddCategory"}
+              title={mode === "edit" ? "Save Changes" : "Add Brand"}
               loading={loading}
-              disabled={loading || editIndex > -1 || isAddAttributeFormEnabled}
+              disabled={loading || editIndex > -1}
               type={"submit"}
-              className={"rounded-0! bg-primary! w-70"}
+              className={"rounded-2xl! bg-blue-500! w-70"}
             />
           </div>
         </form>
@@ -154,4 +203,4 @@ const CategoryForm = ({ mode = "add", updationBrand = {}, setEditModal }) => {
   );
 };
 
-export default CategoryForm;
+export default BrandForm;

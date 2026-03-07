@@ -68,10 +68,10 @@ const ProductRow = ({ product, index }) => {
         <td className="px-6 py-4 whitespace-nowrap">
           {product?.variants?.length}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap">
+        <td className="px-6 py-4 whitespace-nowrap text-[12px]">
           {getFixedDateAndTimeString(product?.createdAt)}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap">
+        <td className="px-6 py-4 whitespace-nowrap text-[12px]">
           {getFixedDateAndTimeString(product?.updatedAt)}
         </td>
         <td className="px-6 py-4 whitespace-nowrap">

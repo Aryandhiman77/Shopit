@@ -3,10 +3,13 @@ import React from "react";
 import { MdDeleteOutline, MdModeEditOutline } from "react-icons/md";
 import CustomToggle from "../../Reusables/Elements/CustomToggle";
 import { getFixedDateAndTimeString } from "../../../utilities/getDateAndTime";
+import useBrands from "../../hooks/useBrands";
 
 const BrandRow = ({ brand, index, handleEdit }) => {
-  const handleStatusChange = (id) => {
-    console.log(id);
+  const { updateBrand, isLoading } = useBrands();
+  const handleStatusChange = async (value) => {
+    console.log(value);
+    updateBrand(brand?._id, { isActive: value });
   };
   return (
     <>
@@ -14,7 +17,7 @@ const BrandRow = ({ brand, index, handleEdit }) => {
         className={`border "border-2 border-b-0 bg-amber-50" dark:bg-gray-900 dark:border-gray-400! border-gray-500`}
       >
         <td className="px-4 py-4  text-center font-semibold text-black">
-          #{brand._id.slice(19)}
+          #{brand?._id.slice(19)}
         </td>
         <td className="px-6 py-4 border border-gray-400">
           <img
@@ -36,22 +39,22 @@ const BrandRow = ({ brand, index, handleEdit }) => {
             </Tooltip>
           </div>
         </td> */}
-        <td className="px-2 py-4 whitespace-nowrap text-center border border-gray-400 text-[12px] font-medium text-black">
+        <td className="px-2 py-4 border border-gray-400 text-[12px] font-medium text-black">
           {brand?.categories?.map((item) => item?.name).join(", ")}
         </td>
 
         <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
           <CustomToggle
-            checked={brand.isActive}
-            // loading={loading}
-            // disabled={loading}
+            checked={brand?.isActive}
+            loading={isLoading(`update-${brand?._id}-brand`)}
+            disabled={isLoading(`update-${brand?._id}-brand`)}
             onChange={(val) => handleStatusChange(val)}
           />
         </td>
-        <td className="px-6 py-4 whitespace-nowrap  border border-gray-400">
+        <td className="px-6 py-4 whitespace-nowrap  border border-gray-400 text-[12px]">
           {getFixedDateAndTimeString(brand?.createdAt)}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
+        <td className="px-6 py-4 whitespace-nowrap border border-gray-400 text-[12px]">
           {getFixedDateAndTimeString(brand?.updatedAt)}
         </td>
 
@@ -59,7 +62,7 @@ const BrandRow = ({ brand, index, handleEdit }) => {
           <div className="flex gap-4 justify-center">
             <Tooltip title="Edit Brand">
               <button
-                onClick={() => handleEdit(brand._id)}
+                onClick={() => handleEdit(brand?._id)}
                 className="custom-btn custom-border bg-green-600! text-white hover:text-[#e5e5e5]!"
               >
                 <MdModeEditOutline className="text-lg" />

@@ -108,6 +108,7 @@ const BasicProductInfo = ({
             </div>
             <div className="w-1/2">
               <SelectableInput
+                disableCloseOnSelect={true}
                 control={control}
                 defaultValue={defaultData?.brand}
                 error={errors.brand?.message}

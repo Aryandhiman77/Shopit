@@ -11,6 +11,7 @@ const SelectableInput = ({
   options = [],
   multiple = true,
   defaultValue,
+  disableCloseOnSelect = false,
   error,
 }) => {
   return (
@@ -21,6 +22,7 @@ const SelectableInput = ({
       render={({ field }) => (
         <Autocomplete
           {...field}
+          disableCloseOnSelect={disableCloseOnSelect}
           multiple={multiple}
           options={options || []}
           loading={loading}

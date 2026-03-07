@@ -57,10 +57,10 @@ const InnerSubCategoryRow = ({
             }}
           />
         </td>
-        <td className="px-6 py-4 whitespace-nowrap  border border-gray-400">
+        <td className="px-6 py-4 whitespace-nowrap  border border-gray-400 text-[12px]">
           {getFixedDateAndTimeString(innerSubcategory?.createdAt)}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap border border-gray-400">
+        <td className="px-6 py-4 whitespace-nowrap border border-gray-400 text-[12px]">
           {getFixedDateAndTimeString(innerSubcategory?.updatedAt)}
         </td>
 

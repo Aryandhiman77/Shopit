@@ -32,6 +32,7 @@ import ProductsProvider from "./Context/Products/ProductsProvider";
 import BrandProvider from "./Context/Brand/BrandProvider";
 import PageNotFound from "./Pages/404";
 import BrandList from "./Pages/Brands";
+import AddBrand from "./Pages/Brands/AddBrand";
 
 const App = () => {
   return (
@@ -50,11 +51,11 @@ const App = () => {
 
               <Route element={<ProtectedRoute />}>
                 <Route element={<Layout />}>
-                  <Route path="/" element={<Dashboard />} />
                   <Route element={<ProductsProvider />}>
+                    <Route path="/" element={<Dashboard />} />
                     <Route element={<BrandProvider />}>
                       <Route path="/brands" element={<BrandList />} />
-                      {/* <Route path="/brand/add" element={<AddProduct />} /> */}
+                      <Route path="/brand/add" element={<AddBrand />} />
                     </Route>
                     <Route element={<BrandProvider />}>
                       <Route path="/products" element={<Products />} />

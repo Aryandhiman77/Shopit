@@ -18,12 +18,12 @@ import NoBrands from "../../assets/noBrands.png";
 // import BrandForm from "../../Components/BrandForm";
 
 const BrandList = () => {
-  const { brands, getBrands, loading } = useBrands();
+  const { brands, getBrands, loading, updateBrand } = useBrands();
 
-  const handleEdit = (id) => {
-    console.log(id);
-  };
-
+  // const handleStatusChange = async (id) => {
+  //   const response = await updateBrand(id, { status });
+  // };
+  const handleEdit = () => {};
   useEffect(() => {
     getBrands(10, 1);
   }, []);
