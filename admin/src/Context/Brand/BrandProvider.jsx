@@ -14,7 +14,7 @@ const BrandProvider = () => {
   const [brandListing, setBrandListing] = useState([]);
   const [brands, setBrands] = useState([]);
   const [formErrors, setFormErrors] = useState([]);
-  const { isLoading, toggleLoading } = useLoading();
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const getBrandsListing = async () => {
     setLoading(true);
