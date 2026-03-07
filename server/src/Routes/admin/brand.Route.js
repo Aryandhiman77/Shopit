@@ -32,7 +32,7 @@ brandRoutes
   .get("/get-brand/:slug", getSingleBrand)
   .patch("/:id/update", validate(updateBrandSchema), updateBrand)
   .patch("/:id/logo", upload.single("logo"), updateBrandLogo)
-  .delete("/:slug/delete", deleteBrand)
+  .delete("/:id/delete", deleteBrand)
   .get("/all-brand-requests", getAllBrandRequests)
   .put("/approve-seller-docs/:reqId", approveSellerDocsAndCreateBrand)
   .patch("/reject-seller-docs/:reqId", rejectSellerDocsWithMessage)

@@ -21,12 +21,10 @@ export const createBrandService = async (
   }
   const isExistingBrand = await Brand.findOne({ name });
   if (isExistingBrand) {
-    fs.unlinkSync(file.path);
     throw new ApiError(400, "Brand already exists.");
   }
   const uploaded = await uploadWithRetry(file.path);
   if (!uploaded) {
-    fs.unlinkSync(file.path);
     throw new ApiError(400, "Technical issue, cannot upload brand logo.");
   }
   const brandData = {
@@ -41,19 +39,10 @@ export const createBrandService = async (
     },
   };
   const createdBrand = await Brand.create(brandData);
-  fs.unlinkSync(file.path);
+  unlinkFiles(file);
   if (!createdBrand)
     throw new ApiError(400, "Technical issue, cannot create brand.");
-  const savedBrand = {
-    name: createdBrand.name,
-    description: createdBrand.description,
-    logo: createdBrand.logo.url,
-    slug: createdBrand.slug,
-    isActive: createdBrand.isActive,
-    isVerified: createdBrand.isVerified,
-    // seller:"Shop-it" // ! should not be static
-  };
-  return { brand: savedBrand };
+  return createdBrand;
 };
 
 export const getBrandsService = async () => {
@@ -121,8 +110,8 @@ export const updateBrandLogoService = async (id, file) => {
   return brand;
 };
 
-export const deleteBrandService = async ({ slug }) => {
-  const brand = await Brand.findOne({ slug }).select("_id logo");
+export const deleteBrandService = async ({ id }) => {
+  const brand = await Brand.findById({ _id: id }).select("_id logo");
   if (!brand) {
     throw new ApiError(404, "Brand not found.");
   }

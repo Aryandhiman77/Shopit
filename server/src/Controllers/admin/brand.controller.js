@@ -18,13 +18,14 @@ import fs from "fs";
 
 export const createBrand = AsyncWrapper(async (req, res, next) => {
   try {
-    const { brand } = await createBrandService(req.data, req.file);
+    const brand = await createBrandService(req.data, req.file);
     return res
       .status(200)
       .json(new ApiResponse(200, brand, "Brand created successfully."));
   } catch (error) {
-    let err = error;
-    fs.unlink(req.file.path, (errors) => (err += errors));
+    if (req.file) {
+      unlinkFiles(file);
+    }
     next(err);
   }
 });
@@ -65,8 +66,8 @@ export const updateBrandLogo = AsyncWrapper(async (req, res) => {
 });
 
 export const deleteBrand = AsyncWrapper(async (req, res) => {
-  const { slug } = req.params;
-  await deleteBrandService({ slug });
+  const { id } = req.params;
+  await deleteBrandService({ id });
   return res
     .status(200)
     .json(new ApiResponse(200, null, "Brand deleted successfully."));

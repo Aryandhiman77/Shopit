@@ -21,29 +21,45 @@ export const createBrandSchema = Joi.object({
   }),
   categories: Joi.array()
     .items(Joi.string())
+    .required()
     .external(async (value) => {
       const categoryIds = [];
-      for (const slug of value) {
-        const category = await Categories.findOne({ slug });
-        if (!category) {
-          throw new Joi.ValidationError("Category does not exist.", [
-            {
-              message: `Category "${slug}" does not exist.`,
-              path: ["category"],
-              type: "any.valid",
-              context: { label: "category", value: slug },
-            },
-          ]);
-        }
-        categoryIds.push(category._id);
+      const categoryData = await Categories.find({
+        _id: { $in: [...value] },
+      })
+        .select("_id name")
+        .lean();
+      if (categoryData.length !== value.length) {
+        const invalidCategorories = [];
+        categoryData?.forEach((cat, i) => {
+          const isValid = value.includes(cat?._id);
+          if (!isValid) {
+            invalidCategorories.push(i + 1);
+          }
+        });
+        const formattedInvalidCategories = invalidCategorories
+          ?.map((cat) => cat)
+          .join(", ");
+        throw new Joi.ValidationError("Invalid Categories.", [
+          {
+            message: `Categories ("${formattedInvalidCategories}") does not exist.`,
+            path: ["category"],
+            type: "any.valid",
+            context: { label: "category", value: formattedInvalidCategories },
+          },
+        ]);
       }
-      return categoryIds;
+      return value;
     })
     .messages({
       "any.required": "Category is required.",
       "array.base": "Category is required.",
     }),
-});
+})
+  .unknown(false)
+  .messages({
+    "object.unknown": "Extra fields are not allowed.",
+  });
 export const updateBrandSchema = Joi.object({
   name: Joi.string()
     .lowercase()

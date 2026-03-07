@@ -6,6 +6,9 @@ import {
 } from "../../Helpers/cloudinary.js";
 import fs from "fs";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
+
+
+
 export const createCategoryService = async (
   { name, parent, level, attributes, description },
   file,
@@ -135,6 +138,9 @@ export const updateCategoryStatusService = async ({ catId }, { isActive }) => {
   });
   if (!category) {
     throw new ApiError(400, "Invalid category.");
+  }
+  if (!category.image.public_id && isActive) {
+    throw new ApiError(400, "Image is required to make category active.");
   }
   if (category.parentCategory?.isActive === false) {
     throw new ApiError(
