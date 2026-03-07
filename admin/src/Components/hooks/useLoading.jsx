@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 
 const useLoading = () => {
   const [loading, setLoading] = useState({});
@@ -7,17 +7,16 @@ const useLoading = () => {
     setLoading((prev) => ({ ...prev, [key]: true }));
   };
   const stopLoading = (key) => {
-    setLoading((prev) => ({ ...prev, [key]: false }));
+    setLoading((prev) => {
+      const updated = { ...prev };
+      delete updated[key];
+      return updated;
+    });
   };
   const isLoading = (key) => {
     return loading[key] || false;
   };
-  useEffect(() => {
-    return () => {
-      setLoading({});
-    };
-  }, []);
-  console.log(loading);
+
   return { isLoading, startLoading, stopLoading };
 };
 

@@ -16,14 +16,17 @@ import Spinner from "../../Components/Reusables/Elements/Loader/Spinner";
 import Table from "../../Components/Table";
 import NoBrands from "../../assets/noBrands.png";
 // import BrandForm from "../../Components/BrandForm";
+import { useNavigate } from "react-router-dom";
 
 const BrandList = () => {
   const { brands, getBrands, loading, updateBrand } = useBrands();
 
-  // const handleStatusChange = async (id) => {
-  //   const response = await updateBrand(id, { status });
-  // };
-  const handleEdit = () => {};
+  const navigate = useNavigate();
+  const handleEdit = (id) => {
+    const brandToBeUpdated = brands.filter((item) => item._id === id);
+    console.log(brandToBeUpdated);
+    navigate(`/update/${brandToBeUpdated?.slug}`);
+  };
   useEffect(() => {
     getBrands(10, 1);
   }, []);
