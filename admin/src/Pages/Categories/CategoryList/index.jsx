@@ -37,7 +37,6 @@ const CategoryList = () => {
   } = useCategory();
   const [open, setOpen] = useState(false);
   const handleEdit = (id) => {
-    if (!id) return;
     setOpen(true);
     getCategory(id);
   };

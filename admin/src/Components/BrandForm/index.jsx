@@ -20,26 +20,44 @@ const BrandForm = ({
   updationBrand = {},
   setEditModal = () => {},
 }) => {
+  const prepareUpdationData = () => {
+    if (mode !== "edit") return;
+    const { name, description, isVerified, isActive } = updationBrand;
+    let updationBrandDefaultData = mode === "edit" && {
+      name,
+      description,
+      isVerified,
+      isActive,
+      categories: updationBrand?.categories?.map((cat) => ({
+        label: cat.name,
+        value: cat._id,
+      })),
+    };
+    return updationBrandDefaultData;
+  };
+
   const {
     register,
     handleSubmit,
     setValue,
     reset,
-    watch,
     control,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(brandValidationSchema) });
+  } = useForm({
+    resolver: yupResolver(brandValidationSchema),
+    defaultValues: prepareUpdationData(),
+  });
 
   const navigate = useNavigate();
   const {
-    isLoading,
     getCategoriesByLevel,
     level3Categories,
     level2Categories,
     level1Categories,
   } = useCategory();
 
-  const { loading, resetFormErrors, createBrand, formErrors } = useBrands();
+  const { isLoading, resetFormErrors, createBrand, formErrors, updateBrand } =
+    useBrands();
 
   const [images, setImages] = useState([]);
   const [resetDropBox, setResetDropBox] = useState(false);
@@ -48,7 +66,6 @@ const BrandForm = ({
     verified: updationBrand?.isVerified || false,
   });
 
-  const [editIndex, setEditIndex] = useState(-1);
   const allCategories = [
     ...(level1Categories || []),
     ...(level2Categories || []),
@@ -62,7 +79,6 @@ const BrandForm = ({
 
   const resetFormStates = () => {
     reset();
-    setEditIndex(-1);
     setResetDropBox(true);
     setImages([]);
     setEditModal(false);
@@ -70,6 +86,22 @@ const BrandForm = ({
 
   const onSubmit = async (data) => {
     resetFormErrors();
+    if (mode === "edit" && Object.keys(updationBrand).length > 0) {
+      const formdata = {
+        ...data,
+        logo: images[0] instanceof File ? images[0] : undefined,
+        isActive: booleanData.active,
+        isVerified: booleanData.verified,
+        categories: [...data.categories?.map((cat) => cat.value)],
+      };
+
+      const update = await updateBrand(updationBrand._id, formdata);
+      if (update) {
+        resetFormStates();
+      }
+      return;
+    }
+
     if (images.length === 0) {
       return toast.error("Image is required.");
     }
@@ -94,7 +126,6 @@ const BrandForm = ({
     getCategoriesByLevel(3);
     return () => {
       resetFormErrors();
-      setEditModal(false);
     };
   }, []);
   return (
@@ -112,7 +143,6 @@ const BrandForm = ({
                 className="w-full bg-white"
                 {...register("name")}
                 name="name"
-                defaultValue={mode === "edit" ? updationBrand.name : ""}
                 label="Brand Name"
                 variant="outlined"
                 // required
@@ -126,7 +156,6 @@ const BrandForm = ({
             <TextField
               className="w-full bg-white"
               {...register("description")}
-              defaultValue={mode === "edit" ? updationBrand.description : ""}
               name="description"
               label="Description"
               variant="outlined"
@@ -141,18 +170,15 @@ const BrandForm = ({
               disableCloseOnSelect={true}
               // required={true}
               control={control}
-              defaultValue={updationBrand?.categories}
+              defaultValue={
+                (updationBrand?.categories?.length && {}) || undefined
+              }
               error={errors.categories?.message}
               name={"categories"}
               label={"Categories"}
               options={categoryOptions}
               getValue={(value) =>
                 setValue("categories", value, { shouldValidate: true })
-              }
-              loading={
-                isLoading("level1categories") ||
-                isLoading("level2categories") ||
-                isLoading("level3categories")
               }
             />
             <FormError error={errors.categories?.message} />
@@ -161,7 +187,7 @@ const BrandForm = ({
             <ImageDropBox
               resetDropBox={resetDropBox}
               setResetDropBox={setResetDropBox}
-              initialImages={mode === "edit" ? [updationBrand?.image?.url] : []}
+              initialImages={mode === "edit" ? [updationBrand?.logo?.url] : []}
               setImages={setImages}
               maxFiles={1}
             />
@@ -170,8 +196,6 @@ const BrandForm = ({
             <CustomToggle
               disableIcons={true}
               checked={booleanData.active}
-              loading={loading}
-              disabled={loading}
               onChange={(value) => {
                 setBooleanData({ ...booleanData, active: value });
               }}
@@ -181,8 +205,6 @@ const BrandForm = ({
               inActiveText="Not Verified"
               disableIcons={true}
               checked={booleanData.verified}
-              loading={loading}
-              disabled={loading}
               onChange={(value) =>
                 setBooleanData({ ...booleanData, verified: value })
               }
@@ -191,8 +213,8 @@ const BrandForm = ({
           <div className="mx-auto">
             <CustomButton
               title={mode === "edit" ? "Save Changes" : "Add Brand"}
-              loading={loading}
-              disabled={loading || editIndex > -1}
+              loading={isLoading(`update-${updationBrand?._id}-brand`)}
+              disabled={isLoading(`update-${updationBrand?._id}-brand`)}
               type={"submit"}
               className={"rounded-2xl! bg-blue-500! w-70"}
             />

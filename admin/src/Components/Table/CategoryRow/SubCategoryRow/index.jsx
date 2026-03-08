@@ -63,14 +63,13 @@ const SubCategoryRow = ({
         <td className="px-4 py-4  text-center border font-semibold text-black">
           #{subCategory._id.slice(19)}
         </td>
-        <td className="px-6 py-4">
-          <div className="w-[150px]">
-            <img
-              src={subCategory?.image?.url}
-              className="w-10 h-10 rounded-xl  object-contain"
-              alt=""
-            />
-          </div>
+        <td className="px-6 py-4 border border-gray-400">
+          <img
+            loading="lazy"
+            src={subCategory?.image?.url}
+            className="w-15 h-auto rounded-xl  object-contain"
+            alt=""
+          />
         </td>
         <td className="px-6 py-4 border border-gray-400 ">
           <div className="p-2">

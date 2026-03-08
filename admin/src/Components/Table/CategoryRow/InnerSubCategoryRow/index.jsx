@@ -25,14 +25,13 @@ const InnerSubCategoryRow = ({
         <td className="px-4 py-4  text-center border font-semibold text-black">
           #{innerSubcategory._id.slice(19)}
         </td>
-        <td className="px-6 py-4">
-          <div className="w-[150px] flex justify-center ">
-            <img
-              src={innerSubcategory?.image?.url}
-              className="w-13 h-13 rounded-xl  object-contain"
-              alt=""
-            />
-          </div>
+        <td className="px-6 py-4 border border-gray-400">
+          <img
+            loading="lazy"
+            src={innerSubcategory?.image?.url}
+            className="w-15 h-auto rounded-xl  object-contain"
+            alt=""
+          />
         </td>
         <td className="px-6 py-4 border border-gray-400 ">
           <div className="p-2">

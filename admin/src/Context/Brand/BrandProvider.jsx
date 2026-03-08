@@ -65,14 +65,41 @@ const BrandProvider = () => {
     }
     setLoading(false);
   };
+
+  const updateBrandLogo = async (id, image) => {
+    const formdata = ConvertToFormData({ image });
+    const response = await fetchData({
+      url: `${ADMIN_BRAND_API}/${id}/logo`,
+      method: "PATCH",
+      payload: formdata,
+      isFormData: true,
+    });
+    if (response?.success) {
+      return response.data;
+    }
+    if (response?.error) {
+      stopLoading(`update-${id}-brand`);
+      return false;
+    }
+    return false;
+  };
+
   const updateBrand = async (id, details) => {
+    console.log(details);
     startLoading(`update-${id}-brand`);
+    if (details.logo && details.logo instanceof File) {
+      const imageUpdated = await updateBrandLogo(id, details.logo);
+      if (!imageUpdated) {
+        toast.error("Cannot update logo.");
+        return;
+      }
+      delete details.image;
+    }
     const response = await fetchData({
       url: `${ADMIN_BRAND_API}/${id}/update`,
       method: "PATCH",
       payload: details,
     });
-    console.log(response);
     if (response?.success) {
       setBrands((prev) =>
         prev?.map((b) => (b._id === id ? { ...b, ...response.data } : b)),
@@ -82,6 +109,10 @@ const BrandProvider = () => {
       return response.data;
     }
     if (response?.error) {
+      stopLoading(`update-${id}-brand`);
+    }
+    if (response?.formErrors) {
+      setFormErrors(response?.formErrors);
       stopLoading(`update-${id}-brand`);
     }
     stopLoading(`update-${id}-brand`);

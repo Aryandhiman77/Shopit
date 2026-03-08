@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BreadCrumb from "../../Components/Reusables/Elements/BreadCrumb";
 import Box from "../../Components/Reusables/Elements/Box";
 import CustomButton from "../../Components/Reusables/Elements/CustomBtn";
@@ -17,15 +17,20 @@ import Table from "../../Components/Table";
 import NoBrands from "../../assets/noBrands.png";
 // import BrandForm from "../../Components/BrandForm";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../Components/Reusables/Elements/Modal";
+import BrandForm from "../../Components/BrandForm";
 
 const BrandList = () => {
-  const { brands, getBrands, loading, updateBrand } = useBrands();
-
+  const { brands, getBrands, loading } = useBrands();
+  const [editMode, setEditMode] = useState(false);
+  const [updationDetails, setUpdationDetails] = useState(null);
   const navigate = useNavigate();
   const handleEdit = (id) => {
-    const brandToBeUpdated = brands.filter((item) => item._id === id);
-    console.log(brandToBeUpdated);
-    navigate(`/update/${brandToBeUpdated?.slug}`);
+    const brandToBeUpdated = brands.filter((item) => item._id === id)[0];
+    if (brandToBeUpdated) {
+      setEditMode(true);
+      setUpdationDetails(brandToBeUpdated);
+    }
   };
   useEffect(() => {
     getBrands(10, 1);
@@ -187,7 +192,22 @@ const BrandList = () => {
           )}
         </Box>
       </div>
-      {/* <BrandForm /> */}
+      {
+        <Modal
+          open={editMode}
+          setOpen={setEditMode}
+          title={`Update brand`}
+          fixedFullScreen={false}
+        >
+          <div className="p-10 ">
+            <BrandForm
+              mode="edit"
+              updationBrand={updationDetails}
+              setEditModal={setEditMode}
+            />
+          </div>
+        </Modal>
+      }
     </>
   );
 };

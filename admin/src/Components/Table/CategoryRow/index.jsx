@@ -60,14 +60,12 @@ const CategoryRow = ({ category, index, handleEdit }) => {
           #{category._id.slice(19)}
         </td>
         <td className="px-6 py-4 border border-gray-400">
-          <div className="w-[150px]">
-            <img
-              loading="lazy"
-              src={category?.image?.url}
-              className="w-13 h-13 rounded-xl  object-contain"
-              alt=""
-            />
-          </div>
+          <img
+            loading="lazy"
+            src={category?.image?.url}
+            className="w-15 h-auto rounded-xl  object-contain"
+            alt=""
+          />
         </td>
         <td className="px-6 py-4 border border-gray-400 ">
           <div className="p-2">
