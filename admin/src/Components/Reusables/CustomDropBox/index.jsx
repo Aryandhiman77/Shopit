@@ -13,7 +13,7 @@ const sizes = {
 
 const CustomDropBox = ({
   multiple = false,
-  maxFiles = 4,
+  maxFiles = 1,
   sizePerFile = Enumerator(["1MB", "2MB", "3MB", "4MB"]),
   className,
   previewClasses,

@@ -93,7 +93,7 @@ const BrandProvider = () => {
         toast.error("Cannot update logo.");
         return;
       }
-      delete details.image;
+      delete details.logo;
     }
     const response = await fetchData({
       url: `${ADMIN_BRAND_API}/${id}/update`,
