@@ -205,10 +205,15 @@ const BrandForm = ({
             /> */}
 
             <CustomDropBox
+              reset={resetDropBox}
+              setReset={setResetDropBox}
               className={"w-fit h-50 max-w-full "}
+              initialPreviews={
+                mode === "edit" ? [{ image: updationBrand?.logo?.url }] : []
+              }
               sizePerFile={"2MB"}
               multiple={false}
-              getFiles={(files) => console.log(files)}
+              getFiles={(files) => setImages(files)}
             />
           </div>
           <div className="w-60 space-y-5">

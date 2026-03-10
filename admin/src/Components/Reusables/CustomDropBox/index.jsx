@@ -20,16 +20,18 @@ const CustomDropBox = ({
   previewsWrapperClasses,
   allowedMimeTypes = ["image/png", "image/jpg", "image/jpeg"],
   getFiles = () => {},
+  reset = false,
+  setReset = () => {},
+  initialPreviews = [],
 }) => {
   const [files, setFiles] = useState([]);
-  const [previews, setPreviews] = useState([]);
+  const [previews, setPreviews] = useState([...(initialPreviews || [])]);
   const styleRef = useRef(null);
   const inputRef = useRef(null);
   const difference = maxFiles - previews.length;
 
   const onDragEnter = (e) => {
     e.preventDefault();
-    styleRef.current.style.background = "#e6f1f3";
   };
   const onDragLeaveCapture = (e) => {
     e.preventDefault();
@@ -57,11 +59,20 @@ const CustomDropBox = ({
       appendFilesAndGeneratePreviews([...inputs]);
     } else {
       setFiles([]);
+      console.log([...inputs.slice(0, maxFiles)]);
       setFiles([...inputs.slice(0, maxFiles)]);
       generatePreviews([...inputs.slice(0, maxFiles)]);
     }
   };
-  // git commit -m "added drag and drop, error handling in customDropBox"
+  const handleReset = () => {
+    console.log("reset");
+    setReset(false);
+    setFiles([]);
+    setPreviews([]);
+    if (inputRef.current) {
+      inputRef.current.value = null;
+    }
+  };
   const generatePreviews = (files) => {
     let previews = Array.from(files).map((item) => {
       if (item instanceof File && typeof item === "object") {
@@ -95,6 +106,12 @@ const CustomDropBox = ({
     URL.revokeObjectURL(previews[i]?.image);
   };
   useEffect(() => {
+    if (reset) {
+      handleReset();
+      setReset(false);
+    }
+  }, [reset]);
+  useEffect(() => {
     return () => {
       previews.forEach((p) => URL.revokeObjectURL(p.image));
     };
@@ -104,7 +121,7 @@ const CustomDropBox = ({
   }, [files]);
   return (
     <>
-      {files?.length < maxFiles && (
+      {files?.length < maxFiles && previews.length < maxFiles && (
         <label
           id="image"
           className={`border border-dotted rounded-md flex justify-center items-center flex-col cursor-pointer transition-all duration-150 active:scale-95 ${className} `}
@@ -113,6 +130,7 @@ const CustomDropBox = ({
           onDragLeaveCapture={onDragLeaveCapture}
           onDragOver={(e) => {
             e.preventDefault();
+            styleRef.current.style.background = "#e6f1f3";
           }}
           onDragOverCapture={(e) => {
             e.preventDefault();
