@@ -14,7 +14,10 @@ import useBrands from "../hooks/useBrands";
 import brandValidationSchema from "./validation";
 import CustomToggle from "../Reusables/Elements/CustomToggle";
 import SelectableInput from "../Reusables/SelectableInput";
-
+import { MdClose } from "react-icons/md";
+import { IoIosClose, IoIosCloseCircle } from "react-icons/io";
+import imageUpload from "../../assets/imageUpload.png";
+import CustomDropBox from "../Reusables/CustomDropBox";
 const BrandForm = ({
   mode = "add",
   updationBrand = {},
@@ -136,6 +139,15 @@ const BrandForm = ({
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 w-full "
         >
+          {/* <div className="p-1 w-40 h-auto border border-gray-400 flex justify-center items-center mb-4  relative">
+            <img className="w-full" src={updationBrand?.logo?.url} alt="" />
+            <button
+              type="button"
+              className="cursor-pointer absolute right-0 top-1"
+            >
+              <IoIosCloseCircle size={20} className="text-red-500" />
+            </button>
+          </div> */}
           <>
             <div className="w-full">
               <TextField
@@ -183,13 +195,20 @@ const BrandForm = ({
             />
             <FormError error={errors.categories?.message} />
           </>
-          <div className="w-[30%]">
-            <ImageDropBox
+          <div className="py-4">
+            {/* <ImageDropBox
               resetDropBox={resetDropBox}
               setResetDropBox={setResetDropBox}
-              initialImages={mode === "edit" ? [updationBrand?.logo?.url] : []}
+              // initialImages={mode === "edit" ? [updationBrand?.logo?.url] : []}
               setImages={setImages}
               maxFiles={1}
+            /> */}
+
+            <CustomDropBox
+              className={"w-fit h-50 max-w-full "}
+              sizePerFile={"2MB"}
+              multiple={false}
+              getFiles={(files) => console.log(files)}
             />
           </div>
           <div className="w-60 space-y-5">
