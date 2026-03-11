@@ -18,6 +18,7 @@ import Autocomplete from "@mui/material/Autocomplete";
 import useCategory from "../hooks/useCategory";
 import BackendErrors from "../Reusables/Elements/BackendErrors";
 import SelectableInput from "../Reusables/SelectableInput";
+import CustomDropBox from "../Reusables/CustomDropBox";
 let i = 0;
 const maxCategoryRefreshes = 5;
 const CategoryForm = ({
@@ -261,15 +262,17 @@ const CategoryForm = ({
             <FormError error={errors.description?.message} />
           </>
 
-          <div className="w-[30%]">
-            <ImageDropBox
-              initialImages={
-                mode === "edit" ? [updationCategory?.image?.url] : []
+          <div className="py-4">
+            <CustomDropBox
+              initialPreviews={
+                mode === "edit" ? [{ image: updationCategory?.image?.url }] : []
               }
-              setImages={setImages}
+              className={"w-fit h-50 max-w-full "}
               maxFiles={1}
-              resetDropBox={resetDropBox}
-              setResetDropBox={setResetDropBox}
+              sizePerFile={"2MB"}
+              getFiles={(images) => setImages(images)}
+              reset={resetDropBox}
+              setReset={setResetDropBox}
             />
           </div>
 
