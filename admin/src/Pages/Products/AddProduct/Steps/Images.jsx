@@ -8,6 +8,7 @@ import Modal from "../../../../Components/Reusables/Elements/Modal";
 import Spinner from "../../../../Components/Reusables/Elements/Loader/Spinner";
 import toast from "react-hot-toast";
 import { FaCheckCircle } from "react-icons/fa";
+import CustomDropBox from "../../../../Components/Reusables/CustomDropBox";
 const Images = ({ setValue, errors }) => {
   const productId = localStorage.getItem("draftProductId");
   const thumb = JSON.parse(localStorage.getItem("draftProduct"))?.thumbnail;
@@ -68,11 +69,16 @@ const Images = ({ setValue, errors }) => {
         Product Images
       </div>
       <h3 className="px-1 py-3 text-sm font-[500]">Product Thumbnail</h3>
-      <div className="w-50!">
-        <ImageDropBox
+      <div className="w-70!">
+        {/* <ImageDropBox
           maxFiles={1}
           setImages={setThumbnail}
           initialImages={thumb && [thumb]}
+        /> */}
+        <CustomDropBox
+          sizePerFile={"2MB"}
+          getFiles={(images) => setThumbnail(images)}
+          initialPreviews={thumb && [{ image: thumb }]}
         />
         <FormError error={errors?.thumbnail?.message} />
         {Object.keys(thumbnail).length > 0 && (
@@ -94,7 +100,13 @@ const Images = ({ setValue, errors }) => {
         )}
       </div>
       <h3 className="px-1 py-3 text-sm font-[500]">Product Gallery</h3>
-      <ImageDropBox maxFiles={10} setImages={setGallery} initialImages={gall} />
+      {/* <ImageDropBox maxFiles={10} setImages={setGallery} initialImages={gall} /> */}
+      <CustomDropBox
+        sizePerFile={"2MB"}
+        getFiles={(images) => setGallery(images)}
+        maxFiles={10}
+        initialPreviews={[...(gall?.map((image) => ({ image })) || [])]}
+      />
       {gallery.length > 0 && !isUploaded.gallery && (
         <CustomButton
           disabled={loading}

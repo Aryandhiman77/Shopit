@@ -125,8 +125,9 @@ const AddProduct = () => {
         setCurrentStep((prev) => prev + 1);
       }
     }
-
-    steps[currentStep].progress = 100;
+    if (!errors) {
+      steps[currentStep].progress = 100;
+    }
   };
   const nextStep = async () => {
     const valid = await trigger();
@@ -222,13 +223,7 @@ const AddProduct = () => {
             />
           </>
         )}
-        {currentStep === 1 && (
-          <Images
-            productId={product?._id}
-            errors={errors}
-            setValue={setValue}
-          />
-        )}
+        {currentStep === 1 && <Images errors={errors} setValue={setValue} />}
         {currentStep === 2 && (
           <Description defaultData={data} setValue={setValue} errors={errors} />
         )}

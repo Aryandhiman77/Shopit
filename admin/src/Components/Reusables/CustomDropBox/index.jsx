@@ -14,7 +14,7 @@ const sizes = {
 const CustomDropBox = ({
   multiple = false,
   maxFiles = 1,
-  sizePerFile = Enumerator(["1MB", "2MB", "3MB", "4MB"]),
+  sizePerFile = ["1MB", "2MB", "3MB", "4MB"][0],
   className,
   previewClasses,
   previewsWrapperClasses,
@@ -113,7 +113,7 @@ const CustomDropBox = ({
   }, [reset]);
   useEffect(() => {
     return () => {
-      previews.forEach((p) => URL.revokeObjectURL(p.image));
+      previews?.forEach((p) => URL.revokeObjectURL(p?.image));
     };
   }, []);
   useEffect(() => {
@@ -177,9 +177,9 @@ const CustomDropBox = ({
               src={preview?.image}
               alt=""
             />
-            {preview.errorMessage && (
+            {preview?.errorMessage && (
               <p className="absolute bottom-0 text-red-600 text-[12px] text-center bg-white w-full">
-                {preview?.errorMessage}
+                {preview.errorMessage}
               </p>
             )}
             <button
