@@ -66,6 +66,7 @@ const AddProduct = () => {
   } = useForm({
     resolver: yupResolver(steps[currentStep]?.schema),
     defaultValues: data,
+    mode: "onChange",
   });
   const [currentProgress, setCurrentProgress] = useState(0);
 

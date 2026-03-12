@@ -53,30 +53,13 @@ const BasicProductInfo = ({
 
   // discount logic
   let discount = 0;
-  if (watch("base_mrp") && watch("base_price")) {
-    discount = Number(
+
+  discount =
+    watch("base_mrp") &&
+    watch("base_price") &&
+    Number(
       ((watch("base_mrp") - watch("base_price")) / watch("base_mrp")) * 100,
     ).toFixed(1);
-    discount = 100 - discount;
-  }
-
-  // progress bar calculation
-  // const values = watch();
-  // const valuesObj = ["title", "brand", "categories", "base_mrp", "base_price"];
-  // const totalFields = valuesObj.length;
-
-  // const filledFields = valuesObj.filter((key) => {
-  //   const value = values[key];
-  //   if (value !== undefined || value !== "" || value !== null) {
-  //     return value;
-  //   }
-  // }).length;
-  // const progressChunk = Math.round((filledFields / totalFields) * 100);
-  // console.log(progressChunk);
-
-  // useEffect(() => {
-  //   setCurrentProgress(progressChunk);
-  // }, [progressChunk]);
 
   useEffect(() => {
     getCategoriesByLevel(1);
@@ -100,9 +83,6 @@ const BasicProductInfo = ({
                 {...register("title")}
                 size="small"
                 type={"text"}
-                // onChange={(e) =>
-                //   setValue("title", e.target.value, { shouldValidate: true })
-                // }
               />
               <FormError className={"h-auto!"} error={errors.title?.message} />
             </div>
@@ -126,7 +106,7 @@ const BasicProductInfo = ({
           </div>
           <div className="flex flex-row gap-10">
             <SelectableInput
-              // required={true}
+              disableCloseOnSelect={true}
               control={control}
               defaultValue={defaultData?.categories}
               error={errors.categories?.message}
@@ -166,7 +146,7 @@ const BasicProductInfo = ({
                   : "border-gray-300 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
               }
                dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400`}
-              placeholder="Write brief description about product in 200 characters."
+              placeholder="Write brief description about product in 400 characters."
               maxLength={400}
               {...register("shortDescription")}
             />
@@ -189,9 +169,6 @@ const BasicProductInfo = ({
                 variant="outlined"
                 size="small"
                 type={"number"}
-                // onChange={(e) =>
-                //   setValue("base_mrp", e.target.value, { shouldValidate: true })
-                // }
               />
               <FormError
                 className={"h-auto!"}
@@ -202,11 +179,6 @@ const BasicProductInfo = ({
               <TextField
                 {...register("base_price")}
                 error={errors.base_price?.message}
-                // onChange={(e) =>
-                //   setValue("base_price", e.target.value, {
-                //     shouldValidate: true,
-                //   })
-                // }
                 name="base_price"
                 className="w-full"
                 label="Selling Price (tax incl.)"
@@ -217,37 +189,12 @@ const BasicProductInfo = ({
               <FormError error={errors.base_price?.message} />
             </div>
 
-            {/* <div className="flex flex-col gap-10 items-center my-4"> */}
-            {/* <div className={"bg-white"}> */}
-
-            {/* </div> */}
-            {/* </div> */}
-            {/* <TextField
-              disabled
-              className="w-1/4"
-              label="Discount in percentage (%)"
-              value={discount > 0 ? `${discount}` : null}
-              variant="outlined"
-              required={true}
-              size="small"
-              type={"number"}
-            /> */}
             {discount > 0 && (
               <div className="p-2 border w-1/3 rounded-sm">
                 Discount : {discount}
               </div>
             )}
           </div>
-          {/* <div className="w-full flex flex-row gap-20">
-            <div className="flex my-4 gap-2 justify-between ">
-              <p className="font-[500]"> Is Featured ?</p>
-              <CustomToggle />
-            </div>
-            <div className="flex my-4 gap-2 justify-between">
-              <p className="font-[500]"> Is Trending ?</p>
-              <CustomToggle defaultChecked={true} />
-            </div>
-          </div> */}
         </div>
       </Box>
     </>
