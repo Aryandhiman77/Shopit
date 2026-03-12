@@ -62,20 +62,27 @@ export const getCategoryService = async ({ level } = {}) => {
   return categories;
 };
 
-export const getCategoryProductsService = async ({ category } = {}) => {
-  if (!category) return [];
-
-  const cat = await Categories.findOne({ slug: category, isActive: true })
+export const getCategoryProductsService = async ({ categories } = {}) => {
+  if (!categories) return [];
+  const slugs = categories.split("/");
+  const cat = await Categories.find({
+    slug: { $in: [...slugs] },
+    isActive: true,
+  })
     .select("_id")
     .lean();
-
   if (!cat) return [];
-
-  const products = await Product.find({ category: cat._id, status: "active" })
-    .select("-_id title price mrp thumbnail brand category seller slug ")
+  const categoryIds = cat?.map((item) => item._id);
+  console.log(categoryIds);
+  const products = await Product.find({
+    categories: { $in: [...categoryIds] },
+    status: "active",
+  })
+    .sort({ name: -1 })
+    .select("-_id title price mrp thumbnail brand categories seller slug ")
     .populate([
       { path: "brand", select: "name slug -_id" },
-      { path: "category", select: "name -_id" },
+      { path: "categories", select: "name -_id" },
       { path: "seller", select: "name -_id" },
     ])
     .lean();

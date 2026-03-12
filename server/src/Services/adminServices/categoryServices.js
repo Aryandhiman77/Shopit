@@ -242,7 +242,7 @@ export const recursiveDeleteCategoryService = async (categoryId) => {
 
   // 4. Recursively delete children
   for (const child of childrens) {
-    await recursiveDeleteCategoryService(child._id);
+    await   (child._id);
   }
   // 5.Delete this category
   await Categories.deleteOne(category._id);

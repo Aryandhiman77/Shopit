@@ -5,6 +5,7 @@ import {
   getCategoryBrands,
   getCategoryProducts,
   getProducts,
+  getProduct,
 } from "../../Controllers/public/index.js";
 const publicRoutes = Router();
 
@@ -15,8 +16,10 @@ publicRoutes
   .get("/categories", getAllStructuredCategories)
   .get("/categories/:level", getCategories);
 
-publicRoutes.get("/products/:category", getCategoryProducts);
+publicRoutes.get("/products", getCategoryProducts);
+publicRoutes.get("/product/:slug", getProduct);
+// publicRoutes.get("/product/additional-information", getProductDetail);
 publicRoutes.get("/brands/:category", getCategoryBrands);
-publicRoutes.get("/products", getProducts);
+// publicRoutes.get("/products", getProducts);
 
 export default publicRoutes;

@@ -1,7 +1,7 @@
 import ApiResponse from "../../Helpers/ApiResponse.js";
 import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import { getCategoryService } from "../../Services/AdminSeller/AdminSeller.services.js";
-import { getStructuredCategories } from "../../Services/public/categoyServices.js";
+import { getStructuredCategories } from "../../Services/public/categoryServices.js";
 
 export const getCategories = AsyncWrapper(async (req, res) => {
   const { level } = req.params;
