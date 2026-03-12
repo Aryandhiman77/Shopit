@@ -82,7 +82,11 @@ export const updateBrandService = async ({
       "Brand updation failed.",
     ]);
   }
-  return brand;
+  const populated = await Brand.findById(saved._id).populate(
+    "categories",
+    "name",
+  );
+  return populated;
 };
 
 export const updateBrandLogoService = async (id, file) => {
@@ -96,18 +100,18 @@ export const updateBrandLogoService = async (id, file) => {
     throw new ApiError(400, "Invalid Brand id.");
   }
   // upload to cloudinary
-  const uploaded = uploadWithRetry(file?.path);
+  const uploaded = await uploadWithRetry(file?.path);
   if (!uploaded) {
     throw new ApiError(400, "Logo updation failed.", ["Cannot upload logo."]);
   }
   brand.logo.public_id = uploaded.public_id;
   brand.logo.url = uploaded.secure_url;
-  const saved = await Brand.save();
+  const saved = await brand.save();
   if (!saved) {
     unlinkFiles(file);
     throw new ApiError(400, "Logo updation failed.", ["Cannot upload logo."]);
   }
-  return brand;
+  return { logo: brand.logo.url };
 };
 
 export const deleteBrandService = async ({ id }) => {

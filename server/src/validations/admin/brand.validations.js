@@ -23,13 +23,12 @@ export const createBrandSchema = Joi.object({
     .items(Joi.string())
     .required()
     .external(async (value) => {
-      const categoryIds = [];
       const categoryData = await Categories.find({
-        _id: { $in: [...value] },
+        _id: { $in: [...(value || [])] },
       })
         .select("_id name")
         .lean();
-      if (categoryData.length !== value.length) {
+      if (categoryData?.length !== value?.length) {
         const invalidCategorories = [];
         categoryData?.forEach((cat, i) => {
           const isValid = value.includes(cat?._id);
@@ -96,27 +95,34 @@ export const updateBrandSchema = Joi.object({
     .optional(),
   categories: Joi.array()
     .items(Joi.string())
-    .external(async (value) => {
-      const categoryIds = [];
-      for (const slug of value) {
-        const category = await Categories.findOne({ slug });
-        if (!category) {
-          throw new Joi.ValidationError("Category does not exist.", [
-            {
-              message: `Category "${slug}" does not exist.`,
-              path: ["category"],
-              type: "any.valid",
-              context: { label: "category", value: slug },
-            },
-          ]);
-        }
-        categoryIds.push(category._id);
-      }
-      return categoryIds;
-    })
     .optional()
-    .messages({
-      "any.required": "Category is required.",
-      "array.base": "Category is required.",
+    .external(async (value) => {
+      if (!value && !value?.length) return value;
+      const categoryData = await Categories.find({
+        _id: { $in: [...(value || [])] },
+      })
+        .select("_id name")
+        .lean();
+      if (categoryData?.length !== value?.length) {
+        const invalidCategorories = [];
+        categoryData?.forEach((cat, i) => {
+          const isValid = value.includes(cat?._id);
+          if (!isValid) {
+            invalidCategorories.push(i + 1);
+          }
+        });
+        const formattedInvalidCategories = invalidCategorories
+          ?.map((cat) => cat)
+          .join(", ");
+        throw new Joi.ValidationError("Invalid Categories.", [
+          {
+            message: `Categories ("${formattedInvalidCategories}") does not exist.`,
+            path: ["category"],
+            type: "any.valid",
+            context: { label: "category", value: formattedInvalidCategories },
+          },
+        ]);
+      }
+      return value;
     }),
 });

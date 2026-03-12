@@ -50,7 +50,7 @@ export const updateBrand = AsyncWrapper(async (req, res, next) => {
   return res.status(200).json(new ApiResponse(200, brand, "Brand updated."));
 });
 
-export const updateBrandLogo = AsyncWrapper(async (req, res) => {
+export const updateBrandLogo = AsyncWrapper(async (req, res, next) => {
   try {
     const { id } = req.params;
     const brand = await updateBrandLogoService(id, req.file);

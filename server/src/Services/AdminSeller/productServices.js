@@ -53,6 +53,11 @@ export const getAllProducts = async (sellerId) => {
 };
 
 export const addThumbnailService = async (productId, thumbnail) => {
+  if (!productId || productId === "null") {
+    throw new ApiError(400, "Cannot identify product.", [
+      "Cannot identify product.",
+    ]);
+  }
   const product = await Product.findById(productId);
   if (!product) {
     throw new ApiError(404, "Product not found.");
@@ -76,7 +81,11 @@ export const addThumbnailService = async (productId, thumbnail) => {
 };
 
 export const addGalleryImagesService = async (productId, gallery) => {
-  console.log(gallery);
+  if (!productId || productId === "null") {
+    throw new ApiError(400, "Cannot identify product.", [
+      "Cannot identify product.",
+    ]);
+  }
   if (!gallery || gallery.length === 0) {
     throw new ApiError(400, "Please add a gallery.");
   }

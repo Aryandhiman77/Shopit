@@ -22,7 +22,7 @@ const brandRoutes = express.Router();
 
 brandRoutes
   .post(
-    "/create-brand",
+    "/create",
     upload.single("image"),
     jsonParser(["categories"]),
     validate(createBrandSchema),
@@ -30,8 +30,8 @@ brandRoutes
   )
   .get("/", getBrands)
   .get("/get-brand/:slug", getSingleBrand)
-  .patch("/:id/update", validate(updateBrandSchema), updateBrand)
-  .patch("/:id/logo", upload.single("logo"), updateBrandLogo)
+  .patch("/:id/update",  validate(updateBrandSchema), updateBrand)
+  .patch("/:id/logo", upload.single("image"), updateBrandLogo)
   .delete("/:id/delete", deleteBrand)
   .get("/all-brand-requests", getAllBrandRequests)
   .put("/approve-seller-docs/:reqId", approveSellerDocsAndCreateBrand)
