@@ -1,31 +1,18 @@
 import { createContext, useState } from "react";
-import DataContext from "./DataContext";
+import DataContext from "./CategoryContext";
 import { fetchData } from "../../utility/RequestAPI";
-const DataProvider = ({ children }) => {
+import CategoryContext from "./CategoryContext";
+import useLoading from "../../hooks/useLoading";
+const CategoryProvider = ({ children }) => {
   const [products, setProducts] = useState([]); // for listing
   const [productDetails, setDetails] = useState({}); // for showing the product detail page..
   const [categories, setCategories] = useState([]); // all categories
   const [brandsByCategory, setBrandsByCategory] = useState([]);
   const [level1Categories, setLevel1Categories] = useState([]);
+  const [level2Categories, setLevel2Categories] = useState([]);
+  const [level3Categories, setLevel3Categories] = useState([]);
   const [errors, setErrors] = useState({ categories: null, products: null });
-  const [loading, setLoading] = useState({});
-
-  const startLoading = (key) =>
-    setLoading((prev) => ({
-      ...prev,
-      [key]: (prev[key] || 0) + 1,
-    }));
-
-  const stopLoading = (key) =>
-    setLoading((prev) => ({
-      ...prev,
-      [key]: Math.max((prev[key] || 1) - 1, 0),
-    }));
-
-  const isLoading = (key) => {
-    return (loading[key] || 0) > 0;
-  };
-
+  const { isLoading, startLoading, stopLoading } = useLoading();
   const [adsBannerData, setAdsBannerData] = useState([
     {
       img: "https://rukminim2.flixcart.com/fk-p-flap/3240/540/image/1206619937a5421c.jpeg?q=60",
@@ -112,10 +99,33 @@ const DataProvider = ({ children }) => {
     stopLoading("orderedCategories");
   };
 
-  const getCategoryProducts = async (category) => {
+  const getCategoriesByLevel = async (level) => {
+    if (!level || level > 3) return;
+    startLoading(`level${level}categories`);
+    const response = await fetchData({
+      url: `/management/categories/${level}`,
+      method: "GET",
+    });
+    if (response?.success) {
+      if (level === 1) {
+        setLevel1Categories(response.data);
+      } else if (level === 2) {
+        setLevel2Categories(response.data);
+      } else {
+        setLevel3Categories(response.data);
+      }
+      stopLoading(`level${level}categories`);
+      return response.data;
+    }
+    if (response?.error) {
+      setErrors(response.error);
+      stopLoading(`level${level}categories`);
+    }
+  };
+  const getCategoryProducts = async (categories = "") => {
     startLoading("categoryProducts");
     const result = await fetchData({
-      url: `/products/${category}`,
+      url: `/products?categories=${categories}`,
       method: "GET",
     });
     if (result?.success) {
@@ -158,27 +168,29 @@ const DataProvider = ({ children }) => {
   ];
 
   return (
-    <DataContext.Provider
+    <CategoryContext.Provider
       value={{
         categories,
         adsBannerData,
         adsMiniBannersData,
         miniSliderBannerData,
         products,
-        level1Categories,
         cartItems,
         addresses,
         getCategoryProducts,
-        loading,
         getOrderedCategories,
         brandsByCategory,
         getBrandsByCategory,
         isLoading,
+        getCategoriesByLevel,
+        level1Categories,
+        level2Categories,
+        level3Categories,
       }}
     >
       {children}
-    </DataContext.Provider>
+    </CategoryContext.Provider>
   );
 };
 
-export default DataProvider;
+export default CategoryProvider;

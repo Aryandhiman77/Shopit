@@ -4,7 +4,7 @@ import React, { useContext } from "react";
 import { MdClose } from "react-icons/md";
 import { Link } from "react-router-dom";
 import CartPanelItem from "../../../Reusables/Items/CartPanelItem";
-import DataContext from "../../../../context/data/DataContext";
+import DataContext from "../../../../context/category/CategoryContext";
 
 const CartPanel = ({ setDrawerOpen }) => {
   const { cartItems } = useContext(DataContext);

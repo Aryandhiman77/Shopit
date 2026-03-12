@@ -13,7 +13,7 @@ import { Collapse } from "react-collapse";
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
 import Rating from "@mui/material/Rating";
-import useData from "../../hooks/useData";
+import useData from "../../hooks/useCategory";
 import { SkeletonText } from "../Reusables/Elements/Loader/skeleton";
 
 const Sidebar = () => {

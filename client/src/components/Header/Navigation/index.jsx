@@ -11,13 +11,13 @@ import DrawerNavigation from "./Drawer";
 import Level_2_CatMenu from "./Level_2_CatMenu";
 import "./style.css";
 import DrawerList from "./Drawer/DrawerList";
-import useData from "../../../hooks/useData";
+import useCategory from "../../../hooks/useCategory";
 import { SkeletonText } from "../../Reusables/Elements/Loader/skeleton";
 import useAxios from "../../../utility/RequestAPI";
 
 const NavigationBar = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const { getOrderedCategories, categories, isLoading } = useData();
+  const { getOrderedCategories, categories, isLoading } = useCategory();
   useEffect(() => {
     getOrderedCategories();
   }, []);
@@ -71,7 +71,7 @@ const NavigationBar = () => {
             ))
           )}
           <li className="relative !p-2 ">
-            <div >more</div>
+            <div>more</div>
           </li>
         </ul>
       </div>

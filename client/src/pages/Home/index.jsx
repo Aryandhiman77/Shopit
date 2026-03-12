@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import BannerSlider from "../../components/Reusables/Sliders/BannerSlider";
 import ItemSlider from "../../components/Reusables/Sliders/ItemSlider";
 import iphone from "/Users/aryan/Desktop/Projects/e-comm images/iphonvar.jpg";
@@ -10,7 +10,8 @@ import BannerItem from "../../components/Reusables/Items/BannerItem";
 import RichBannerItem from "../../components/Reusables/Items/RichBanerItem";
 import StaticBannerItem from "../../components/Reusables/Items/StaticBannerItem";
 import StaticBannerSection from "./StaticBannerSection";
-import DataContext from "../../context/data/DataContext";
+import DataContext from "../../context/category/CategoryContext";
+import useCategory from "../../hooks/useCategory";
 
 const Home = () => {
   const {
@@ -18,8 +19,11 @@ const Home = () => {
     adsMiniBannersData,
     miniSliderBannerData,
     productsData,
-  } = useContext(DataContext);
-  const level1Categories = [];
+    getCategoriesByLevel,
+    level1Categories,
+    level2Categories,
+    isLoading,
+  } = useCategory();
   const popularCategories = [
     {
       name: "Fashion",
@@ -130,6 +134,10 @@ const Home = () => {
       },
     },
   ];
+  useEffect(() => {
+    getCategoriesByLevel(1);
+    getCategoriesByLevel(2);
+  }, []);
   return (
     <div className="wrapper">
       <section className="main-section bg-[#fbecf9d0]">
@@ -145,7 +153,7 @@ const Home = () => {
           <ItemSlider
             breakpoints={true}
             spaceBetween={10}
-            items={popularCategories}
+            items={level2Categories}
             renderItem={(item) => <CategoryItem item={item} />}
           />
         </div>
@@ -159,7 +167,7 @@ const Home = () => {
                 Don't miss the current offers until the end of Season.
               </p>
             </div>
-            <ScrollTab items={level1Categories} />
+            {/* <ScrollTab items={popularCategories} /> */}
           </div>
           <div className="product-list mt-2">
             <ItemSlider
@@ -223,7 +231,10 @@ const Home = () => {
                 Don't miss the current offers until the end of Season.
               </p>
             </div>
-            <ScrollTab items={level1Categories} />
+            <ScrollTab
+              items={level1Categories}
+              loading={isLoading(`level1categories`)}
+            />
           </div>
           <div className="product-list mt-2">
             <ItemSlider

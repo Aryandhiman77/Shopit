@@ -9,16 +9,17 @@ import MenuItem from "@mui/material/MenuItem";
 import ProductItem from "../../components/Reusables/Items/ProductItem";
 import { GiHamburgerMenu } from "react-icons/gi";
 import Pagination from "@mui/material/Pagination";
-import useData from "../../hooks/useData";
+import useData from "../../hooks/useCategory";
 import noProductsImage from "../../assets/noProductFound.png";
 import "./style.css";
 import ProductSkeleton from "../../components/Reusables/Items/ProductItem/ProductSkeleton";
 import ProductSkeletonPage from "./ProductSkeletonPage";
+import useCategory from "../../hooks/useCategory";
 
 const ProductsListing = () => {
   const params = useParams();
   const category = params?.category;
-  const { products, getCategoryProducts, isLoading } = useData();
+  const { products, getCategoryProducts, isLoading } = useCategory();
 
   const [viewStyle, setViewStyle] = useState("grid");
   const [anchorEl, setAnchorEl] = useState(null);

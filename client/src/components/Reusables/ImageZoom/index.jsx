@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
 import "./style.css";
-import grid from "../../../assets/grid.png"
+import grid from "../../../assets/grid.png";
 
-const ImageZoom = ({ image, children }) => {
+const ImageZoom = ({ image = "", children }) => {
   const lens = useRef(null);
   const mainImage = useRef(null);
   const magnifiedImage = useRef(null);
@@ -26,12 +26,12 @@ const ImageZoom = ({ image, children }) => {
     magnifiedImage.current.style = `background:url(${image}) 
       -${x * cx}px -${y * cy}px /
       ${product_image_rect.width * cx}px ${product_image_rect.height * cy}px no-repeat`;
-      magnifiedImage.current.classList.remove("hidden") ;
+    magnifiedImage.current.classList.remove("hidden");
   };
 
   const onMouseLeavesImage = () => {
     magnifiedImage.current.style = "opacity:0";
-    magnifiedImage.current.classList.add("hidden") 
+    magnifiedImage.current.classList.add("hidden");
     lens.current.style = "opacity:0";
   };
 
@@ -47,13 +47,15 @@ const ImageZoom = ({ image, children }) => {
           <img
             ref={mainImage}
             src={image}
-            className="h-full min-w-full object-cover rounded-xl"
+            className="h-full min-w-full object-contain rounded-xl"
             alt=""
           />
           <div
             ref={lens}
             className="lens h-[30%] w-[50%] absolute top-0 opacity-0 rounded-xl flex justify-center items-center"
-          ><img src={grid} alt="" className="h-full w-full" /></div>
+          >
+            <img src={grid} alt="" className="h-full w-full" />
+          </div>
         </div>
 
         {/* Right content */}

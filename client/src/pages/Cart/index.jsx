@@ -2,7 +2,7 @@ import Divider from "@mui/material/Divider";
 import React, { useContext } from "react";
 import CartItem from "../../components/Reusables/Items/CartPanelItem";
 import { IoCloseOutline } from "react-icons/io5";
-import DataContext from "../../context/data/DataContext";
+import DataContext from "../../context/category/CategoryContext";
 import { Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import { BsCartCheck, BsCartCheckFill } from "react-icons/bs";

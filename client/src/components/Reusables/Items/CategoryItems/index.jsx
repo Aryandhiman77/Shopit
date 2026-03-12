@@ -7,14 +7,14 @@ const CategoryItem = ({ item }) => {
     <>
       <Link
         to={`/category/${item?.slug}`}
-        className="flex flex-col justify-center items-center p-3 gap-y-2 rounded-md bg-white cursor-pointer border-[1px] border-gray-300 shadow-[0_3px_12px_0.1px_rgba(8,8,8,0.4)]"
+        className="flex flex-col justify-center items-center p-3 gap-y-2 rounded-md bg-white cursor-pointer border-[1px] border-gray-300 shadow-sm"
       >
         <img
-          className="h-[150px] w-[150px] object-contain hover:scale-105 transition-all ease-in-out duration-250"
-          src={item?.image}
-          alt="Category image"
+          className="h-40 w-40 object-contain hover:scale-105 transition-all ease-in-out duration-250"
+          src={item?.image?.url}
+          alt={item?.name}
         />
-        <p className="text-[0.9rem] w-full text-center">{item.name}</p>
+        <p className="text-[0.9rem] w-full text-center">{item?.name}</p>
       </Link>
     </>
   );

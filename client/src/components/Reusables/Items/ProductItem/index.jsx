@@ -20,7 +20,7 @@ import QuantityBox from "../../QuantityBox";
 import { MdShoppingCart } from "react-icons/md";
 import SkeletonImage, { SkeletonText } from "../../Elements/Loader/skeleton";
 import ProductSkeleton from "./ProductSkeleton";
-const ProductItem = ({ item, horizontal = false, loading }) => {
+const ProductItem = ({ item, horizontal = false }) => {
   const smText = horizontal ? "text-lg" : "text-sm";
   const lgText = horizontal ? "text-2xl" : "text-lg";
   const [isModalOpen, setModalOpen] = useState(false);

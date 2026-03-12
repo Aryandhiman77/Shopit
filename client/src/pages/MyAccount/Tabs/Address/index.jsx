@@ -5,7 +5,7 @@ import { useContext, useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { Collapse } from "react-collapse";
 import AddressItem from "../../../../components/Reusables/Items/AddressItem";
-import DataContext from "../../../../context/data/DataContext";
+import DataContext from "../../../../context/category/CategoryContext";
 import { Link } from "react-router-dom";
 
 const Address = () => {

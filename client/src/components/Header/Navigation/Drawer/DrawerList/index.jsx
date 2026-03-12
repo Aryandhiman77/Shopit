@@ -4,7 +4,7 @@ import { FaRegSquarePlus, FaRegSquareMinus } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import DrawerItems from "../DrawerItems";
 import { useContext } from "react";
-import DataContext from "../../../../../context/data/DataContext";
+import DataContext from "../../../../../context/category/CategoryContext";
 import Box from "@mui/material/Box";
 import { SkeletonText } from "../../../../Reusables/Elements/Loader/skeleton";
 
