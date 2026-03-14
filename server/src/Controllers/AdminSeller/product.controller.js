@@ -20,7 +20,7 @@ export const createProductController = AsyncWrapper(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, product, "Product created successfully"));
 });
-export const getDraftProducts = AsyncWrapper(async (req, res) => {
+export const getMyDraftProducts = AsyncWrapper(async (req, res) => {
   const products = await getProducts({ filter: "draft" }, req.user.id);
   res.status(200).json(new ApiResponse(200, products, "Products found."));
 });

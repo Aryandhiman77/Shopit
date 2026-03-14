@@ -5,6 +5,8 @@ import {
   uploadWithRetry,
 } from "../../Helpers/cloudinary.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
+import Category from "../../Models/category.js";
+import Brand from "../../Models/brand.js";
 
 export const createProductService = async (
   {
@@ -204,24 +206,98 @@ export const updateProductStatusService = async (productId, status) => {
   return product;
 };
 
-export const getProductsService = async ({ limit = 20, page = 1 }) => {
-  console.log(limit, page);
-  let skip = 0;
-  let products;
-  if (limit > 0 && page > 1) {
-    skip = limit * page;
-    products = await Product.find()
-      .limit(limit)
-      .skip(skip)
-      .populate({ path: "brand", select: "name" })
-      .populate({ path: "seller", select: "name" })
-      .populate({ path: "categories", select: "name" });
-    return products;
+export const getProductsService = async ({
+  limit,
+  page,
+  categorySlugs,
+  sort_by,
+  search,
+  brandSlugs,
+  createdDate,
+  updatedDate,
+  stock,
+  minPrice,
+  maxPrice,
+  isFeatured,
+  isTrending,
+  status,
+  sortingOrder,
+}) => {
+  const OFFSET = parseInt(page) - 1; // mandatory
+  const LIMIT = parseInt(limit) || 40; // mandatory
+
+  const SORTING_ORDER = sortingOrder === "ascending" ? 1 : -1;
+  const SORT_BY = sort_by || "price";
+
+  const CATEGORIES = categorySlugs ? categorySlugs.split(",") : ["all"];
+  const BRANDS = brandSlugs ? brandSlugs.split(",") : ["all"];
+  const STOCK_STATUS = [
+    "in-stock",
+    "out-of-stock",
+    "low-stock",
+    "tracking-disabled",
+    "all",
+  ];
+  let query = {};
+  if (CATEGORIES !== "all") {
+    if (BRANDS !== "all") {
+      let brandIds = await Brand.find({
+        slug: { $in: [...BRANDS] },
+      });
+      brandIds = brandIds?.map((brand) => brand._id);
+      query.brand = { $in: [...brandIds] };
+    }
+    let categoriesIds = await Category.find({
+      slug: { $in: [...CATEGORIES] },
+    });
+    categoriesIds = categoriesIds?.map((cat) => cat._id);
+    query.categories = { $in: [...categoriesIds] };
   }
-  products = await Product.find()
-    .populate({ path: "brand", select: "name" })
-    .populate({ path: "seller", select: "name" })
-    .populate({ path: "categories", select: "name" });
+
+  if (minPrice) query.price = { $gte: Number(minPrice) };
+  if (maxPrice) query.price = { $lte: Number(minPrice) };
+
+  if (createdDate) {
+    query.createdAt = { $gte: new Date(createdDate) };
+  }
+  if (updatedDate) {
+    query.modifiedAt = { $gte: new Date(updatedDate) };
+  }
+  const productStatus = Product.schema.path("status")?.enumValues;
+  if (productStatus?.includes(status)) {
+    query.status = status;
+  }
+  if (isFeatured !== undefined) {
+    query.isFeatured = Boolean(isFeatured);
+  }
+  if (isTrending !== undefined) {
+    query.isTrending = Boolean(isTrending);
+  }
+
+  if (stock === STOCK_STATUS[0]) {
+    query = { $gt: 0 };
+  } else if (stock === STOCK_STATUS[1]) {
+    query = { $eq: 0 };
+  } else if (stock === STOCK_STATUS[2]) {
+    query = { lowStockAlert: { $or: [{ $eq: stock }, { $lt: stock }] } };
+  } else if (stock === STOCK_STATUS[3]) {
+    query = { stockTracking: false };
+  }
+  let products;
+  if (search) {
+    const SEARCH = new RegExp(search?.toString(), "i"); // mandatory
+    products = await Product.find({
+      $or: [
+        { name: { $regex: SEARCH } },
+        { sku: { $regex: SEARCH } },
+        { product_Id: { $regex: SEARCH } },
+      ],
+      query,
+    })
+      .sort(SORT_BY, SORTING_ORDER)
+      .limit(LIMIT)
+      .skip(OFFSET);
+  }
   return products;
 };
 

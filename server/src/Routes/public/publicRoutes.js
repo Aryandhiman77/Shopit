@@ -16,7 +16,7 @@ publicRoutes
   .get("/categories", getAllStructuredCategories)
   .get("/categories/:level", getCategories);
 
-publicRoutes.get("/products", getCategoryProducts);
+publicRoutes.get("/products", getCategoryProducts); // query
 publicRoutes.get("/product/:slug", getProduct);
 // publicRoutes.get("/product/additional-information", getProductDetail);
 publicRoutes.get("/brands/:category", getCategoryBrands);

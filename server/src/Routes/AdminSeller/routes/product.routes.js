@@ -3,7 +3,7 @@ import { upload } from "../../../Middlewares/multer.js";
 import {
   createProductController,
   deleteGalleryImagesController,
-  getDraftProducts,
+  getMyDraftProducts,
   productAttributesController,
   productGalleryController,
   productThumbnailController,
@@ -22,7 +22,7 @@ const productRoutes = express.Router();
 
 productRoutes
   .post("/create", validate(createProductBasicSchema), createProductController)
-  .get("/drafts", getDraftProducts)
+  .get("/my-drafts", getMyDraftProducts)
   .get("/", getSellerProducts)
   .patch(
     "/:productId/thumbnail",

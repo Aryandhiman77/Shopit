@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
 import category from "./category.js";
 import slugify from "slugify";
+import { nanoid } from "nanoid";
+import { addThumbnailService } from "../Services/AdminSeller/productServices.js";
 
 // Variant Schema (for size, color, etc.)
 const variantSchema = new mongoose.Schema(
@@ -45,6 +47,7 @@ const variantSchema = new mongoose.Schema(
 
 const productSchema = new mongoose.Schema(
   {
+    product_Id: { type: String, required: true },
     title: { type: String, required: true, trim: true },
     brand: {
       type: mongoose.Schema.Types.ObjectId,
@@ -78,6 +81,11 @@ const productSchema = new mongoose.Schema(
     price: { type: Number, index: true },
     mrp: { type: Number },
     stock: { type: Number, default: 0 },
+
+    //todo-- low stock alert and
+    lowStockAlert: { type: Number, default: 0 },
+    stockTracking: { type: Boolean, default: true }, //stock unlimited if false
+
     // base thumbnail and gallery optional
     thumbnail: {
       url: { type: String },
@@ -134,6 +142,15 @@ productSchema.index({
 });
 
 productSchema.pre("save", async function (next) {
+  if (!this.product_Id) {
+    let exists = true;
+    let id;
+    while (exists) {
+      id = "PROD-" + nanoid(8);
+      exists = this.contructor.exists({ productId: id });
+    }
+    this.productId = id;
+  }
   if (!this.isModified("title") && !this.isModified("category")) {
     return next();
   }
