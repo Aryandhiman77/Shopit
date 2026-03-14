@@ -209,28 +209,27 @@ export const updateProductStatusService = async (productId, status) => {
 export const getProductsService = async ({
   limit,
   page,
-  categorySlugs,
+  categories,
   sort_by,
   search,
-  brandSlugs,
+  brands,
   createdDate,
   updatedDate,
   stock,
   minPrice,
   maxPrice,
-  isFeatured,
-  isTrending,
+  featured,
+  trending,
   status,
-  sortingOrder,
+  sortOrder = "asc",
 }) => {
-  const OFFSET = parseInt(page) - 1; // mandatory
+  const OFFSET = parseInt(page) > 0 ? parseInt(page) - 1 : 0; // mandatory
   const LIMIT = parseInt(limit) || 40; // mandatory
-
-  const SORTING_ORDER = sortingOrder === "ascending" ? 1 : -1;
-  const SORT_BY = sort_by || "price";
-
-  const CATEGORIES = categorySlugs ? categorySlugs.split(",") : ["all"];
-  const BRANDS = brandSlugs ? brandSlugs.split(",") : ["all"];
+  const SKIP = OFFSET * LIMIT;
+  const SORTING_ORDER = sortOrder === "desc" ? -1 : 1;
+  const SORT = sort_by
+    ? { [sort_by]: SORTING_ORDER }
+    : { price: SORTING_ORDER }; // default
   const STOCK_STATUS = [
     "in-stock",
     "out-of-stock",
@@ -239,14 +238,8 @@ export const getProductsService = async ({
     "all",
   ];
   let query = {};
-  if (CATEGORIES !== "all") {
-    if (BRANDS !== "all") {
-      let brandIds = await Brand.find({
-        slug: { $in: [...BRANDS] },
-      });
-      brandIds = brandIds?.map((brand) => brand._id);
-      query.brand = { $in: [...brandIds] };
-    }
+  if (categories) {
+    const CATEGORIES = categories ? categories.split(",") : ["all"];
     let categoriesIds = await Category.find({
       slug: { $in: [...CATEGORIES] },
     });
@@ -254,8 +247,16 @@ export const getProductsService = async ({
     query.categories = { $in: [...categoriesIds] };
   }
 
+  if (brands) {
+    const BRANDS = brands ? brands.split(",") : ["all"];
+    let brandIds = await Brand.find({
+      slug: { $in: [...BRANDS] },
+    });
+    brandIds = brandIds?.map((brand) => brand._id);
+    query.brand = { $in: [...brandIds] };
+  }
   if (minPrice) query.price = { $gte: Number(minPrice) };
-  if (maxPrice) query.price = { $lte: Number(minPrice) };
+  if (maxPrice) query.price = { $lte: Number(maxPrice) };
 
   if (createdDate) {
     query.createdAt = { $gte: new Date(createdDate) };
@@ -267,38 +268,48 @@ export const getProductsService = async ({
   if (productStatus?.includes(status)) {
     query.status = status;
   }
-  if (isFeatured !== undefined) {
-    query.isFeatured = Boolean(isFeatured);
+  if (featured !== undefined) {
+    query.isFeatured = Boolean(featured);
   }
-  if (isTrending !== undefined) {
-    query.isTrending = Boolean(isTrending);
+  if (trending !== undefined) {
+    query.isTrending = Boolean(trending);
   }
 
   if (stock === STOCK_STATUS[0]) {
-    query = { $gt: 0 };
+    query.stock = { $gt: 0 };
   } else if (stock === STOCK_STATUS[1]) {
-    query = { $eq: 0 };
+    query.stock = { $eq: 0 };
   } else if (stock === STOCK_STATUS[2]) {
-    query = { lowStockAlert: { $or: [{ $eq: stock }, { $lt: stock }] } };
+    query.stock = { lowStockAlert: { $or: [{ $eq: stock }, { $lt: stock }] } };
   } else if (stock === STOCK_STATUS[3]) {
-    query = { stockTracking: false };
+    query.stock = { stockTracking: false };
   }
-  let products;
+
   if (search) {
-    const SEARCH = new RegExp(search?.toString(), "i"); // mandatory
-    products = await Product.find({
+    const SEARCH = new RegExp(search?.toString(), "i");
+    query = {
+      ...query,
       $or: [
-        { name: { $regex: SEARCH } },
+        { title: { $regex: SEARCH } },
         { sku: { $regex: SEARCH } },
         { product_Id: { $regex: SEARCH } },
       ],
-      query,
-    })
-      .sort(SORT_BY, SORTING_ORDER)
-      .limit(LIMIT)
-      .skip(OFFSET);
+    };
   }
-  return products;
+  console.log("query", JSON.stringify(query));
+  const products = await Product.find({
+    ...query,
+  })
+    .sort(SORT)
+    .limit(LIMIT)
+    .skip(SKIP)
+    .populate([
+      { path: "categories", select: "name" },
+      { path: "seller", select: "name" },
+      { path: "brand", select: "name" },
+    ]);
+  const totalDocuments = await Product.countDocuments(query);
+  return { products, total: totalDocuments, limit: LIMIT, page: OFFSET + 1 };
 };
 
 export const updateProductService = async (
