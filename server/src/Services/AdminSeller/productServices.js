@@ -229,7 +229,8 @@ export const getProductsService = async ({
   const SORTING_ORDER = sortOrder === "desc" ? -1 : 1;
   const SORT = sort_by
     ? { [sort_by]: SORTING_ORDER }
-    : { price: SORTING_ORDER }; // default
+    : { price: SORTING_ORDER }; // default sort by price
+
   const STOCK_STATUS = [
     "in-stock",
     "out-of-stock",
@@ -269,10 +270,10 @@ export const getProductsService = async ({
     query.status = status;
   }
   if (featured !== undefined) {
-    query.isFeatured = Boolean(featured);
+    query.isFeatured = featured === "true";
   }
   if (trending !== undefined) {
-    query.isTrending = Boolean(trending);
+    query.isTrending = trending === "true";
   }
 
   if (stock === STOCK_STATUS[0]) {
@@ -307,8 +308,9 @@ export const getProductsService = async ({
       { path: "categories", select: "name" },
       { path: "seller", select: "name" },
       { path: "brand", select: "name" },
-    ]);
-  const totalDocuments = await Product.countDocuments(query);
+    ])
+    .lean();
+  const totalDocuments = await Product.countDocuments(query).lean();
   return { products, total: totalDocuments, limit: LIMIT, page: OFFSET + 1 };
 };
 
