@@ -7,8 +7,8 @@ const productFilters = async (req, _, next) => {
     categories,
     search,
     brands,
-    createdDate,
-    updatedDate,
+    created_at,
+    updated_at,
     stock,
     minPrice,
     maxPrice,
@@ -49,11 +49,11 @@ const productFilters = async (req, _, next) => {
   if (minPrice) query.price = { $gte: Number(minPrice) };
   if (maxPrice) query.price = { $lte: Number(maxPrice) };
 
-  if (createdDate) {
-    query.createdAt = { $gte: new Date(createdDate) };
+  if (created_at) {
+    query.createdAt = { $gte: new Date(created_at) };
   }
-  if (updatedDate) {
-    query.modifiedAt = { $gte: new Date(updatedDate) };
+  if (updated_at) {
+    query.updatedAt = { $gte: new Date(updated_at) };
   }
   const productStatus = Product.schema.path("status")?.enumValues;
   if (productStatus?.includes(status)) {
