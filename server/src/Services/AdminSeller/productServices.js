@@ -206,112 +206,29 @@ export const updateProductStatusService = async (productId, status) => {
   return product;
 };
 
-export const getProductsService = async ({
-  limit,
-  page,
-  categories,
-  sort_by,
-  search,
-  brands,
-  createdDate,
-  updatedDate,
-  stock,
-  minPrice,
-  maxPrice,
-  featured,
-  trending,
-  status,
-  sortOrder = "asc",
-}) => {
-  const OFFSET = parseInt(page) > 0 ? parseInt(page) - 1 : 0; // mandatory
-  const LIMIT = parseInt(limit) || 40; // mandatory
-  const SKIP = OFFSET * LIMIT;
-  const SORTING_ORDER = sortOrder === "desc" ? -1 : 1;
-  const SORT = sort_by
-    ? { [sort_by]: SORTING_ORDER }
-    : { price: SORTING_ORDER }; // default sort by price
-
-  const STOCK_STATUS = [
-    "in-stock",
-    "out-of-stock",
-    "low-stock",
-    "tracking-disabled",
-    "all",
-  ];
-  let query = {};
-  if (categories) {
-    const CATEGORIES = categories ? categories.split(",") : ["all"];
-    let categoriesIds = await Category.find({
-      slug: { $in: [...CATEGORIES] },
-    });
-    categoriesIds = categoriesIds?.map((cat) => cat._id);
-    query.categories = { $in: [...categoriesIds] };
-  }
-
-  if (brands) {
-    const BRANDS = brands ? brands.split(",") : ["all"];
-    let brandIds = await Brand.find({
-      slug: { $in: [...BRANDS] },
-    });
-    brandIds = brandIds?.map((brand) => brand._id);
-    query.brand = { $in: [...brandIds] };
-  }
-  if (minPrice) query.price = { $gte: Number(minPrice) };
-  if (maxPrice) query.price = { $lte: Number(maxPrice) };
-
-  if (createdDate) {
-    query.createdAt = { $gte: new Date(createdDate) };
-  }
-  if (updatedDate) {
-    query.modifiedAt = { $gte: new Date(updatedDate) };
-  }
-  const productStatus = Product.schema.path("status")?.enumValues;
-  if (productStatus?.includes(status)) {
-    query.status = status;
-  }
-  if (featured !== undefined) {
-    query.isFeatured = featured === "true";
-  }
-  if (trending !== undefined) {
-    query.isTrending = trending === "true";
-  }
-
-  if (stock === STOCK_STATUS[0]) {
-    query.stock = { $gt: 0 };
-  } else if (stock === STOCK_STATUS[1]) {
-    query.stock = { $eq: 0 };
-  } else if (stock === STOCK_STATUS[2]) {
-    query.stock = { lowStockAlert: { $or: [{ $eq: stock }, { $lt: stock }] } };
-  } else if (stock === STOCK_STATUS[3]) {
-    query.stock = { stockTracking: false };
-  }
-
-  if (search) {
-    const SEARCH = new RegExp(search?.toString(), "i");
-    query = {
-      ...query,
-      $or: [
-        { title: { $regex: SEARCH } },
-        { sku: { $regex: SEARCH } },
-        { product_Id: { $regex: SEARCH } },
-      ],
-    };
-  }
-  console.log("query", JSON.stringify(query));
-  const products = await Product.find({
-    ...query,
-  })
-    .sort(SORT)
-    .limit(LIMIT)
-    .skip(SKIP)
-    .populate([
-      { path: "categories", select: "name" },
-      { path: "seller", select: "name" },
-      { path: "brand", select: "name" },
-    ])
-    .lean();
-  const totalDocuments = await Product.countDocuments(query).lean();
-  return { products, total: totalDocuments, limit: LIMIT, page: OFFSET + 1 };
+export const getProductsService = async (pagination, sortOptions, filters) => {
+  const [products, totalDocuments] = await Promise.all([
+    await Product.find({
+      ...filters,
+    })
+      .sort(sortOptions)
+      .limit(pagination?.limit)
+      .skip(pagination?.skip)
+      .populate([
+        { path: "categories", select: "name" },
+        { path: "seller", select: "name" },
+        { path: "brand", select: "name" },
+      ])
+      .lean(),
+    Product.countDocuments(filters).lean(),
+  ]);
+  return {
+    products,
+    totalPages: Math.ceil(totalDocuments / pagination.limit),
+    totalResults: totalDocuments,
+    limit: pagination.limit,
+    page: pagination.page + 1,
+  };
 };
 
 export const updateProductService = async (

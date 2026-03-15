@@ -3,7 +3,11 @@ import AsyncWrapper from "../../Helpers/AsyncWrapper.js";
 import { getProductsService } from "../../Services/AdminSeller/productServices.js";
 
 export const getProducts = AsyncWrapper(async (req, res) => {
-  const products = await getProductsService(req.query);
+  const products = await getProductsService(
+    req.pagination,
+    req.sortOptions,
+    req.filters,
+  );
   return res
     .status(200)
     .json(new ApiResponse(200, products, "Products found."));
