@@ -24,7 +24,11 @@ const SelectableInput = ({
           name={name}
           control={control}
           defaultValue={
-            multiple && defaultValue?.length ? [...defaultValue] : defaultValue
+            multiple
+              ? defaultValue?.length
+                ? [...defaultValue]
+                : []
+              : defaultValue
           }
           render={({ field }) => (
             <Autocomplete
@@ -62,8 +66,10 @@ const SelectableInput = ({
             multiple={multiple}
             loading={loading}
             defaultValue={
-              multiple && defaultValue?.length
-                ? [...defaultValue]
+              multiple
+                ? defaultValue?.length
+                  ? [...defaultValue]
+                  : []
                 : defaultValue
             }
             isOptionEqualToValue={(option, value) =>

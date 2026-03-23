@@ -41,7 +41,6 @@ const ProductFilters = () => {
         />
         <SelectableInput
           disableClearable={true}
-          multiple={false}
           label={"Brands"}
           name={"brands"}
           defaultValue={{ label: "All", value: "" }}
