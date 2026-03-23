@@ -3,6 +3,7 @@ import FitlerSection from "../../Reusables/FilterSection";
 import SelectableInput from "../../Reusables/SelectableInput";
 import DatePickerMui from "../../Reusables/DatePickerMui";
 import { TextField } from "@mui/material";
+import useCategory from "../../hooks/useCategory";
 
 const ProductFilters = () => {
   // categories,✅
@@ -18,6 +19,8 @@ const ProductFilters = () => {
   // trending,
   // sortOrder - asc,desc,
   // sortby- price
+
+  const { categories, isLoading } = useCategory();
 
   return (
     <FitlerSection className={"pt-5"}>
@@ -55,10 +58,8 @@ const ProductFilters = () => {
           disableClearable={true}
           label={"Categories"}
           name={"categories"}
-          defaultValue={[{ label: "All", value: "" }]}
           required={false}
           options={[
-            { label: "All", value: "" },
             { label: "Active", value: "isActive=true" },
             { label: "Inactive", value: "isActive=false" },
             { label: "Draft", value: "status=draft" },

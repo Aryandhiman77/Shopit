@@ -6,7 +6,7 @@ import { fetchData } from "../../utilities/RequestAPI";
 import ConvertToFormData from "../../utilities/ConvertToFormData";
 import toast from "react-hot-toast";
 import CustomToast from "../../Components/Reusables/CustomToast";
-import { AiOutlineConsoleSql } from "react-icons/ai";
+import useLoading from "../../Components/hooks/useLoading";
 
 // ✅ Provider Component
 const CategoryProvider = ({ children }) => {
@@ -85,22 +85,7 @@ const CategoryProvider = ({ children }) => {
   const [category, setCategory] = useState();
   const [formErrors, setFormErrors] = useState(null);
   const [errors, setErrors] = useState({ categories: null, products: null });
-  const [loading, setLoading] = useState({});
-  const startLoading = (key) =>
-    setLoading((prev) => ({
-      ...prev,
-      [key]: (prev[key] || 0) + 1,
-    }));
-
-  const stopLoading = (key) =>
-    setLoading((prev) => ({
-      ...prev,
-      [key]: Math.max((prev[key] || 1) - 1, 0),
-    }));
-
-  const isLoading = (key) => {
-    return (loading[key] || 0) > 0;
-  };
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleFullScreenConfirmation = ({ fn, message }) => {
     toast.custom(
