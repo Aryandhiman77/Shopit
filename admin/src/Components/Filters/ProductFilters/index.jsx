@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FitlerSection from "../../Reusables/FilterSection";
 import SelectableInput from "../../Reusables/SelectableInput";
 import DatePickerMui from "../../Reusables/DatePickerMui";
 import { TextField } from "@mui/material";
 import useCategory from "../../hooks/useCategory";
+import useBrands from "../../hooks/useBrands";
 
 const ProductFilters = () => {
   // categories,✅
@@ -12,16 +13,46 @@ const ProductFilters = () => {
   // created_at,✅
   // updated_at,✅
   // status,✅
-  // stock,
+  // stock,✅
   // minPrice,✅
   // maxPrice,✅
-  // featured,
-  // trending,
-  // sortOrder - asc,desc,
-  // sortby- price
+  // featured,✅
+  // trending,✅
+  // sortOrder - asc,desc,✅
+  const { filters, setFilters } = useState({});
+  const handleOnChange = (value) => {
+    // setFilters(...filters, value);
+    console.log(value);
+  };
 
-  const { categories, isLoading } = useCategory();
+  const {
+    level1Categories,
+    level2Categories,
+    level3Categories,
+    isLoading: isCategoriesLoading,
+    getCategoriesByLevel,
+  } = useCategory();
+  const { getBrandsListing, brandListing: brands, loading } = useBrands();
 
+  const categoryOptions = [
+    ...(level1Categories || []),
+    ...(level2Categories || []),
+    ...(level3Categories || []),
+  ]?.map((cat) => ({ label: cat.name, value: cat.slug }));
+
+  const brandOptions = [...(brands || [])]?.map((brand) => ({
+    label: brand.name,
+    value: brand.slug,
+  }));
+  useEffect(() => {
+    getBrandsListing();
+    getCategoriesByLevel(1);
+    getCategoriesByLevel(2);
+    getCategoriesByLevel(3);
+  }, []);
+  useEffect(() => {
+    console.log(filters);
+  }, [filters]);
   return (
     <FitlerSection className={"pt-5"}>
       <div className="flex items-center gap-4 w-full">
@@ -38,34 +69,52 @@ const ProductFilters = () => {
             { label: "Inactive", value: "isActive=false" },
             { label: "Draft", value: "status=draft" },
           ]}
+          getValue={(value) => {
+            handleOnChange({ status: value.value });
+          }}
         />
         <SelectableInput
-          disableClearable={true}
           label={"Brands"}
           name={"brands"}
-          defaultValue={{ label: "All", value: "" }}
+          multiple={true}
           required={false}
-          options={[
-            { label: "All", value: "" },
-            { label: "Active", value: "isActive=true" },
-            { label: "Inactive", value: "isActive=false" },
-            { label: "Draft", value: "status=draft" },
-          ]}
+          options={brandOptions}
+          getValue={(values) =>
+            handleOnChange({ brands: [...(values.map((v) => v.value) || [])] })
+          }
         />
         <SelectableInput
           multiple={true}
-          disableClearable={true}
           label={"Categories"}
           name={"categories"}
           required={false}
-          options={[
-            { label: "Active", value: "isActive=true" },
-            { label: "Inactive", value: "isActive=false" },
-            { label: "Draft", value: "status=draft" },
-          ]}
+          loading={
+            isCategoriesLoading("level1categories") ||
+            isCategoriesLoading("level2categories") ||
+            isCategoriesLoading("level3categories")
+          }
+          options={
+            !isCategoriesLoading("level1categories") &&
+            !isCategoriesLoading("level2categories") &&
+            !isCategoriesLoading("level3categories") &&
+            categoryOptions
+          }
+          getValue={(values) =>
+            handleOnChange({
+              categories: [...(values.map((v) => v.value) || [])],
+            })
+          }
         />
-        <DatePickerMui label={"Created At"} />
-        <DatePickerMui label={"Updated At"} />
+        <DatePickerMui
+          label={"Created Date"}
+          name={"createdAt"}
+          getValue={(value) => handleOnChange({ createdAt: value })}
+        />
+        <DatePickerMui
+          label={"Updated Date"}
+          name={"updatedAt"}
+          getValue={(value) => handleOnChange({ updatedAt: value })}
+        />
       </div>
       <div className="flex items-center gap-4 w-full">
         <TextField
@@ -75,6 +124,10 @@ const ProductFilters = () => {
           variant="outlined"
           name="minPrice"
           label="Min. Price"
+          type="number"
+          onChange={(e) =>
+            handleOnChange({ minPrice: `minPrice=${e.target.value}` })
+          }
         />
         <TextField
           size="small"
@@ -83,6 +136,27 @@ const ProductFilters = () => {
           variant="outlined"
           name="maxPrice"
           label="Max. Price"
+          type="number"
+          onChange={(e) =>
+            handleOnChange({ maxPrice: `minPrice=${e.target.value}` })
+          }
+        />
+        <SelectableInput
+          disableClearable={true}
+          multiple={false}
+          label={"Stock status"}
+          name={"highlights"}
+          defaultValue={{ label: "All", value: "" }}
+          required={false}
+          loading={loading}
+          options={[
+            { label: "All", value: "" },
+            { label: "In stock", value: "stock=in-stock" },
+            { label: "Out of stock", value: "stock=out-of-stock" },
+            { label: "Low stock Alert", value: "stock=low-stock" },
+            { label: "Tracking disabled", value: "stock=tracking-disabled" },
+          ]}
+          getValue={(value) => handleOnChange({ stock: value.value })}
         />
         <SelectableInput
           disableClearable={true}
@@ -91,17 +165,20 @@ const ProductFilters = () => {
           name={"highlights"}
           defaultValue={{ label: "Both", value: "" }}
           required={false}
+          loading={loading}
           options={[
             { label: "Both", value: "" },
             { label: "Featured", value: "featured=true" },
-            { label: "trending", value: "trending=true" },
+            { label: "Trending", value: "trending=true" },
           ]}
+          getValue={(value) => handleOnChange({ highlights: value.value })}
         />
+
         <SelectableInput
           disableClearable={true}
           multiple={false}
-          label={"Sort Order"}
-          name={"sortOrder"}
+          label={"Sort By"}
+          name={"sortBy"}
           defaultValue={{ label: "Newest", value: "sortOrder=desc" }}
           required={false}
           options={[

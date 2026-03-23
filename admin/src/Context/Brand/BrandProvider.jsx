@@ -27,7 +27,7 @@ const BrandProvider = () => {
     setLoading(false);
   };
 
-  const getBrands = async ({ limit, page, status = "all" }) => {
+  const getBrands = async () => {
     setLoading(true);
     const response = await fetchData({
       url: "/admin/brands",
