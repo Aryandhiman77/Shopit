@@ -104,7 +104,10 @@ const BasicProductInfo = ({
             <SelectableInput
               disableCloseOnSelect={true}
               control={control}
-              defaultValue={defaultData?.categories}
+              multiple={true}
+              defaultValue={
+                defaultData?.categories?.length ? [defaultData.categories] : []
+              }
               error={errors.categories?.message}
               name={"categories"}
               label={"Categories"}
@@ -113,9 +116,6 @@ const BasicProductInfo = ({
                 !isLoading("level2categories") &&
                 !isLoading("level3categories") &&
                 categoryOptions
-              }
-              getValue={(value) =>
-                setValue("categories", value, { shouldValidate: true })
               }
               loading={isLoading("level1categories")}
             />
