@@ -16,7 +16,9 @@ const ProductsProvider = () => {
   const getProducts = async ({ limit, page, status = "all" }) => {
     setLoading(true);
     const queryString =
-      limit && page ? `limit=${limit}&page=${page}&status=${status}` : "";
+      limit > 0 && page > 0
+        ? `limit=${limit}&page=${page}&status=${status}`
+        : "";
     const response = await fetchData({
       url: `/admin/products?${queryString}`,
       method: "GET",

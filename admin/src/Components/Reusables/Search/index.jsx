@@ -22,7 +22,7 @@ const Search = ({ endIcon, placeholder, onSearch = (value) => {}, width }) => {
   return (
     <>
       <div
-        className={`flex flex-row items-center custom-border rounded-lg p-2 bg-white  w-full `}
+        className={`flex flex-row items-center custom-border rounded-lg p-2  w-full `}
       >
         <IoSearchOutline />
         <input
@@ -30,7 +30,7 @@ const Search = ({ endIcon, placeholder, onSearch = (value) => {}, width }) => {
           onChange={handleChange}
           type="text"
           value={search}
-          className="focus:outline-none px-2 text-sm w-full"
+          className="focus:outline-none px-2 text-sm w-full "
           placeholder={placeholder}
         />
         {endIcon}

@@ -179,11 +179,19 @@ const BrandForm = ({
           </>
           <>
             <SelectableInput
+              multiple={true}
               disableCloseOnSelect={true}
-              // required={true}
               control={control}
               defaultValue={
-                (updationBrand?.categories?.length && {}) || undefined
+                (updationBrand?.categories?.length && [
+                  [
+                    {
+                      label: updationBrand.cateogories,
+                      value: updationBrand._id,
+                    },
+                  ],
+                ]) ||
+                []
               }
               error={errors.categories?.message}
               name={"categories"}

@@ -93,12 +93,8 @@ const BasicProductInfo = ({
                 error={errors.brand?.message}
                 multiple={false}
                 name={"brand"}
-                // required={true}
                 label={"Brand"}
                 options={!loading && optionsBrands}
-                getValue={(value) => {
-                  setValue("brand", value, { shouldValidate: true });
-                }}
                 loading={loading}
               />
               <FormError className={"h-auto!"} error={errors.brand?.message} />

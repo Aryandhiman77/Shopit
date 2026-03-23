@@ -167,7 +167,6 @@ const CategoryList = () => {
             </p>
           </div>
 
-          {/* <Divider className="mb-4!" /> */}
           {isLoading("ordered-categories") ? (
             <div className="flex justify-center items-center p-4">
               <Spinner size={40} />
@@ -199,7 +198,7 @@ const CategoryList = () => {
               <img
                 src={NoCategories}
                 alt="No Categories found."
-                className="w-100 h-auto mx-auto"
+                className="w-100 h-auto mx-auto dark:invert-100"
               />
             </div>
           )}

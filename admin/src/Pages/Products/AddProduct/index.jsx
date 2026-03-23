@@ -245,31 +245,7 @@ const AddProduct = () => {
             }}
           />
         )}
-        {/* <Box className={"flex  items-center gap-10  bg-white"}>
-            <div className="flex my-4 gap-2 ">
-              <p className="font-[500]"> Free Shipping ?</p>
-              <CustomToggle />
-            </div>
-            <TextField
-              className="w-1/2"
-              label="Shipping Amount"
-              variant="outlined"
-              required={true}
-              size="small"
-              type={"number"}
-            />
-          </Box> */}
-        {/* <Box className={"flex  items-center gap-10  bg-white"}>
-                <h1 className="heading-1">Search Engine Optimization</h1>    ONLY SHOWN IN EDITING
-                  <TextField
-                  className="w-1/2"
-                  label="Product Slug"
-                  variant="outlined"
-                  required={true}
-                  size="small"
-                  type={"number"}
-                />
-            </Box> */}
+
         {/* <Box className={"bg-white flex flex-col gap-4"}>
             <div className="flex items-center justify-between">
               <h1 className="heading-1">Product Variant</h1>
@@ -328,81 +304,7 @@ const AddProduct = () => {
               <h3 className="px-1 py-3 text-sm font-[500]">Variant Gallery</h3>
               <ImageDropBox maxFiles={10} setImages={setGallery} />
             </div>
-            <div>
-              <h1 className="heading-1 py-4">Inventory Tracking</h1>
-              <div className="pb-4 flex flex-col gap-2">
-                <div className="flex ">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="inventory-3"
-                      aria-describedby="helper-radio-text"
-                      name="variant-inventory"
-                      type="radio"
-                      value=""
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                  </div>
-                  <div className="ms-2 text-sm">
-                    <label
-                      htmlFor="inventory-3"
-                      className="font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Track inventory for this product.
-                    </label>
-                    <p
-                      id="helper-radio-text"
-                      className="text-xs font-normal text-gray-500 dark:text-gray-300"
-                    >
-                      Stock will be limited.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex">
-                  <div className="flex items-center h-5">
-                    <input
-                      id="inventory-4"
-                      name="variant-inventory"
-                      aria-describedby="helper-radio-text"
-                      type="radio"
-                      value=""
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                  </div>
-                  <div className="ms-2 text-sm">
-                    <label
-                      htmlFor="inventory-4"
-                      className="font-medium text-gray-900 dark:text-gray-300"
-                    >
-                      Do not track inventory for this product.
-                    </label>
-                    <p
-                      id="helper-radio-text"
-                      className="text-xs font-normal text-gray-500 dark:text-gray-300"
-                    >
-                      Stock will be unlimited.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-4 w-1/2">
-                <TextField
-                  className="w-full"
-                  label="Current Stock Level"
-                  variant="outlined"
-                  required={true}
-                  size="small"
-                  type={"number"}
-                />
-                <TextField
-                  className="w-full"
-                  label="Low Stock Alert"
-                  variant="outlined"
-                  required={true}
-                  size="small"
-                  type={"number"}
-                />
-              </div>
-            </div>
+            
             <div>
               <h1 className="heading-1 pt-4 pb-2">Variant Attributes</h1>
               <div className="flex gap-10">

@@ -23,7 +23,7 @@ const BrandRow = ({ brand, index, handleEdit }) => {
           <img
             loading="lazy"
             src={brand?.logo?.url}
-            className="w-15 h-auto rounded-xl  object-contain"
+            className="w-15 h-auto object-contain"
             alt=""
           />
         </td>

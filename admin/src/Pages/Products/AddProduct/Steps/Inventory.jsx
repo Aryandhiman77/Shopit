@@ -1,4 +1,11 @@
-import { TextField } from "@mui/material";
+import {
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
 import React from "react";
 import Box from "../../../../Components/Reusables/Elements/Box";
 
@@ -8,6 +15,26 @@ const Inventory = () => {
       <h1 className="heading-1 py-4">Inventory Tracking</h1>
       <div className="pb-4 flex flex-col gap-2">
         <div className="flex ">
+          <FormControl>
+            <FormLabel id="demo-radio-buttons-group-label">Gender</FormLabel>
+            <RadioGroup
+              aria-labelledby="demo-radio-buttons-group-label"
+              defaultValue="female"
+              name="radio-buttons-group"
+            >
+              <FormControlLabel
+                value="female"
+                control={<Radio />}
+                label="Female"
+              />
+              <FormControlLabel value="male" control={<Radio />} label="Male" />
+              <FormControlLabel
+                value="other"
+                control={<Radio />}
+                label="Other"
+              />
+            </RadioGroup>
+          </FormControl>
           <div className="flex items-center h-5">
             <input
               id="inventory-1"
@@ -29,7 +56,7 @@ const Inventory = () => {
               id="helper-radio-text"
               className="text-xs font-normal text-gray-500 dark:text-gray-300"
             >
-              Stock will be limited.
+              Stock will be limited (recommended).
             </p>
           </div>
         </div>
@@ -60,24 +87,26 @@ const Inventory = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-col gap-4 w-1/2">
-        <TextField
-          className="w-full"
-          label="Current Stock Level"
-          variant="outlined"
-          required={true}
-          size="small"
-          type={"number"}
-        />
-        <TextField
-          className="w-full"
-          label="Low Stock Alert"
-          variant="outlined"
-          required={true}
-          size="small"
-          type={"number"}
-        />
-      </div>
+      {true && ( // only open when stock is limited
+        <div className="flex flex-col gap-4 w-1/2">
+          <TextField
+            className="w-full"
+            label="Current Stock Level"
+            variant="outlined"
+            required={true}
+            size="small"
+            type={"number"}
+          />
+          <TextField
+            className="w-full"
+            label="Low Stock Alert"
+            variant="outlined"
+            required={true}
+            size="small"
+            type={"number"}
+          />
+        </div>
+      )}
     </Box>
   );
 };

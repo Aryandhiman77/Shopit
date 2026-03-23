@@ -15,7 +15,7 @@ import Login from "./Pages/Auth/Login";
 import Signup from "./Pages/Auth/Signup";
 import ProtectedRoute from "./Components/Reusables/Routes/ProtectedRoute";
 import PublicRoute from "./Components/Reusables/Routes/PublicRoute";
-import Products from "./Pages/Products/AllProducts";
+import ProductListing from "./Pages/Products/ProductListing";
 import AddProduct from "./Pages/Products/AddProduct";
 import StoreSettings from "./Pages/Settings";
 import CategoryList from "./Pages/Categories/CategoryList";
@@ -58,7 +58,7 @@ const App = () => {
                       <Route path="/brand/add" element={<AddBrand />} />
                     </Route>
                     <Route element={<BrandProvider />}>
-                      <Route path="/products" element={<Products />} />
+                      <Route path="/products" element={<ProductListing />} />
                       <Route path="/products/add" element={<AddProduct />} />
                     </Route>
 

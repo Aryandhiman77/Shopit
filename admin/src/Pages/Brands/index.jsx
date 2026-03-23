@@ -186,7 +186,7 @@ const BrandList = () => {
               <img
                 src={NoBrands}
                 alt="No brands found."
-                className="w-100 h-auto mx-auto"
+                className="w-100 h-auto mx-auto dark:invert-100"
               />
             </div>
           )}
