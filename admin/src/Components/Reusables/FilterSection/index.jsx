@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CollapsablePanel from "../CollapsablePanel";
 import DropDownField from "../DropDownField";
 import Box from "../Elements/Box";
 import { IoIosArrowDown, IoMdClose, IoMdRefresh } from "react-icons/io";
 import Search from "../Search";
 import { CiFilter } from "react-icons/ci";
-import { Divider, Tooltip } from "@mui/material";
+import { Tooltip } from "@mui/material";
 import useFilters from "../../../Components/hooks/useFilters";
 
-const FitlerSection = ({ children, className }) => {
+const FitlerSection = ({
+  children,
+  className,
+  resetFilters,
+  handleOnChange,
+}) => {
   const [open, setOpen] = useState(false);
-  const { filters, setFilters, handleOnChange, resetFilters } = useFilters();
+
   return (
     <>
       <div className={" w-full"}>
@@ -31,7 +36,10 @@ const FitlerSection = ({ children, className }) => {
               </Tooltip>
             </button>
             <button
-              onClick={resetFilters}
+              onClick={() => {
+                resetFilters();
+              }}
+              type="reset"
               className={`custom-btn custom-border flex items-center gap-2 !bg-transparent text-black! text-sm font-[500] border! border-gray-400! rounded-md! hover:text-black!  px-4!`}
             >
               <Tooltip title="Clear all filters">

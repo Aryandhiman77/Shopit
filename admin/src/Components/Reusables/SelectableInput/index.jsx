@@ -2,6 +2,7 @@ import { Autocomplete, TextField } from "@mui/material";
 import { Controller } from "react-hook-form";
 import Spinner from "../Elements/Loader/Spinner";
 import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 const SelectableInput = ({
   name,
@@ -67,17 +68,19 @@ const SelectableInput = ({
             multiple={multiple}
             loading={loading}
             defaultValue={
-              multiple
-                ? defaultValue?.length
-                  ? [...defaultValue]
-                  : []
-                : defaultValue
+              multiple ? (defaultValue?.length ? [...defaultValue] : []) : null
+            }
+            value={
+              multiple ? (defaultValue?.length ? [...defaultValue] : []) : null
             }
             isOptionEqualToValue={(option, value) =>
               option?.value === value?.value
             }
             getOptionLabel={(option) => option?.label || ""}
-            onChange={(_, data) => getValue(data)}
+            onChange={(_, data) => {
+              getValue(data);
+              setSelectedValues(data);
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}

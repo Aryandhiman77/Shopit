@@ -13,14 +13,10 @@ const ProductsProvider = () => {
   const [product, setProductData] = useState({});
   const [formErrors, setFormErrors] = useState([]);
 
-  const getProducts = async ({ limit, page, status = "all" }) => {
+  const getProducts = async (query) => {
     setLoading(true);
-    const queryString =
-      limit > 0 && page > 0
-        ? `limit=${limit}&page=${page}&status=${status}`
-        : "";
     const response = await fetchData({
-      url: `/admin/products?${queryString}`,
+      url: `/admin/products?${query ? query : ""}`,
       method: "GET",
     });
     if (response?.success) {

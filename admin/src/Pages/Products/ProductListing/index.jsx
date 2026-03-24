@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ProductList from "../../Dashboard/ProductList";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
 import { PiExport, PiPlus } from "react-icons/pi";
@@ -19,9 +19,10 @@ import FitlerSection from "../../../Components/Reusables/FilterSection";
 import ProductFilters from "../../../Components/Filters/ProductFilters";
 const Products = () => {
   const { products, loading, getProducts } = useProducts();
+  const [query, setQuery] = useState("");
   useEffect(() => {
-    getProducts({ limit: 10, page: 1 });
-  }, []);
+    getProducts(query);
+  }, [query]);
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -99,14 +100,14 @@ const Products = () => {
           />
         </div>
       </div>
-      <ProductFilters />
+      <ProductFilters getQuery={setQuery} />
       <Box className={"space-y-4 bg-white dark:bg-black rounded-sm!"}>
         {loading ? (
           <div className="flex justify-center items-center p-4">
             <Spinner size={40} />
           </div>
-        ) : products.length > 0 ? (
-          <ProductList products={products} />
+        ) : products?.products?.length > 0 ? (
+          <ProductList products={products?.products} />
         ) : (
           <div className="text-center text-gray-500 font-semibold">
             <img

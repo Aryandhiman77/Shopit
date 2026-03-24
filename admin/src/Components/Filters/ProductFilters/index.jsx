@@ -10,12 +10,10 @@ import Search from "../../Reusables/Search";
 import { CiFilter } from "react-icons/ci";
 import CustomButton from "../../Reusables/Elements/CustomBtn";
 import { IoMdRefresh } from "react-icons/io";
+import useFilters from "../../hooks/useFilters";
+import { useSearchParams } from "react-router-dom";
 
-const ProductFilters = ({
-  filters = {},
-  setFilters = () => {},
-  handleOnChange = () => {},
-}) => {
+const ProductFilters = ({ getQuery = () => {} }) => {
   // categories,✅
   // search,✅
   // brands,✅
@@ -28,6 +26,9 @@ const ProductFilters = ({
   // featured,✅
   // trending,✅
   // sortOrder+sortby - asc,desc, price="asc"✅
+  const { filters, handleOnChange, resetFilters } = useFilters();
+
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const {
     level1Categories,
@@ -37,7 +38,6 @@ const ProductFilters = ({
     getCategoriesByLevel,
   } = useCategory();
   const { getBrandsListing, brandListing: brands, loading } = useBrands();
-
   const categoryOptions = [
     ...(level1Categories || []),
     ...(level2Categories || []),
@@ -54,13 +54,25 @@ const ProductFilters = ({
     getCategoriesByLevel(2);
     getCategoriesByLevel(3);
   }, []);
-  useEffect(() => {
+  const submitFilters = (e) => {
+    e.preventDefault();
     const query = buildQueryFromObject(filters);
-    console.log(query);
-  }, [filters]);
+    setSearchParams(query);
+    getQuery(query);
+  };
+
+  useEffect(() => {
+    return () => {
+      resetFilters();
+    };
+  }, []);
   return (
-    <>
-      <FitlerSection className={"pt-5 "}>
+    <form onSubmit={submitFilters}>
+      <FitlerSection
+        className={"pt-5 "}
+        resetFilters={resetFilters}
+        handleOnChange={handleOnChange}
+      >
         <div className="flex items-center justify-between w-full flex-wrap">
           <SelectableInput
             className={"w-1/6!"}
@@ -81,6 +93,7 @@ const ProductFilters = ({
             }}
           />
           <SelectableInput
+            disableCloseOnSelect={false}
             className={"w-1/6!"}
             label={"Brands"}
             name={"brands"}
@@ -94,6 +107,7 @@ const ProductFilters = ({
             }
           />
           <SelectableInput
+            disableCloseOnSelect={false}
             className={"w-1/6!"}
             multiple={true}
             label={"Categories"}
@@ -253,7 +267,7 @@ const ProductFilters = ({
           />
         </div>
       </FitlerSection>
-    </>
+    </form>
   );
 };
 
