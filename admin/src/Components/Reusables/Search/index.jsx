@@ -2,7 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { PiCommandBold } from "react-icons/pi";
 
-const Search = ({ endIcon, placeholder, onSearch = (value) => {}, width }) => {
+const Search = ({
+  endIcon,
+  placeholder,
+  onSearch = (value) => {},
+  className,
+}) => {
   const [search, setSearch] = useState("");
   const debounceRef = useRef(null);
 
@@ -22,7 +27,7 @@ const Search = ({ endIcon, placeholder, onSearch = (value) => {}, width }) => {
   return (
     <>
       <div
-        className={`flex flex-row items-center custom-border rounded-lg p-2  w-full `}
+        className={`flex flex-row items-center custom-border rounded-lg p-2  w-full ${className} `}
       >
         <IoSearchOutline />
         <input

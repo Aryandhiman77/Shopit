@@ -16,6 +16,7 @@ const SelectableInput = ({
   error,
   disableClearable = false,
   getValue = () => {},
+  className,
 }) => {
   return (
     <>
@@ -54,7 +55,7 @@ const SelectableInput = ({
                 />
               )}
               size="small"
-              className="w-full bg-white"
+              className={`w-full ${className}`}
             />
           )}
         />
@@ -89,7 +90,7 @@ const SelectableInput = ({
               />
             )}
             size="small"
-            className="w-full"
+            className={`w-full ${className}`}
           />
         </>
       )}

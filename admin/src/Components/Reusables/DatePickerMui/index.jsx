@@ -2,27 +2,21 @@ import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
 
-const DatePickerMui = ({ getValue = () => {}, label, name }) => {
+const DatePickerMui = ({ getValue = () => {}, label, name, className }) => {
   const [value, setValue] = useState(null);
+
   useEffect(() => {
-    getValue(value);
+    getValue(value ? value.toDate() : null); // convert dayjs → JS Date
   }, [value]);
+
   return (
-    <div className="w-full">
+    <div className={`w-full ${className}`}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label={label}
-          name={name}
           value={value}
           onChange={(newValue) => setValue(newValue)}
-          referenceDate={"dd-mm-yyyy"}
-          onAccept={(value) =>
-            setValue(
-              new Date(`${value.day()} ${value.month()} ${value.year()}`),
-            )
-          }
           slotProps={{ textField: { size: "small" } }}
           className="w-full"
         />

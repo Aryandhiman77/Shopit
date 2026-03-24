@@ -7,9 +7,10 @@ import ConvertToFormData from "../../utilities/ConvertToFormData";
 import toast from "react-hot-toast";
 import CustomToast from "../../Components/Reusables/CustomToast";
 import useLoading from "../../Components/hooks/useLoading";
+import { Outlet } from "react-router-dom";
 
 // ✅ Provider Component
-const CategoryProvider = ({ children }) => {
+const CategoryProvider = () => {
   const [orders, setOrders] = useState([
     {
       orderId: "#32422432",
@@ -300,7 +301,7 @@ const CategoryProvider = ({ children }) => {
         resetFormErrors,
       }}
     >
-      {children}
+      <Outlet />
     </CategoryContext.Provider>
   );
 };
