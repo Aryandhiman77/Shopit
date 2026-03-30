@@ -27,10 +27,10 @@ const BrandProvider = () => {
     setLoading(false);
   };
 
-  const getBrands = async () => {
+  const getBrands = async (query) => {
     setLoading(true);
     const response = await fetchData({
-      url: "/admin/brands",
+      url: `/admin/brands${query}`,
       method: "GET",
     });
     console.log(response);
@@ -101,9 +101,12 @@ const BrandProvider = () => {
       payload: details,
     });
     if (response?.success) {
-      setBrands((prev) =>
-        prev?.map((b) => (b._id === id ? { ...b, ...response.data } : b)),
-      );
+      setBrands((prev) => ({
+        ...prev,
+        brands: prev.brands?.map((b) =>
+          b._id === id ? { ...b, ...response.data } : { ...b },
+        ),
+      }));
       toast.success("Brand updated.");
       stopLoading(`update-${id}-brand`);
       return response.data;

@@ -15,6 +15,11 @@ import ProductFilters from "../../../Components/Filters/ProductFilters";
 import useFilters from "../../../Components/hooks/useFilters";
 
 const ItemsPerPage = 5;
+const defaultFilters = {
+  page: 1,
+  limit: ItemsPerPage,
+  sortOrder: "desc",
+};
 
 const Products = () => {
   const { products, loading, getProducts } = useProducts();
@@ -27,10 +32,11 @@ const Products = () => {
   }, [filters]);
 
   useEffect(() => {
-    handleOnChange({
-      page: 1,
-      limit: ItemsPerPage,
-    });
+    // default sorting
+    handleOnChange(defaultFilters);
+    return () => {
+      resetFilters();
+    };
   }, []);
   return (
     <div className="flex flex-col gap-4">
@@ -114,16 +120,22 @@ const Products = () => {
         handleOnChange={handleOnChange}
         handleFieldsReset={() => {
           resetFilters();
-          handleOnChange({ page: 1, limit: ItemsPerPage });
+          handleOnChange(defaultFilters);
         }}
       />
+      <p className="text-right px-3 text-[12px]">
+        Total Products :{" "}
+        <span className="font-semibold">{products?.totalResults}</span>
+      </p>
       <Box className={"space-y-4 bg-white dark:bg-black rounded-sm!"}>
         {loading ? (
           <div className="flex justify-center items-center p-4">
             <Spinner size={40} />
           </div>
         ) : products?.products?.length > 0 ? (
-          <ProductList products={products?.products} />
+          <>
+            <ProductList products={products?.products} />
+          </>
         ) : (
           <div className="text-center text-gray-500 font-semibold">
             <img
