@@ -15,7 +15,7 @@ const PaginationFilter = ({ totalPages, currentPage, getPage = () => {} }) => {
       <Pagination
         onChange={(e, page) => changePage(page)}
         count={totalPages || 10}
-        page={currentPage}
+        page={currentPage ? currentPage : active}
         variant="outlined"
         shape="rounded"
         renderItem={(item) => <PaginationItem {...item} />}
