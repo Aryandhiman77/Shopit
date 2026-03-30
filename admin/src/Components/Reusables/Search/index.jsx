@@ -1,3 +1,4 @@
+import { TextField } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
 import { IoSearchOutline } from "react-icons/io5";
 import { PiCommandBold } from "react-icons/pi";
@@ -8,19 +9,16 @@ const Search = ({
   onSearch = (value) => {},
   className,
 }) => {
-  const [search, setSearch] = useState("");
   const debounceRef = useRef(null);
 
   const handleChange = (e) => {
-    setSearch(e.target.value);
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
     debounceRef.current = setTimeout(() => {
       onSearch(e.target.value);
-    }, 500);
+    }, 600);
   };
-
   useEffect(() => {
     return () => clearTimeout(debounceRef?.current);
   }, []);
@@ -34,7 +32,6 @@ const Search = ({
           name="search"
           onChange={handleChange}
           type="text"
-          value={search}
           className="focus:outline-none px-2 text-sm w-full "
           placeholder={placeholder}
         />

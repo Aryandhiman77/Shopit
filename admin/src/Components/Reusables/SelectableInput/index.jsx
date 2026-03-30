@@ -44,7 +44,10 @@ const SelectableInput = ({
                 option?.value === value?.value
               }
               getOptionLabel={(option) => option?.label || ""}
-              onChange={(_, data) => field.onChange(data)}
+              onChange={(_, data) => {
+                field.onChange(data);
+                getValue(data);
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -63,14 +66,12 @@ const SelectableInput = ({
       ) : (
         <>
           <Autocomplete
+            disableCloseOnSelect={disableCloseOnSelect}
             disableClearable={disableClearable}
             options={options || []}
             multiple={multiple}
             loading={loading}
             defaultValue={
-              multiple ? (defaultValue?.length ? [...defaultValue] : []) : null
-            }
-            value={
               multiple ? (defaultValue?.length ? [...defaultValue] : []) : null
             }
             isOptionEqualToValue={(option, value) =>
@@ -79,7 +80,6 @@ const SelectableInput = ({
             getOptionLabel={(option) => option?.label || ""}
             onChange={(_, data) => {
               getValue(data);
-              setSelectedValues(data);
             }}
             renderInput={(params) => (
               <TextField

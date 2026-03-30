@@ -16,7 +16,7 @@ const ProductsProvider = () => {
   const getProducts = async (query) => {
     setLoading(true);
     const response = await fetchData({
-      url: `/admin/products?${query ? query : ""}`,
+      url: `/admin/products${query ? query : ""}`,
       method: "GET",
     });
     if (response?.success) {

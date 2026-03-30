@@ -33,7 +33,6 @@ import BrandProvider from "./Context/Brand/BrandProvider";
 import PageNotFound from "./Pages/404";
 import BrandList from "./Pages/Brands";
 import AddBrand from "./Pages/Brands/AddBrand";
-import FilterProvider from "./Context/Filter/FilterProvider";
 
 const App = () => {
   return (
@@ -51,33 +50,28 @@ const App = () => {
 
             <Route element={<ProtectedRoute />}>
               <Route element={<Layout />}>
-                <Route element={<FilterProvider />}>
-                  <Route element={<CategoryProvider />}>
-                    <Route element={<ProductsProvider />}>
-                      <Route element={<BrandProvider />}>
-                        <Route path="/" element={<Dashboard />} />
-                        <Route path="/brands" element={<BrandList />} />
-                        <Route path="/brand/add" element={<AddBrand />} />
-                        <Route path="/products" element={<ProductListing />} />
-                        <Route path="/products/add" element={<AddProduct />} />
+                <Route element={<CategoryProvider />}>
+                  <Route element={<ProductsProvider />}>
+                    <Route element={<BrandProvider />}>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/brands" element={<BrandList />} />
+                      <Route path="/brand/add" element={<AddBrand />} />
+                      <Route path="/products" element={<ProductListing />} />
+                      <Route path="/products/add" element={<AddProduct />} />
 
-                        <Route path="/categories" element={<CategoryList />} />
-                        <Route
-                          path="/categories/add"
-                          element={<AddCategory />}
-                        />
-                        <Route path="/orders" element={<Orders />} />
-                        <Route
-                          path="/users"
-                          element={
-                            <UserProvider>
-                              <Users />
-                            </UserProvider>
-                          }
-                        />
-                        <Route path="/settings" element={<StoreSettings />} />
-                        <Route path="*" element={<PageNotFound />} />
-                      </Route>
+                      <Route path="/categories" element={<CategoryList />} />
+                      <Route path="/categories/add" element={<AddCategory />} />
+                      <Route path="/orders" element={<Orders />} />
+                      <Route
+                        path="/users"
+                        element={
+                          <UserProvider>
+                            <Users />
+                          </UserProvider>
+                        }
+                      />
+                      <Route path="/settings" element={<StoreSettings />} />
+                      <Route path="*" element={<PageNotFound />} />
                     </Route>
                   </Route>
                 </Route>

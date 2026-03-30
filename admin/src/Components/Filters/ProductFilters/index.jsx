@@ -6,29 +6,30 @@ import { Checkbox, TextField, Tooltip } from "@mui/material";
 import useCategory from "../../hooks/useCategory";
 import useBrands from "../../hooks/useBrands";
 import buildQueryFromObject from "../../../utilities/buildQueryFromObject";
-import Search from "../../Reusables/Search";
-import { CiFilter } from "react-icons/ci";
-import CustomButton from "../../Reusables/Elements/CustomBtn";
-import { IoMdRefresh } from "react-icons/io";
-import useFilters from "../../hooks/useFilters";
-import { useSearchParams } from "react-router-dom";
+import { Controller, useForm } from "react-hook-form";
 
-const ProductFilters = ({ getQuery = () => {} }) => {
-  // categories,✅
-  // search,✅
-  // brands,✅
-  // created_at,✅
-  // updated_at,✅
-  // status,✅
-  // stock,✅
-  // minPrice,✅
-  // maxPrice,✅
-  // featured,✅
-  // trending,✅
-  // sortOrder+sortby - asc,desc, price="asc"✅
-  const { filters, handleOnChange, resetFilters } = useFilters();
+const ProductFilters = ({
+  handleOnChange = () => {},
+  handleFieldsReset = () => {},
+}) => {
+  const { control, reset } = useForm({
+    defaultValues: {
+      categories: [],
+      brands: [],
+      status: { label: "All", value: "" },
+      featured: false,
+      trending: false,
+      sortBy: { label: "Newest", value: { sortOrder: "desc" } },
+      createdAt: null,
+      updatedAt: null,
+    },
+    mode: "onChange",
+  });
 
-  const [searchParams, setSearchParams] = useSearchParams();
+  const resetFields = () => {
+    reset();
+    handleFieldsReset();
+  };
 
   const {
     level1Categories,
@@ -54,33 +55,22 @@ const ProductFilters = ({ getQuery = () => {} }) => {
     getCategoriesByLevel(2);
     getCategoriesByLevel(3);
   }, []);
-  const submitFilters = (e) => {
-    e.preventDefault();
-    const query = buildQueryFromObject(filters);
-    setSearchParams(query);
-    getQuery(query);
-  };
 
-  useEffect(() => {
-    return () => {
-      resetFilters();
-    };
-  }, []);
   return (
-    <form onSubmit={submitFilters}>
+    <form>
       <FitlerSection
         className={"pt-5 "}
-        resetFilters={resetFilters}
-        handleOnChange={handleOnChange}
+        handleOnChange={handleOnChange} // for search change
+        onReset={resetFields}
       >
         <div className="flex items-center justify-between w-full flex-wrap">
           <SelectableInput
+            control={control}
             className={"w-1/6!"}
             disableClearable={true}
             multiple={false}
             label={"Status"}
             name={"status"}
-            defaultValue={{ label: "All", value: "" }}
             required={false}
             options={[
               { label: "All", value: "" },
@@ -93,6 +83,7 @@ const ProductFilters = ({ getQuery = () => {} }) => {
             }}
           />
           <SelectableInput
+            control={control}
             disableCloseOnSelect={false}
             className={"w-1/6!"}
             label={"Brands"}
@@ -107,7 +98,8 @@ const ProductFilters = ({ getQuery = () => {} }) => {
             }
           />
           <SelectableInput
-            disableCloseOnSelect={false}
+            control={control}
+            disableCloseOnSelect={true}
             className={"w-1/6!"}
             multiple={true}
             label={"Categories"}
@@ -132,12 +124,14 @@ const ProductFilters = ({ getQuery = () => {} }) => {
             }
           />
           <DatePickerMui
+            control={control}
             className={"w-1/6!"}
             label={"Created Date"}
             name={"createdAt"}
             getValue={(value) => handleOnChange({ createdAt: value })}
           />
           <DatePickerMui
+            control={control}
             className={"w-1/6!"}
             label={"Updated Date"}
             name={"updatedAt"}
@@ -145,31 +139,45 @@ const ProductFilters = ({ getQuery = () => {} }) => {
           />
         </div>
         <div className="flex items-center justify-between w-full flex-wrap">
-          <TextField
-            size="small"
-            placeholder="min Price"
-            className={"w-1/6!"}
-            variant="outlined"
+          <Controller
+            control={control}
             name="minPrice"
-            label="Min. Price"
-            type="number"
-            onChange={(e) =>
-              handleOnChange({ minPrice: Number(e.target.value) })
-            }
+            render={({ field }) => (
+              <TextField
+                size="small"
+                placeholder="min Price"
+                className={"w-1/6!"}
+                variant="outlined"
+                label="Min. Price"
+                type="number"
+                onChange={(e) => {
+                  handleOnChange({ minPrice: Number(e.target.value) });
+                  field.onChange({ minPrice: Number(e.target.value) });
+                }}
+              />
+            )}
           />
-          <TextField
-            size="small"
-            placeholder="max Price"
-            className={"w-1/6!"}
-            variant="outlined"
+          <Controller
+            control={control}
             name="maxPrice"
-            label="Max. Price"
-            type="number"
-            onChange={(e) =>
-              handleOnChange({ maxPrice: Number(e.target.value) })
-            }
+            render={({ field }) => (
+              <TextField
+                size="small"
+                placeholder="max Price"
+                className={"w-1/6!"}
+                variant="outlined"
+                label="Max. Price"
+                type="number"
+                onChange={(e) => {
+                  handleOnChange({ maxPrice: Number(e.target.value) });
+                  field.onChange({ minPrice: Number(e.target.value) });
+                }}
+              />
+            )}
           />
+
           <SelectableInput
+            control={control}
             className={"w-1/6!"}
             disableClearable={true}
             multiple={false}
@@ -187,51 +195,53 @@ const ProductFilters = ({ getQuery = () => {} }) => {
             ]}
             getValue={(value) => handleOnChange({ stock: value.value })}
           />
-          {/* <SelectableInput
-          disableClearable={true}
-          multiple={false}
-          label={"Product Highlights"}
-          name={"highlights"}
-          defaultValue={{ label: "Both", value: "" }}
-          required={false}
-          loading={loading}
-          options={[
-            { label: "Both", value: "" },
-            { label: "Featured", value: "featured=true" },
-            { label: "Trending", value: "trending=true" },
-          ]}
-          getValue={(value) => handleOnChange({ highlights: value.value })}
-        /> */}
-          <label
-            htmlFor="featured"
-            className="flex justify-center items-center font-medium"
-          >
-            Featured
-            <Checkbox
-              title="Featured"
-              id="featured"
-              onChange={(_, value) => handleOnChange({ featured: value })}
-            />
-          </label>
-          <label
-            htmlFor="trending"
-            className="flex justify-center items-center font-medium"
-          >
-            Trending
-            <Checkbox
-              title="Trending"
-              id="trending"
-              onChange={(_, value) => handleOnChange({ trending: value })}
-            />
-          </label>
-
+          <Controller
+            name="featured"
+            control={control}
+            render={({ field }) => (
+              <label
+                htmlFor="featured"
+                className="flex justify-center items-center font-medium"
+              >
+                Featured
+                <Checkbox
+                  value={field.value}
+                  title="Featured"
+                  id="featured"
+                  onChange={(e) =>
+                    handleOnChange({ featured: e.target.checked })
+                  }
+                />
+              </label>
+            )}
+          />
+          <Controller
+            name="trending"
+            control={control}
+            render={({ field }) => (
+              <label
+                htmlFor="trending"
+                className="flex justify-center items-center font-medium"
+              >
+                Trending
+                <Checkbox
+                  value={field.value}
+                  title="Trending"
+                  id="trending"
+                  onChange={(e) =>
+                    handleOnChange({ trending: e.target.checked })
+                  }
+                />
+              </label>
+            )}
+          />
           <SelectableInput
+            control={control}
             className={"w-1/6!"}
             disableClearable={true}
             multiple={false}
             label={"Sort By"}
             name={"sortBy"}
-            defaultValue={{ label: "Newest", value: "sortOrder=desc" }}
             required={false}
             options={[
               { label: "Newest", value: { sortOrder: "desc" } },

@@ -1,28 +1,37 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import ProductList from "../../Dashboard/ProductList";
 import BreadCrumb from "../../../Components/Reusables/Elements/BreadCrumb";
-import { PiExport, PiPlus } from "react-icons/pi";
-import Search from "../../../Components/Reusables/Search";
+import { PiPlus } from "react-icons/pi";
 import useProducts from "../../../Components/hooks/useProducts";
 import Box from "../../../Components/Reusables/Elements/Box";
 import CustomButton from "../../../Components/Reusables/Elements/CustomBtn";
-import DropDownField from "../../../Components/Reusables/DropDownField";
 import Spinner from "../../../Components/Reusables/Elements/Loader/Spinner";
 import NoProducts from "../../../assets/noProducts.png";
 import PaginationFilter from "../../../Components/Filters/Pagination";
-import { RiResetLeftFill } from "react-icons/ri";
 import { Tooltip } from "@mui/material";
 import { CiExport, CiTrash } from "react-icons/ci";
 import { FaRegEdit } from "react-icons/fa";
-import CollapsablePanel from "../../../Components/Reusables/CollapsablePanel";
-import FitlerSection from "../../../Components/Reusables/FilterSection";
 import ProductFilters from "../../../Components/Filters/ProductFilters";
+import useFilters from "../../../Components/hooks/useFilters";
+
+const ItemsPerPage = 5;
+
 const Products = () => {
   const { products, loading, getProducts } = useProducts();
-  const [query, setQuery] = useState("");
+  const { filters, handleOnChange, resetFilters, query } = useFilters();
+
   useEffect(() => {
-    getProducts(query);
-  }, [query]);
+    if (filters.limit && filters.page) {
+      getProducts(`?${query}`);
+    }
+  }, [filters]);
+
+  useEffect(() => {
+    handleOnChange({
+      page: 1,
+      limit: ItemsPerPage,
+    });
+  }, []);
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
@@ -100,7 +109,14 @@ const Products = () => {
           />
         </div>
       </div>
-      <ProductFilters getQuery={setQuery} />
+      <ProductFilters
+        filters={filters}
+        handleOnChange={handleOnChange}
+        handleFieldsReset={() => {
+          resetFilters();
+          handleOnChange({ page: 1, limit: ItemsPerPage });
+        }}
+      />
       <Box className={"space-y-4 bg-white dark:bg-black rounded-sm!"}>
         {loading ? (
           <div className="flex justify-center items-center p-4">
@@ -118,7 +134,14 @@ const Products = () => {
           </div>
         )}
         <div className="flex justify-center items-center">
-          <PaginationFilter />
+          <PaginationFilter
+            getPage={(page) => {
+              handleOnChange({ page, limit: ItemsPerPage });
+            }}
+            currentPage={products?.page}
+            limit={ItemsPerPage}
+            totalPages={products?.totalPages}
+          />
         </div>
       </Box>
     </div>

@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
 import CollapsablePanel from "../CollapsablePanel";
-import DropDownField from "../DropDownField";
-import Box from "../Elements/Box";
-import { IoIosArrowDown, IoMdClose, IoMdRefresh } from "react-icons/io";
-import Search from "../Search";
+import { IoIosSearch, IoMdRefresh } from "react-icons/io";
 import { CiFilter } from "react-icons/ci";
 import { Tooltip } from "@mui/material";
-import useFilters from "../../../Components/hooks/useFilters";
+import Search from "../../../Components/Reusables/Search";
 
 const FitlerSection = ({
   children,
   className,
-  resetFilters,
   handleOnChange,
+  onReset = () => {},
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -22,24 +19,16 @@ const FitlerSection = ({
         <div className="p-5 bg-white custom-border">
           <div className="flex items-center gap-2">
             <Search
-              width={50}
-              placeholder={"Search by title, sku, id"}
-              className={"bg-white"}
-              onSearch={(value) => handleOnChange({ search: value })}
+              className={"w-full"}
+              onSearch={(search) => {
+                handleOnChange({ search, page: 1 });
+              }}
+              placeholder={"Search product title, sku, id"}
             />
 
             <button
-              className={`custom-btn flex items-center gap-2 bg-blue-500! text-white text-sm font-[500] rounded-md! hover:text-white! px-4! `}
-            >
-              <Tooltip title="Apply filters">
-                <div className="flex gap-1 items-center">Apply</div>
-              </Tooltip>
-            </button>
-            <button
-              onClick={() => {
-                resetFilters();
-              }}
               type="reset"
+              onClick={onReset}
               className={`custom-btn custom-border flex items-center gap-2 !bg-transparent text-black! text-sm font-[500] border! border-gray-400! rounded-md! hover:text-black!  px-4!`}
             >
               <Tooltip title="Clear all filters">
@@ -47,6 +36,8 @@ const FitlerSection = ({
               </Tooltip>
             </button>
             <button
+              type="button"
+              role="button"
               onClick={() => setOpen(!open)}
               className={`custom-btn custom-border flex items-center gap-2 !bg-transparent text-black! text-sm font-[500] border! border-gray-400! rounded-md! hover:text-black! ${open && "bg-blue-100!"}`}
             >
