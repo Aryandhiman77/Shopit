@@ -11,6 +11,7 @@ adminRoutes
   .use(tokenVerification)
   .use("/categories", requireRole("admin"), categoryRoutes)
   .use("/brands", requireRole("admin"), brandRoutes)
+  // .use("/brands", brandRoutes)
   .use("/products", requireRole("admin"), productRoutes)
   .use("/users", requireRole("admin"), UserRouter);
 export default adminRoutes;

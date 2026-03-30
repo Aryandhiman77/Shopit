@@ -18,6 +18,9 @@ import {
   updateBrand,
   updateBrandLogo,
 } from "../../Controllers/admin/brand.controller.js";
+import pagination from "../../Middlewares/Filters/reusable/pagination.js";
+import sortingFilters from "../../Middlewares/Filters/reusable/sorting.filters.js";
+import brandFilters from "../../Middlewares/Filters/brand.filters.js";
 const brandRoutes = express.Router();
 
 brandRoutes
@@ -28,9 +31,9 @@ brandRoutes
     validate(createBrandSchema),
     createBrand,
   )
-  .get("/", getBrands)
+  .get("/", pagination, sortingFilters, brandFilters, getBrands)
   .get("/get-brand/:slug", getSingleBrand)
-  .patch("/:id/update",  validate(updateBrandSchema), updateBrand)
+  .patch("/:id/update", validate(updateBrandSchema), updateBrand)
   .patch("/:id/logo", upload.single("image"), updateBrandLogo)
   .delete("/:id/delete", deleteBrand)
   .get("/all-brand-requests", getAllBrandRequests)

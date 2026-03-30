@@ -55,7 +55,7 @@ export const loginUserService = async ({
   // 5. If already login verify using otp (may be both tokens are removed)
   if (user.loggedInUserCount > 0 && user.loggedInUserCount <= 3) {
     const OTP = await user.createResetCode();
-    const sent = mailSender({
+    const sent = await mailSender({
       from: "support@shopit.com",
       to: user.email,
       subject: "Shopit OTP verification",

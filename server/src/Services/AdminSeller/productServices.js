@@ -5,8 +5,6 @@ import {
   uploadWithRetry,
 } from "../../Helpers/cloudinary.js";
 import unlinkFiles from "../../Helpers/fileUnlinker.js";
-import Category from "../../Models/category.js";
-import Brand from "../../Models/brand.js";
 
 export const createProductService = async (
   {
@@ -220,7 +218,7 @@ export const getProductsService = async (pagination, sortOptions, filters) => {
         { path: "brand", select: "name" },
       ])
       .lean(),
-    Product.countDocuments(filters).lean(),
+    Product.countDocuments({ ...filters }).lean(),
   ]);
   return {
     products,

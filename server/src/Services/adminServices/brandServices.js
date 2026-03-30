@@ -45,9 +45,23 @@ export const createBrandService = async (
   return createdBrand;
 };
 
-export const getBrandsService = async () => {
-  const brands = await Brand.find().populate("categories", "name");
-  return brands;
+export const getBrandsService = async (pagination, sorting, filters) => {
+  const [brands, totalDocuments] = await Promise.all([
+    await Brand.find({ ...filters })
+      .populate("categories", "name")
+      .sort(sorting)
+      .limit(pagination.limit)
+      .skip(pagination.skip)
+      .lean(),
+    Brand.countDocuments({ ...filters }).lean(),
+  ]);
+  return {
+    brands,
+    totalPages: Math.ceil(totalDocuments / pagination.limit),
+    totalResults: totalDocuments,
+    limit: pagination.limit,
+    page: pagination.page + 1,
+  };
 };
 
 export const getSingleBrandService = async ({ slug }) => {

@@ -31,7 +31,11 @@ export const createBrand = AsyncWrapper(async (req, res, next) => {
 });
 
 export const getBrands = AsyncWrapper(async (req, res) => {
-  const brands = await getBrandsService();
+  const brands = await getBrandsService(
+    req.pagination,
+    req.sortOptions,
+    req.filters,
+  );
   return res.status(200).json(new ApiResponse(200, brands, "Brands found."));
 });
 

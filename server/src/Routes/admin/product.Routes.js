@@ -2,9 +2,9 @@ import express from "express";
 import { upload } from "../../Middlewares/multer.js";
 import { jsonParser } from "../../Helpers/jsonParser.js";
 import { getProducts } from "../../Controllers/admin/product.controller.js";
-import pagination from "../../Middlewares/Filters/pagination.js";
+import pagination from "../../Middlewares/Filters/reusable/pagination.js";
 import productFilters from "../../Middlewares/Filters/product.filters.js";
-import sortingFilters from "../../Middlewares/Filters/sorting.filters.js";
+import sortingFilters from "../../Middlewares/Filters/reusable/sorting.filters.js";
 
 const productRoutes = express.Router();
 
